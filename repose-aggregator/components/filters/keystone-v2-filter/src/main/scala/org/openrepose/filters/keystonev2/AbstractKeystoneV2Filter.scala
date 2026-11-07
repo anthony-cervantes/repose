@@ -32,7 +32,7 @@ import org.openrepose.core.filter.AbstractConfiguredFilter
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.keystonev2.config._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
@@ -43,9 +43,9 @@ abstract class AbstractKeystoneV2Filter[T <: KeystoneV2Config: ClassTag](configu
 
   import AbstractKeystoneV2Filter._
 
-  val handleFailures: PartialFunction[Try[Unit.type], KeystoneV2Result]
+  val handleFailures: PartialFunction[Try[Unit], KeystoneV2Result]
 
-  def doAuth(request: HttpServletRequestWrapper): Try[Unit.type]
+  def doAuth(request: HttpServletRequestWrapper): Try[Unit]
 
   def doWork(servletRequest: HttpServletRequest, servletResponse: HttpServletResponse, chain: FilterChain): Unit = {
     /**
@@ -75,7 +75,7 @@ abstract class AbstractKeystoneV2Filter[T <: KeystoneV2Config: ClassTag](configu
         Pass
       } else {
         val authResult = doAuth(request)
-        handleFailures.applyOrElse(authResult, (_: Try[Unit.type]) match {
+        handleFailures.applyOrElse(authResult, (_: Try[Unit]) match {
           case Success(_) => Pass
           case Failure(e) => Reject(SC_INTERNAL_SERVER_ERROR, Some(e.getMessage))
         })

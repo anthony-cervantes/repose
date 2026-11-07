@@ -27,12 +27,12 @@ import org.openrepose.filters.keystonev2.AbstractKeystoneV2Filter.{KeystoneV2Res
 import org.openrepose.filters.keystonev2.KeystoneV2Common._
 import org.openrepose.filters.keystonev2.config._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 object KeystoneV2Authorization extends StrictLogging {
 
-  val handleFailures: PartialFunction[Try[Unit.type], KeystoneV2Result] = {
+  val handleFailures: PartialFunction[Try[Unit], KeystoneV2Result] = {
     case Failure(e: InvalidTenantException) => Reject(SC_UNAUTHORIZED, Some(e.getMessage))
     case Failure(e: UnauthorizedEndpointException) => Reject(SC_FORBIDDEN, Some(e.getMessage))
     case Failure(e: UnparsableTenantException) => Reject(SC_UNAUTHORIZED, Some(e.getMessage))
@@ -53,17 +53,17 @@ object KeystoneV2Authorization extends StrictLogging {
         .map(_.getStripTokenTenantPrefixes)
         .flatMap(Option.apply)
         .map(_.split('/'))
-        .getOrElse(Array.empty)
+        .getOrElse(Array.empty[String])
       val scopedTenantToRolesMap = validateTenant
         .map(_ => getScopedTenantToRolesMap(tenantPrefixes, userTenantToRolesMap, requestTenants))
       val matchedTenants = (scopedTenantToRolesMap.getOrElse(Map.empty) - DomainRoleTenantKey).keySet
       val tenantAuthorization = validateTenant
         .map(_ => authorizeTenant(tenantPrefixes, matchedTenants, requestTenants))
-        .getOrElse(Success(Unit))
+        .getOrElse(Success(()))
 
       val endpointAuthorization = Option(config.getRequireServiceEndpoint)
         .map(requiredEndpoint => authorizeEndpoints(requiredEndpoint, endpoints))
-        .getOrElse(Success(Unit))
+        .getOrElse(Success(()))
 
       tenantAuthorization.flatMap(_ => endpointAuthorization) match {
         case Success(_) => AuthorizationPassed(scopedTenantToRolesMap.getOrElse(userTenantToRolesMap), matchedTenants)
@@ -86,7 +86,7 @@ object KeystoneV2Authorization extends StrictLogging {
 
   // NOTE: Replaces the tenant and roles scoping methods. For the roles scoping, also accounts for tenant prefixes, which was not previously the case.
   def getScopedTenantToRolesMap(prefixes: Array[String], userTenantToRolesMap: TenantToRolesMap, requestTenants: Set[String]): TenantToRolesMap = {
-    userTenantToRolesMap filterKeys { userTenant =>
+    userTenantToRolesMap filter { case (userTenant, _) =>
       userTenant == DomainRoleTenantKey || requestTenants.exists { requestTenant =>
         prefixableTenantEquals(prefixes, userTenant, requestTenant)
       }
@@ -99,7 +99,7 @@ object KeystoneV2Authorization extends StrictLogging {
     }
   }
 
-  def authorizeTenant(prefixes: Array[String], userTenants: Set[String], requestTenants: Set[String]): Try[Unit.type] = {
+  def authorizeTenant(prefixes: Array[String], userTenants: Set[String], requestTenants: Set[String]): Try[Unit] = {
     logger.trace("Validating tenant")
 
     val allTenantsMatch = requestTenants forall { requestTenant =>
@@ -108,11 +108,11 @@ object KeystoneV2Authorization extends StrictLogging {
       }
     }
 
-    if (allTenantsMatch) Success(Unit)
+    if (allTenantsMatch) Success(())
     else Failure(InvalidTenantException("A tenant from the configured header does not match any of the user's tenants"))
   }
 
-  def authorizeEndpoints(config: ServiceEndpointType, maybeEndpoints: => Try[EndpointsData]): Try[Unit.type] = {
+  def authorizeEndpoints(config: ServiceEndpointType, maybeEndpoints: => Try[EndpointsData]): Try[Unit] = {
     logger.trace("Authorizing endpoints")
 
     maybeEndpoints flatMap { endpoints =>
@@ -124,7 +124,7 @@ object KeystoneV2Authorization extends StrictLogging {
           region = Option(config.getRegion)
         )
 
-      if (endpoints.vector.exists(_.meetsRequirement(requiredEndpointModel))) Success(Unit)
+      if (endpoints.vector.exists(_.meetsRequirement(requiredEndpointModel))) Success(())
       else Failure(UnauthorizedEndpointException("User did not have the required endpoint"))
     }
   }

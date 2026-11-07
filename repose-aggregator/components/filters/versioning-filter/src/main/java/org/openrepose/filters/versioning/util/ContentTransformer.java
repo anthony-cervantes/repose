@@ -28,8 +28,8 @@ import org.openrepose.commons.utils.xslt.LogTemplatesWrapper;
 import org.openrepose.core.servlet.PowerApiContextException;
 import org.openrepose.filters.versioning.config.JsonFormat;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;

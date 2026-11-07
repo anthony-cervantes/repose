@@ -18,12 +18,12 @@
 #=_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_=_
 #
 
-- include_tasks: install_gatling.yml
+- import_tasks: install_gatling.yml
   tags: [repose, origin]
 
-- include_tasks: setup_test.yml
+- import_tasks: setup_test.yml
   tags: [repose, origin]
 
-- include_tasks: run_test.yml
+- import_tasks: run_test.yml
 
-- include_tasks: fetch_results.yml
+- import_tasks: fetch_results.yml

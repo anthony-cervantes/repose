@@ -27,8 +27,8 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 import static jakarta.servlet.http.HttpServletResponse.SC_OK
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON
 
 @Tag("scaffold.category.Recipe")
 class TenantCullingRBACRecipeTest extends ReposeValveTest {

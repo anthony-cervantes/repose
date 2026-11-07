@@ -21,7 +21,7 @@ package org.openrepose.filters.uristripper
 
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
-import javax.xml.bind.{JAXBContext, JAXBElement}
+import jakarta.xml.bind.{JAXBContext, JAXBElement}
 import org.openrepose.filters.uristripper.config.UriStripperConfig
 import scala.reflect._
 

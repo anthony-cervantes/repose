@@ -33,7 +33,7 @@ import org.scalatestplus.mockito.MockitoSugar
 
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ContentTypeStripperFilterTest extends FunSpec with Matchers with MockitoSugar {
@@ -56,7 +56,7 @@ class ContentTypeStripperFilterTest extends FunSpec with Matchers with MockitoSu
         Mockito.verify(filterChain).doFilter(servletRequest.capture(), any())
         val chainRequest = servletRequest.getValue
         val wrapper: HttpServletRequestWrapper = new HttpServletRequestWrapper(chainRequest.asInstanceOf[HttpServletRequest])
-        wrapper.getHeaderNames exists (_.equalsIgnoreCase("content-type")) shouldBe true
+        wrapper.getHeaderNames.asScala exists (_.equalsIgnoreCase("content-type")) shouldBe true
         wrapper.getHeader("content-type") shouldBe "application/json"
         IOUtils.toString(chainRequest.getInputStream) shouldBe bodyContent
       }
@@ -79,7 +79,7 @@ class ContentTypeStripperFilterTest extends FunSpec with Matchers with MockitoSu
         Mockito.verify(filterChain).doFilter(servletRequest.capture(), any())
         val chainRequest = servletRequest.getValue
         val wrapper: HttpServletRequestWrapper = new HttpServletRequestWrapper(chainRequest.asInstanceOf[HttpServletRequest])
-        wrapper.getHeaderNames exists (_.equalsIgnoreCase("content-type")) shouldBe false
+        wrapper.getHeaderNames.asScala exists (_.equalsIgnoreCase("content-type")) shouldBe false
         wrapper.getHeader("content-type") shouldBe null
         IOUtils.toString(chainRequest.getInputStream) shouldBe bodyContent
       }

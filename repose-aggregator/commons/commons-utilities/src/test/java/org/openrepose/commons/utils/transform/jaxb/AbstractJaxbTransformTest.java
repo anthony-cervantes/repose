@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openrepose.commons.utils.pooling.ResourceConstructionException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;

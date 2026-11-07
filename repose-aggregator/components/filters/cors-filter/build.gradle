@@ -3,12 +3,11 @@ dependencies {
     api project(":repose-aggregator:commons:commons-utilities")
     api "org.scala-lang:scala-library"
     api "com.google.guava:guava"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "jakarta.inject:jakarta.inject-api"
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
 
     testImplementation "junit:junit"
     testImplementation "org.scalatest:scalatest_$scalaMajDotMin"

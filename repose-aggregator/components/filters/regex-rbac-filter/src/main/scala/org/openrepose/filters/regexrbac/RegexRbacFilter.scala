@@ -36,7 +36,7 @@ import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.regexrbac.RegexRbacFilter._
 import org.openrepose.filters.regexrbac.config.RegexRbacConfig
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 

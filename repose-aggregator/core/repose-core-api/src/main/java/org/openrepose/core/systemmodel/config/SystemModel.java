@@ -21,7 +21,7 @@ package org.openrepose.core.systemmodel.config;
 
 import lombok.Data;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 import java.io.Serializable;
 
 @XmlRootElement(name = "system-model")

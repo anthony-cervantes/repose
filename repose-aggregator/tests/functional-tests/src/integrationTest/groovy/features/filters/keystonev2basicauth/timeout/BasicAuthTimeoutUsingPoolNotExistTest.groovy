@@ -28,7 +28,7 @@ import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 
 import jakarta.servlet.http.HttpServletResponse
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.HttpHeaders
 
 /**
  * Created by jennyvo on 11/9/15.

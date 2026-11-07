@@ -36,7 +36,7 @@ import org.openrepose.core.services.reporting.metrics.{MetricNameUtility, Metric
 import org.openrepose.filters.urinormalization.config.{HttpMethod, UriNormalizationConfig}
 import org.openrepose.filters.urinormalization.normalizer.{MediaTypeNormalizer, MultiInstanceWhiteListFactory}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
 @Named
@@ -61,7 +61,7 @@ class UriNormalizationFilter @Inject()(configurationService: ConfigurationServic
       val request = new HttpServletRequestWrapper(servletRequest.asInstanceOf[HttpServletRequest])
 
       mediaTypeNormalizer.normalizeContentMediaType(request)
-      if (request.getParameterMap.nonEmpty) {
+      if (request.getParameterMap.asScala.nonEmpty) {
         queryStringNormalizers.find(_.normalize(request)) foreach { queryStringNormalizer =>
           metricRegistryOpt foreach {
             _.createSummingMeterFactory(NormalizationMetricPrefix)
@@ -96,7 +96,7 @@ class UriNormalizationFilter @Inject()(configurationService: ConfigurationServic
     synchronized {
       val newNormalizers = mutable.LinkedHashMap.empty[String, QueryParameterNormalizer]
 
-      Option(configurationObject.getUriFilters).foreach(_.getTarget foreach { target =>
+      Option(configurationObject.getUriFilters).foreach(_.getTarget.asScala foreach { target =>
         val alphabetize = target.isAlphabetize
         val whiteListFactory = new MultiInstanceWhiteListFactory(target.getWhitelist)
         val normalizerInstance = new QueryStringNormalizer(whiteListFactory, alphabetize)
@@ -105,7 +105,7 @@ class UriNormalizationFilter @Inject()(configurationService: ConfigurationServic
           target.getHttpMethods.add(HttpMethod.ALL)
         }
 
-        target.getHttpMethods foreach { method =>
+        target.getHttpMethods.asScala foreach { method =>
           val methodScopedNormalizer = newNormalizers.getOrElseUpdate(method.name, new QueryParameterNormalizer(method))
           methodScopedNormalizer.uriSelector.addPattern(target.getUriRegex, normalizerInstance)
         }
@@ -114,7 +114,7 @@ class UriNormalizationFilter @Inject()(configurationService: ConfigurationServic
       queryStringNormalizers = newNormalizers.values
       Option(configurationObject.getMediaVariants) match {
         case Some(mediaVariants) =>
-          mediaTypeNormalizer = new MediaTypeNormalizer(mediaVariants.getMediaType)
+          mediaTypeNormalizer = new MediaTypeNormalizer(mediaVariants.getMediaType.asScala.toSeq)
         case None =>
           mediaTypeNormalizer = new MediaTypeNormalizer(Seq.empty)
       }

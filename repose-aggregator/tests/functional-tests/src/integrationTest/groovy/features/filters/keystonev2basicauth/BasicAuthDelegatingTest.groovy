@@ -29,7 +29,7 @@ import org.rackspace.deproxy.Response
 import scaffold.category.Identity
 import spock.lang.Unroll
 
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.HttpHeaders
 
 import static jakarta.servlet.http.HttpServletResponse.*
 import static org.openrepose.commons.utils.http.normal.ExtendedStatusCodes.SC_TOO_MANY_REQUESTS

@@ -38,7 +38,7 @@ import org.openrepose.filters.openstackidentityv3.utilities.Cache._
 import org.openrepose.filters.openstackidentityv3.utilities.OpenStackIdentityV3API
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, AtomFeedService, LifecycleEvents}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.xml.XML
 
 @Named
@@ -101,7 +101,7 @@ class OpenStackIdentityV3Filter @Inject()(configurationService: ConfigurationSer
   def configurationUpdated(config: OpenstackIdentityV3Config) {
     // This will also un-register any Atom Feeds not present in the new config.
     CacheInvalidationFeedListener.updateFeeds(
-      Option(config.getCache).map(_.getAtomFeed.map(_.getId).toSet).getOrElse(Set.empty)
+      Option(config.getCache).map(_.getAtomFeed.asScala.map(_.getId).toSet).getOrElse(Set.empty)
     )
 
     httpClient = httpClientService.getClient(config.getConnectionPoolId)

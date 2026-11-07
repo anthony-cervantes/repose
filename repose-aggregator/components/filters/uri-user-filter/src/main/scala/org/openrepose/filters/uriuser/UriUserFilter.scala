@@ -34,7 +34,7 @@ import org.openrepose.core.filter.FilterConfigHelper
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.uriuser.config.UriUserConfig
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @Named
 class UriUserFilter @Inject()(configurationService: ConfigurationService)
@@ -84,7 +84,7 @@ class UriUserFilter @Inject()(configurationService: ConfigurationService)
 
   override def configurationUpdated(uriUserConfig: UriUserConfig): Unit = {
     config = Config(
-      uriUserConfig.getIdentificationMappings.getMapping.map(_.getIdentificationRegex.r.pattern),
+      uriUserConfig.getIdentificationMappings.getMapping.asScala.toList.map(_.getIdentificationRegex.r.pattern),
       Option(uriUserConfig.getGroup).filterNot(_.trim.isEmpty).getOrElse(DefaultGroup),
       Option(uriUserConfig.getQuality).map(_.toDouble).getOrElse(DefaultQuality))
     initialized = true

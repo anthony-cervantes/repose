@@ -33,7 +33,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class HeaderUserFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {
@@ -151,7 +151,7 @@ class HeaderUserFilterTest extends FunSpec with BeforeAndAfterEach with Matchers
     val config = new HeaderUserConfig
     val sourceHeaders = new HttpHeaderList
     config.setSourceHeaders(sourceHeaders)
-    sourceHeaders.getHeader.addAll(configHeaders.map(createHttpHeader))
+    sourceHeaders.getHeader.addAll(configHeaders.map(createHttpHeader).asJava)
     config
   }
 

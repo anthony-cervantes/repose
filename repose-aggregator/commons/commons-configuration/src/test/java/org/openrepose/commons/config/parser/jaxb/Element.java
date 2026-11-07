@@ -19,8 +19,8 @@
  */
 package org.openrepose.commons.config.parser.jaxb;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "element")
 public class Element {

@@ -25,7 +25,7 @@ import io.opentracing.propagation.TextMap
 import jakarta.servlet.http.HttpServletRequest
 
 import scala.Function.tupled
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class HttpRequestCarrier(httpServletRequest: HttpServletRequest) extends TextMap {
 

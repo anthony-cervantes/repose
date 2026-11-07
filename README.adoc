@@ -66,8 +66,21 @@ our https://github.com/rackerlabs/repose-hello-world[example custom filter] for 
 Install JDK 27 and set `JAVA_HOME` to that installation.
 The Gradle wrapper downloads the pinned Gradle distribution and verifies its SHA-256 checksum.
 
-Custom filters use the Jakarta Servlet and Jakarta Inject APIs (`jakarta.servlet` and `jakarta.inject`).
-The build retains the Scala 2.12 binary API required by the API checker and adapts its legacy servlet references during dependency resolution.
+Custom filters use the Jakarta Servlet, Jakarta Inject, and Jakarta REST APIs
+(`jakarta.servlet`, `jakarta.inject`, and `jakarta.ws.rs`).
+The mock service uses Jersey 4 with Servlet 6.1 and Jakarta REST 4 directly.
+
+Java and Scala sources target Java 27; Scala modules use Scala 3.10.
+Rebuild custom filters with this toolchain and the Jakarta APIs before upgrading.
+The WADL API checker, WADL tools, and HTTP delegation protocol are built from
+source in this repository against Jakarta APIs. The Atom feed service uses
+Apache Pekko in place of Akka. XML bindings use JAXB 4 and `jakarta.xml.bind`.
+Only the test connector, Deproxy, still needs a Jakarta/Groovy binary adaptation
+while resolving test dependencies.
+
+WADL validation and Simple RBAC errors return UTF-8 `text/plain` diagnostics in
+the response body. Clients must use the status code and body rather than custom
+HTTP/1.1 reason phrases. Successful and delegated response bodies are unchanged.
 
 [source,shell]
 ----

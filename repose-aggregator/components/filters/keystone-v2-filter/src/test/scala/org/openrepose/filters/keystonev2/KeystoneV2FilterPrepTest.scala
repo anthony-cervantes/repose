@@ -41,7 +41,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockFilterConfig
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class KeystoneV2FilterPrepTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
@@ -279,7 +279,7 @@ class KeystoneV2FilterPrepTest extends FunSpec with Matchers with MockitoSugar w
         """.stripMargin
       ))
 
-      listAppender.getEvents.map(_.getMessage.getFormattedMessage) should contain("Tenant validation has been moved to the keystone-v2-authorization filter, and is considered deprecated in the keystone-v2 filter")
+      listAppender.getEvents.asScala.map(_.getMessage.getFormattedMessage) should contain("Tenant validation has been moved to the keystone-v2-authorization filter, and is considered deprecated in the keystone-v2 filter")
     }
 
     it("should log a deprecation warning if require service endpoint is used") {
@@ -295,7 +295,7 @@ class KeystoneV2FilterPrepTest extends FunSpec with Matchers with MockitoSugar w
         """.stripMargin
       ))
 
-      listAppender.getEvents.map(_.getMessage.getFormattedMessage) should contain("Service endpoint requirements have been moved to the keystone-v2-authorization filter, and are considered deprecated in the keystone-v2 filter")
+      listAppender.getEvents.asScala.map(_.getMessage.getFormattedMessage) should contain("Service endpoint requirements have been moved to the keystone-v2-authorization filter, and are considered deprecated in the keystone-v2 filter")
     }
 
     it("should log a deprecation warning if pre-authorized role is used") {
@@ -313,7 +313,7 @@ class KeystoneV2FilterPrepTest extends FunSpec with Matchers with MockitoSugar w
         """.stripMargin
       ))
 
-      listAppender.getEvents.map(_.getMessage.getFormattedMessage) should contain("Pre-authorized roles have been moved to the keystone-v2-authorization filter, and are considered deprecated in the keystone-v2 filter")
+      listAppender.getEvents.asScala.map(_.getMessage.getFormattedMessage) should contain("Pre-authorized roles have been moved to the keystone-v2-authorization filter, and are considered deprecated in the keystone-v2 filter")
     }
   }
 
@@ -333,6 +333,6 @@ class KeystoneV2FilterPrepTest extends FunSpec with Matchers with MockitoSugar w
         """.stripMargin
       )
     }
-    listAppender.getEvents.exists(_.getMessage.getFormattedMessage.contains("Atom Feed ID's must be unique")) shouldBe true
+    listAppender.getEvents.asScala.exists(_.getMessage.getFormattedMessage.contains("Atom Feed ID's must be unique")) shouldBe true
   }
 }

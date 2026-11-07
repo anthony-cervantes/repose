@@ -1,12 +1,14 @@
 apply plugin: 'war'
 
 dependencies {
-    api "com.sun.jersey:jersey-servlet"
+    api "org.glassfish.jersey.containers:jersey-container-servlet"
+    runtimeOnly "org.glassfish.jersey.inject:jersey-hk2"
     api "org.slf4j:slf4j-api"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api"
 
     testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.eclipse.jetty.ee11:jetty-ee11-servlet"
     testImplementation "junit:junit"
     testImplementation "org.hamcrest:hamcrest"
     testImplementation "org.mockito:mockito-core"

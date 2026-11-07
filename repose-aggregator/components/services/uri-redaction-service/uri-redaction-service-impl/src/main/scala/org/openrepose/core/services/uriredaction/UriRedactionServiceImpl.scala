@@ -26,7 +26,7 @@ import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.uriredaction.config.UriRedactionConfig
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 
 /**
@@ -64,7 +64,7 @@ class UriRedactionServiceImpl @Inject()(configurationService: ConfigurationServi
     synchronized {
       logger.trace("Service configuration updated")
       redactions = Option(configurationObject.getRedact)
-        .map(_.asScala).getOrElse(List.empty[String])
+        .map(_.asScala.toList).getOrElse(List.empty[String])
         .map(_.r)
       initialized = true
     }

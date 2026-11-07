@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
 
-import static javax.ws.rs.core.HttpHeaders.LOCATION;
+import static jakarta.ws.rs.core.HttpHeaders.LOCATION;
 import static org.mockito.Mockito.*;
 
 public class LocationHeaderBuilderTest {

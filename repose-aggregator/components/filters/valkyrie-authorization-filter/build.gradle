@@ -4,19 +4,17 @@ dependencies {
     api project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
     api project(":repose-aggregator:components:services:http-client-service:http-client-service-api")
     api "org.scala-lang:scala-library"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    api "org.openrepose:http-delegation"
+    api project(":repose-aggregator:external:http-delegation")
     api "org.playframework:play-json_$scalaMajDotMin"
     api "com.jayway.jsonpath:json-path"
-    api "io.gatling:jsonpath_$scalaMajDotMin"
     api "com.fasterxml.jackson.core:jackson-core"
     api "org.apache.httpcomponents:httpclient"
     api "org.apache.httpcomponents:httpcore"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "jakarta.inject:jakarta.inject-api"
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
 
     testImplementation project(":repose-aggregator:commons:commons-test")
     testImplementation "junit:junit"

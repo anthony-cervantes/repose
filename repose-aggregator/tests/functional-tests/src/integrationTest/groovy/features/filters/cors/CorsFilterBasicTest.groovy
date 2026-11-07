@@ -29,7 +29,7 @@ import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
 import spock.lang.Unroll
 
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.HttpHeaders
 
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN
 import static jakarta.servlet.http.HttpServletResponse.SC_OK

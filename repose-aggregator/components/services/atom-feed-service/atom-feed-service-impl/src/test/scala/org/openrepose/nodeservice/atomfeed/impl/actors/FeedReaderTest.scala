@@ -23,9 +23,10 @@ import java.io.StringWriter
 import org.scalatest.funsuite.{AnyFunSuiteLike => FunSuiteLike}
 import java.util.Date
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model._
-import akka.testkit.{TestActorRef, TestKit, TestProbe}
+import org.apache.pekko.actor.ActorSystem
+import org.openrepose.nodeservice.atomfeed.impl.MockService.Response
+import java.nio.charset.StandardCharsets.UTF_8
+import org.apache.pekko.testkit.{TestActorRef, TestKit, TestProbe}
 import io.opentracing.Tracer.SpanBuilder
 import io.opentracing.{Scope, Span, Tracer}
 import org.apache.abdera.Abdera
@@ -57,7 +58,7 @@ class FeedReaderTest(_system: ActorSystem)
   extends TestKit(_system) with FunSuiteLike with BeforeAndAfterEach with MockitoSugar {
 
   val mockAuthRequestFactory = mock[AuthenticatedRequestFactory]
-  val notifierProbe = TestProbe()
+  var notifierProbe: TestProbe = _
   val abdera = Abdera.getInstance()
 
   var feed: Feed = _
@@ -71,7 +72,14 @@ class FeedReaderTest(_system: ActorSystem)
 
   def this() = this(ActorSystem("FeedReaderTest"))
 
+  override def afterEach(): Unit = {
+    Option(actorRef).foreach(system.stop)
+    Option(mockAtomFeedService).foreach(_.close())
+    super.afterEach()
+  }
+
   override def beforeEach() = {
+    notifierProbe = TestProbe()
     mockHttpClientService = mock[HttpClientService]
     when(mockHttpClientService.getClient(anyString)).thenReturn(getTestClient)
 
@@ -99,16 +107,16 @@ class FeedReaderTest(_system: ActorSystem)
     feed.addAuthor("Repose")
   }
 
-  def finishSetup(): Unit = {
+  def finishSetup(entryOrder: EntryOrderType = EntryOrderType.READ): Unit = {
     val sw = new StringWriter()
     feed.writeTo(sw)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), sw.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = sw.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     mockAtomFeedService.start()
@@ -122,9 +130,11 @@ class FeedReaderTest(_system: ActorSystem)
         1 second,
         notifierProbe.ref,
         5,
-        EntryOrderType.READ,
+        entryOrder,
         "1.0")
     )
+    notifierProbe.expectMsgClass(classOf[BindFeedReader])
+    notifierProbe.expectMsg(FeedReaderCreated)
   }
 
   test("should bind to the notifier manager and send a lifecycle update when started") {
@@ -216,11 +226,6 @@ class FeedReaderTest(_system: ActorSystem)
   }
 
   test("the notifier actor should not receive a message when an old atom entry is found") {
-    notifierProbe.ignoreMsg {
-      case _: BindFeedReader => true
-      case Notifier.FeedReaderCreated => true
-    }
-
     val entryOne = feed.addEntry()
     entryOne.setId("tag:openrepose.org,2007:/feed/entries/1")
     entryOne.setTitle("Test Title")
@@ -255,11 +260,11 @@ class FeedReaderTest(_system: ActorSystem)
     feed.writeTo(sw)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), sw.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = sw.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     actorRef ! ReadFeed
@@ -295,11 +300,11 @@ class FeedReaderTest(_system: ActorSystem)
     feed.writeTo(sw)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), sw.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = sw.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     actorRef ! ReadFeed
@@ -343,11 +348,11 @@ class FeedReaderTest(_system: ActorSystem)
     feed.writeTo(sw)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), sw.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = sw.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     actorRef ! ReadFeed
@@ -359,20 +364,7 @@ class FeedReaderTest(_system: ActorSystem)
   }
 
   test("the newest atom entries should come last in the list (reverse-read)") {
-    finishSetup()
-
-    actorRef = TestActorRef(
-      new FeedReader(mockAtomFeedService.getUrl + "/feed",
-        mockHttpClientService,
-        mockTracer,
-        "",
-        Some(mockAuthRequestFactory),
-        1 second,
-        notifierProbe.ref,
-        5,
-        EntryOrderType.REVERSE_READ,
-        "1.0")
-    )
+    finishSetup(EntryOrderType.REVERSE_READ)
 
     actorRef ! ReadFeed
 
@@ -406,11 +398,11 @@ class FeedReaderTest(_system: ActorSystem)
     feed.writeTo(sw)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), sw.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = sw.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     actorRef ! ReadFeed

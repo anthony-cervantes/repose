@@ -124,7 +124,7 @@ class ValveTest extends FunSpec with Matchers with TestUtils with BeforeAndAfter
    * Need to keep track of stuff to clean up, so this is used to clean up the mess
    */
   override protected def afterAll() = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     cleanUpDirs.asScala.foreach { f =>
       deleteRecursive(f.toPath)
     }
@@ -169,7 +169,7 @@ class ValveTest extends FunSpec with Matchers with TestUtils with BeforeAndAfter
 
         valve.shutdown() //Terminate it!
 
-        Await.result(exitValue, 1 second) shouldBe 0
+        Await.result(exitValue, 1.second) shouldBe 0
       }
     }
     it("outputs to stdout the settings it's going to hand to the individual jetties") {

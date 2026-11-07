@@ -23,7 +23,7 @@ import jakarta.servlet.FilterChain
 import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.scalatest.matchers.should.Matchers
 import jakarta.servlet.http.HttpServletRequest
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.HttpHeaders
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
@@ -39,7 +39,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
 @RunWith(classOf[JUnitRunner])

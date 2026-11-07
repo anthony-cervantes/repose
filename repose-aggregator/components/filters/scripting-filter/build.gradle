@@ -2,7 +2,6 @@ dependencies {
     api project(":repose-aggregator:core:repose-core-api")
     api project(":repose-aggregator:commons:commons-utilities")
     api "org.scala-lang:scala-library"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     api "org.python:jython-standalone"
     api "org.apache.groovy:groovy-all"

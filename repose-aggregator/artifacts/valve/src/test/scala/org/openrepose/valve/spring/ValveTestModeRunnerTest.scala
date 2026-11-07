@@ -67,15 +67,12 @@ class ValveTestModeRunnerTest extends FunSpec with Matchers with StrictLogging {
       runner.run(configRoot, insecure, testMode)
     }
 
-    runnerTask.onFailure {
-      case t => fail("Future didn't go!", t)
-    }
     try {
       f(runner)
     } finally {
       runner.destroy()
     }
-    Await.ready(runnerTask, 3 seconds)
+    Await.result(runnerTask, 3.seconds)
   }
 
   def getValvePortMXBean: ValvePortMXBean = {
@@ -114,7 +111,7 @@ class ValveTestModeRunnerTest extends FunSpec with Matchers with StrictLogging {
     future.isCompleted shouldBe false
 
     runner.destroy()
-    Await.ready(future, 1 second)
+    Await.ready(future, 1.second)
     future.isCompleted shouldBe true
   }
 
@@ -410,7 +407,7 @@ class ValveTestModeRunnerTest extends FunSpec with Matchers with StrictLogging {
       updateContainerConfig("/valveTesting/without-keystore.cfg.xml")
       updateSystemModel("/valveTesting/0node/system-model-0.cfg.xml")
       runner.getActiveNodes shouldBe empty
-      val exitCode = Await.result(runnerTask, 1 second)
+      val exitCode = Await.result(runnerTask, 1.second)
       exitCode shouldBe 0
     }
   }

@@ -31,7 +31,7 @@ import org.openrepose.core.filter.FilterConfigHelper
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.addheader.config.{HttpMessage, AddHeadersConfig}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @Named
 class AddHeaderFilter @Inject()(configurationService: ConfigurationService)

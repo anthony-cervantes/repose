@@ -25,7 +25,7 @@ import java.util.{Calendar, GregorianCalendar}
 
 import com.typesafe.scalalogging.StrictLogging
 import jakarta.servlet.http.HttpServletResponse._
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.core.MediaType
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{CloseableHttpResponse, RequestBuilder}
 import org.apache.http.entity.ContentType
@@ -119,7 +119,7 @@ class OpenStackIdentityV3API(config: OpenstackIdentityV3Config, datastore: Datas
           .build()
         val requestBuilder = RequestBuilder.post(identityServiceUri + TOKEN_ENDPOINT)
           .setEntity(requestBody)
-        headerMap.foreach(tupled(requestBuilder.addHeader))
+        headerMap.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
         val request = requestBuilder.build()
 
         val cachingContext = CachingHttpClientContext.create()
@@ -176,7 +176,7 @@ class OpenStackIdentityV3API(config: OpenstackIdentityV3Config, datastore: Datas
             ) ++ requestTracingHeader
 
             val requestBuilder = RequestBuilder.get(identityServiceUri + TOKEN_ENDPOINT)
-            headerMap.foreach(tupled(requestBuilder.addHeader))
+            headerMap.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
             val request = requestBuilder.build()
 
             val cachingContext = CachingHttpClientContext.create()
@@ -266,7 +266,7 @@ class OpenStackIdentityV3API(config: OpenstackIdentityV3Config, datastore: Datas
             ) ++ requestTracingHeader
 
             val requestBuilder = RequestBuilder.get(identityServiceUri + GROUPS_ENDPOINT(userId))
-            headerMap.foreach(tupled(requestBuilder.addHeader))
+            headerMap.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
             val request = requestBuilder.build()
 
             val cachingContext = CachingHttpClientContext.create()

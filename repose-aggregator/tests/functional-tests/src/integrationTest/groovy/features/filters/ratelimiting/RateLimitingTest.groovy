@@ -30,9 +30,9 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 import static jakarta.servlet.http.HttpServletResponse.*
-import static javax.ws.rs.core.HttpHeaders.ACCEPT
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import static javax.ws.rs.core.MediaType.*
+import static jakarta.ws.rs.core.HttpHeaders.ACCEPT
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE
+import static jakarta.ws.rs.core.MediaType.*
 import static org.openrepose.commons.utils.http.normal.ExtendedStatusCodes.SC_TOO_MANY_REQUESTS
 
 /**

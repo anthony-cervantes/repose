@@ -28,7 +28,7 @@ import org.apache.http.HttpHeaders
 import org.openrepose.commons.utils.io.stream.ServletInputStreamWrapper
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 
-import scala.collection.JavaConversions.enumerationAsScalaIterator
+import scala.jdk.CollectionConverters._
 
 class ContentTypeStripperFilter extends Filter {
 
@@ -36,7 +36,7 @@ class ContentTypeStripperFilter extends Filter {
 
   override def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain): Unit = {
     val httpServletRequest = request.asInstanceOf[HttpServletRequest]
-    if (httpServletRequest.getHeaderNames exists (_.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE))) {
+    if (httpServletRequest.getHeaderNames.asScala exists (_.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE))) {
       val byteArray = new Array[Byte](8)
       val pushBackStream = new PushbackInputStream(httpServletRequest.getInputStream, 8)
       val pushBackRequest = new HttpServletRequestWrapper(httpServletRequest, new ServletInputStreamWrapper(pushBackStream))

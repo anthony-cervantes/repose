@@ -24,8 +24,8 @@ import java.util.regex.Pattern
 import jakarta.inject.{Inject, Named}
 import jakarta.servlet._
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.ws.rs.HttpMethod
-import javax.ws.rs.core.{HttpHeaders, MediaType}
+import jakarta.ws.rs.HttpMethod
+import jakarta.ws.rs.core.{HttpHeaders, MediaType}
 
 import com.google.common.net.InetAddresses
 import com.typesafe.scalalogging.StrictLogging
@@ -37,7 +37,7 @@ import org.openrepose.core.filter.FilterConfigHelper
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.cors.config.CorsConfig
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 import scala.util.matching.Regex
 import scala.util.{Failure, Success, Try}
@@ -143,17 +143,17 @@ class CorsFilter @Inject()(configurationService: ConfigurationService)
   }
 
   override def configurationUpdated(config: CorsConfig): Unit = {
-    allowedOrigins = config.getAllowedOrigins.getOrigin.asScala.map { origin =>
+    allowedOrigins = config.getAllowedOrigins.getOrigin.asScala.toList.map { origin =>
       if (origin.isRegex) origin.getValue.r else Pattern.quote(origin.getValue).r
     }
 
-    allowedMethods = Option(config.getAllowedMethods).map(_.getMethod.asScala).getOrElse(List())
+    allowedMethods = Option(config.getAllowedMethods).map(_.getMethod.asScala.toList).getOrElse(List())
 
     resources = Option(config.getResources)
-      .map(_.getResource.asScala).getOrElse(List())
+      .map(_.getResource.asScala.toList).getOrElse(List())
       .map { configResource =>
       Resource(configResource.getPath.r,
-        Option(configResource.getAllowedMethods).map(_.getMethod.asScala).getOrElse(List()))}
+        Option(configResource.getAllowedMethods).map(_.getMethod.asScala.toList).getOrElse(List()))}
 
     initialized = true
   }

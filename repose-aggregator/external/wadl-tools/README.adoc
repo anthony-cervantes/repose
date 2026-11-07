@@ -1,0 +1,8 @@
+= Maintained WADL Tools
+
+Imported from com.rackspace.cloud.api:wadl-tools_2.12:1.1.0:sources,
+https://maven.research.rackspacecloud.com/content/groups/aggregate/.
+The original source and resource notices are retained.
+Source archive SHA-256: ae26e02871e3ae6f3f044786fae3564e776f6374f307bb34c442f7e405bd6f7e
+
+The Scala source is rebuilt with Repose; the released binary is not bundled.

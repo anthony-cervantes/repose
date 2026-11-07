@@ -22,6 +22,7 @@ package org.openrepose.filters.apivalidator;
 import com.codahale.metrics.MetricRegistry;
 import com.rackspace.com.papi.components.checker.Validator;
 import com.rackspace.com.papi.components.checker.ValidatorException;
+import com.rackspace.com.papi.components.checker.handler.ServletResultHandler;
 import com.rackspace.com.papi.components.checker.step.results.ErrorResult;
 import com.rackspace.com.papi.components.checker.step.results.Result;
 import com.rackspace.com.papi.components.checker.wadl.WADLException;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class ApiValidatorHandler {
+    private static final ServletResultHandler ERROR_HANDLER = new ServletResultHandler();
     private static final Logger LOG = LoggerFactory.getLogger(ApiValidatorHandler.class);
     private static final String INVALID_REQUEST_METRIC_PREFIX = MetricRegistry.name(ApiValidatorHandler.class, "invalid-request");
 
@@ -111,8 +113,7 @@ public class ApiValidatorHandler {
         try {
             ErrorResult error = getErrorResult(result);
             if (error != null && !delegatingMode) {
-                response.setStatus(error.code());
-                response.sendError(error.code(), error.message());
+                ERROR_HANDLER.sendError(error, response);
             }
         } catch (ValidatorException | WADLException | IOException e) {
             LOG.error("Some error", e);

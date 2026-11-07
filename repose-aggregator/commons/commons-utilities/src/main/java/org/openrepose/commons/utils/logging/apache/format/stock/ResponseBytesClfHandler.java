@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.HttpHeaders;
 
 public class ResponseBytesClfHandler implements FormatterLogic {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(ResponseBytesClfHandler.class);

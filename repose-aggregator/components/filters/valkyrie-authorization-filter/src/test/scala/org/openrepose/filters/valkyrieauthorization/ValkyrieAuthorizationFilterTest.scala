@@ -30,7 +30,7 @@ import com.rackspace.httpdelegation.{HttpDelegationHeaderNames, HttpDelegationMa
 import jakarta.servlet.http.HttpServletResponse._
 import jakarta.servlet.http.{HttpServletRequestWrapper, HttpServletResponse, HttpServletResponseWrapper}
 import jakarta.servlet.{FilterChain, ServletRequest, ServletResponse}
-import javax.ws.rs.core.HttpHeaders.{CONTENT_TYPE, RETRY_AFTER}
+import jakarta.ws.rs.core.HttpHeaders.{CONTENT_TYPE, RETRY_AFTER}
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet, HttpUriRequest}
 import org.apache.http.message.{BasicHeader, BasicHttpResponse}
@@ -66,8 +66,8 @@ import org.scalatest.matchers.should.{Matchers => ScalaTestMatchers}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.Function.tupled
-import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach with MockitoSugar
@@ -307,7 +307,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
             val requestCaptor = ArgumentCaptor.forClass(classOf[HttpServletRequestWrapper])
             Mockito.verify(mockFilterChain).doFilter(requestCaptor.capture(), MockitoMatchers.any(classOf[ServletResponse]))
             val delegationHeaders: Map[String, List[String]] = buildDelegationHeaders(result.code, "valkyrie-authorization", result.message, .1)
-            assert(requestCaptor.getValue.getHeaders(HttpDelegationHeaderNames.Delegated).toList == delegationHeaders(HttpDelegationHeaderNames.Delegated))
+            assert(requestCaptor.getValue.getHeaders(HttpDelegationHeaderNames.Delegated).asScala.toList == delegationHeaders(HttpDelegationHeaderNames.Delegated))
           } else {
             mockServletResponse.getStatus shouldBe result.code
           }
@@ -340,7 +340,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
           val requestCaptor = ArgumentCaptor.forClass(classOf[HttpServletRequestWrapper])
           Mockito.verify(mockFilterChain).doFilter(requestCaptor.capture(), MockitoMatchers.any(classOf[ServletResponse]))
           val delegationHeaders: Map[String, List[String]] = buildDelegationHeaders(SC_BAD_GATEWAY, "valkyrie-authorization", "Unable to communicate with Valkyrie: Valkyrie is missing", .1)
-          assert(requestCaptor.getValue.getHeaders(HttpDelegationHeaderNames.Delegated).toList == delegationHeaders(HttpDelegationHeaderNames.Delegated))
+          assert(requestCaptor.getValue.getHeaders(HttpDelegationHeaderNames.Delegated).asScala.toList == delegationHeaders(HttpDelegationHeaderNames.Delegated))
         } else {
           mockServletResponse.getStatus shouldBe SC_BAD_GATEWAY
         }
@@ -493,7 +493,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
           val requestCaptor = ArgumentCaptor.forClass(classOf[HttpServletRequestWrapper])
           Mockito.verify(mockFilterChain).doFilter(requestCaptor.capture(), MockitoMatchers.any(classOf[ServletResponse]))
           val delegationHeaders: Map[String, List[String]] = buildDelegationHeaders(SC_NOT_FOUND, "valkyrie-authorization", "Not Found", .1)
-          assert(requestCaptor.getValue.getHeaders(HttpDelegationHeaderNames.Delegated).toList == delegationHeaders(HttpDelegationHeaderNames.Delegated))
+          assert(requestCaptor.getValue.getHeaders(HttpDelegationHeaderNames.Delegated).asScala.toList == delegationHeaders(HttpDelegationHeaderNames.Delegated))
         } else {
           mockServletResponse.getStatus shouldBe SC_NOT_FOUND
         }
@@ -2389,7 +2389,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
     val retryTime = new Date().getTime
 
     implicit def mapToArray(headerMap: Map[String, String]): Array[Header] = {
-      headerMap.entrySet.map(entry => new BasicHeader(entry.getKey, entry.getValue)).toArray
+      headerMap.iterator.map { case (name, value) => new BasicHeader(name, value): Header }.toArray
     }
 
     List(ValkyrieExpectations(SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR),
@@ -2417,7 +2417,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
             EntityBuilder.create()
               .setText(createValkyrieResponse(devicePermissions("123456", "view_product")))
               .build(),
-            valkyrie.valkyrieHeaders.mapValues(Seq.apply(_))
+            valkyrie.valkyrieHeaders.view.mapValues(Seq.apply(_)).toMap
           ))
 
           val filter: ValkyrieAuthorizationFilter = new ValkyrieAuthorizationFilter(mock[ConfigurationService], httpClientService, mockDatastoreService)
@@ -2437,7 +2437,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
           filter.doWork(mockServletRequest, response, mockFilterChain)
 
           response.getStatus shouldBe valkyrie.filterStatusCode
-          valkyrie.filterHeaders.entrySet.foreach(entry => response.getHeader(entry.getKey) shouldBe entry.getValue)
+          valkyrie.filterHeaders.foreach { case (name, value) => response.getHeader(name) shouldBe value }
         }
       }
 
@@ -2465,7 +2465,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
             EntityBuilder.create()
               .setText(createValkyrieResponse(devicePermissions("123456", "view_product")))
               .build(),
-            valkyrie.valkyrieHeaders.mapValues(Seq.apply(_))
+            valkyrie.valkyrieHeaders.view.mapValues(Seq.apply(_)).toMap
           ))
 
           val filter: ValkyrieAuthorizationFilter = new ValkyrieAuthorizationFilter(mock[ConfigurationService], httpClientService, mockDatastoreService)
@@ -2489,7 +2489,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
           filter.doWork(mockServletRequest, response, mockFilterChain)
 
           response.getStatus shouldBe valkyrie.filterStatusCode
-          valkyrie.filterHeaders.entrySet.foreach(entry => response.getHeader(entry.getKey) shouldBe entry.getValue)
+          valkyrie.filterHeaders.foreach { case (name, value) => response.getHeader(name) shouldBe value }
         }
       }
   }
@@ -2710,7 +2710,7 @@ class ValkyrieAuthorizationFilterTest extends FunSpec with BeforeAndAfterEach wi
     Option(entity).foreach(response.setEntity)
     headers.foldLeft(Seq.empty[(String, String)]) { case (aggregate, (headerName, headerValues)) =>
       aggregate ++ headerValues.map(headerName -> _)
-    }.foreach(tupled(response.addHeader))
+    }.foreach { case (name, value) => response.addHeader(name, value) }
     response
   }
 }

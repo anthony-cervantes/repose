@@ -28,7 +28,7 @@ import com.rackspace.httpdelegation.{HttpDelegationHeaderNames, HttpDelegationMa
 import jakarta.servlet.http.HttpServletResponse.{SC_UNAUTHORIZED, _}
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import jakarta.servlet.{FilterConfig, Servlet, ServletRequest, ServletResponse}
-import javax.ws.rs.core.HttpHeaders._
+import jakarta.ws.rs.core.HttpHeaders._
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet, HttpPost, HttpUriRequest}
 import org.apache.http.client.utils.DateUtils
@@ -67,7 +67,7 @@ import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 import play.api.libs.json.Json
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 import scala.util.Success
 

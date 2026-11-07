@@ -35,7 +35,7 @@ import jakarta.inject.Named
 import jakarta.servlet._
 import java.net.URL
 
-import collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @Named
 class HeaderUserFilter @Inject()(configurationService: ConfigurationService)
@@ -82,7 +82,7 @@ class HeaderUserFilter @Inject()(configurationService: ConfigurationService)
 
   override def configurationUpdated(config: HeaderUserConfig): Unit = {
     configuredHeaders.set(
-      config.getSourceHeaders.getHeader.map(header => ConfiguredHeader(header.getId, header.getQuality)).toList)
+      config.getSourceHeaders.getHeader.asScala.map(header => ConfiguredHeader(header.getId, header.getQuality)).toList)
     initialized = true
   }
 

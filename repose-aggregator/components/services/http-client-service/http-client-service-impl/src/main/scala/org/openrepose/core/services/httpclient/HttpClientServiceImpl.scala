@@ -29,7 +29,7 @@ import org.openrepose.core.services.httpclient.HttpClientServiceImpl._
 import org.openrepose.core.services.httpclient.config.HttpConnectionPoolsConfig
 
 import scala.Function.tupled
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @Named
 class HttpClientServiceImpl @Inject()(configurationService: ConfigurationService,

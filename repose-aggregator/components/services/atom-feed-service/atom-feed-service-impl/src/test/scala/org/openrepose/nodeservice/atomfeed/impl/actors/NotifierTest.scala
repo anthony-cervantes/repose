@@ -19,9 +19,9 @@
  */
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import org.scalatest.funsuite.{AnyFunSuiteLike => FunSuiteLike}
-import akka.testkit.{TestActorRef, TestKit}
+import org.apache.pekko.testkit.{TestActorRef, TestKit}
 import org.junit.runner.RunWith
 import org.mockito.Mockito.{reset, verify}
 import org.openrepose.nodeservice.atomfeed.impl.actors.Notifier._

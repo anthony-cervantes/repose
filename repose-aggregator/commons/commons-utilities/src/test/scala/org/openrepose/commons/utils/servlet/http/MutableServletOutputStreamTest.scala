@@ -85,7 +85,7 @@ class MutableServletOutputStreamTest extends FunSpec with Matchers with MockitoS
   }
 
   describe("setOutput") {
-    val testBody = """{ "test": "nbsp\u00A0" }"""
+    val testBody = s"""{ "test": "nbsp${0x00A0.toChar}" }"""
 
     it("should set the contents of this wrapper to the contents of the provided InputStream") {
       val outputStream = new ByteArrayServletOutputStream()

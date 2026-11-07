@@ -24,8 +24,8 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
 import java.net.{URI, URL}
 import java.nio.charset.Charset
 
-import _root_.io.gatling.jsonpath.AST.{Field, RootNode}
-import _root_.io.gatling.jsonpath.Parser
+import org.openrepose.filters.uristripper.jsonpath.AST.{Field, RootNode}
+import org.openrepose.filters.uristripper.jsonpath.Parser
 import com.typesafe.scalalogging.StrictLogging
 import jakarta.inject.{Inject, Named}
 import jakarta.servlet._
@@ -50,7 +50,7 @@ import org.xml.sax.SAXParseException
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.language.{implicitConversions, postfixOps, reflectiveCalls}
 import scala.util.{Failure, Success, Try}
@@ -114,9 +114,9 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
         wrappedRequest.setRequestURI(joinTokensIntoPath(uriTokens))
       }
 
-      val requestLinkPaths = config.getLinkResource
+      val requestLinkPaths = config.getLinkResource.asScala
         .filter(resource => resource.getUriPathRegex =~ wrappedRequest.getRequestURI)
-        .filter(resource => isMatchingMethod(resource.getHttpMethods.toSet, wrappedRequest.getMethod))
+        .filter(resource => isMatchingMethod(resource.getHttpMethods.asScala.toSet, wrappedRequest.getMethod))
         .flatMap(resource => getPathsForContentType(wrappedRequest.getContentType, resource.getRequest))
         .toList
 
@@ -153,9 +153,9 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
         }
       }
 
-      val responseLinkPaths = config.getLinkResource
+      val responseLinkPaths = config.getLinkResource.asScala
         .filter(resource => resource.getUriPathRegex =~ wrappedRequest.getRequestURI)
-        .filter(resource => isMatchingMethod(resource.getHttpMethods.toSet, wrappedRequest.getMethod))
+        .filter(resource => isMatchingMethod(resource.getHttpMethods.asScala.toSet, wrappedRequest.getMethod))
         .flatMap(resource => getPathsForContentType(wrappedResponse.getContentType, resource.getResponse))
         .toList
 
@@ -348,8 +348,8 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
 
   private def getPathsForContentType(contentType: String, resource: HttpMessage): List[LinkPath] = {
     (Option(contentType), Option(resource)) match {
-      case (Some(ct), Some(res)) if ct.toLowerCase.contains("json") => res.getJson.toList
-      case (Some(ct), Some(res)) if ct.toLowerCase.contains("xml") => res.getXml.toList map (_.getXpath)
+      case (Some(ct), Some(res)) if ct.toLowerCase.contains("json") => res.getJson.asScala.toList
+      case (Some(ct), Some(res)) if ct.toLowerCase.contains("xml") => res.getXml.asScala.toList map (_.getXpath)
       case _ => List.empty
     }
   }
@@ -448,7 +448,7 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
       setupTransformer.setParameter("xpath", xmlElement.getXpath.getValue)
       setupTransformer.setParameter("namespaces", new StreamSource(
         <namespaces xmlns="http://www.rackspace.com/repose/params">
-          {for (namespace <- xmlElement.getNamespace) yield
+          {for (namespace <- xmlElement.getNamespace.asScala) yield
             <ns prefix={namespace.getName} uri={namespace.getUrl}/>}
         </namespaces>
       ))
@@ -466,11 +466,11 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
 
     config = uriStripperConfig
 
-    templateMapRequest = (for (resource <- config.getLinkResource;
-                               xml <- Option(resource.getRequest).map(_.getXml.toList).getOrElse(List.empty))
+    templateMapRequest = (for (resource <- config.getLinkResource.asScala;
+                               xml <- Option(resource.getRequest).map(_.getXml.asScala.toList).getOrElse(List.empty))
                                yield xml.getXpath -> setupTransformer(xml, isRequest = true)).toMap
-    templateMapResponse = (for (resource <- config.getLinkResource;
-                                xml <- Option(resource.getResponse).map(_.getXml.toList).getOrElse(List.empty))
+    templateMapResponse = (for (resource <- config.getLinkResource.asScala;
+                                xml <- Option(resource.getResponse).map(_.getXml.asScala.toList).getOrElse(List.empty))
                                 yield xml.getXpath -> setupTransformer(xml, isRequest = false)).toMap
     initialized = true
   }

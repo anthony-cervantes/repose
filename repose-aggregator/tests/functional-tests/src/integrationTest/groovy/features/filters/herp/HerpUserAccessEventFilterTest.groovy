@@ -32,7 +32,7 @@ import spock.lang.Unroll
 
 import jakarta.servlet.http.HttpServletResponse
 
-import static javax.ws.rs.HttpMethod.GET
+import static jakarta.ws.rs.HttpMethod.GET
 
 @Tag("scaffold.category.Filters")
 class HerpUserAccessEventFilterTest extends ReposeValveTest {

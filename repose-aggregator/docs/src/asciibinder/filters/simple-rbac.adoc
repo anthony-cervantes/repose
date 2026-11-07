@@ -50,7 +50,8 @@ This filter does not modify the request body.
 This filter is not strictly required by any other filters.
 
 === Response Body Changes
-This filter does not modify the response body.
+Rejected requests include the validation diagnostic in a UTF-8 `text/plain` response body.
+Successful and delegated responses retain their original bodies.
 
 === Response Headers Created
 This filter does not create/modify any response headers.

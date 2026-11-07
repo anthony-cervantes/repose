@@ -57,7 +57,7 @@ import org.slf4j.MDC
 import org.springframework.context.support.AbstractApplicationContext
 import org.springframework.mock.web.{MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ReposeFilterTest extends FunSpec

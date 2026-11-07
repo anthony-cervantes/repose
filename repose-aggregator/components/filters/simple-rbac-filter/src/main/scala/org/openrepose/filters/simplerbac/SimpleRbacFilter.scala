@@ -98,7 +98,7 @@ class SimpleRbacFilter @Inject()(configurationService: ConfigurationService,
     config.checkPlainParams = true
     config.setParamDefaults = true
     config.maskRaxRoles403 = configuration.isMaskRaxRoles403
-    config.setResultHandler(getHandler)
+    config.resultHandler = getHandler
 
     val rbacWadl = Option(configuration.getResources).flatMap { resources =>
         rbacToWadl(Option(resources.getValue).filter(_.trim.nonEmpty)).orElse(

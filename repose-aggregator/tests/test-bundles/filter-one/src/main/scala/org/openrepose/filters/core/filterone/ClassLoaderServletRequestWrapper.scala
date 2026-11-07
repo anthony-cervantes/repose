@@ -25,7 +25,7 @@ import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
 import org.apache.commons.lang3.StringUtils
 import org.openrepose.others.SimplicityDivine
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class ClassLoaderServletRequestWrapper(request: HttpServletRequest) extends HttpServletRequestWrapper(request) {
   override def getHeader(headerString: String): String = {

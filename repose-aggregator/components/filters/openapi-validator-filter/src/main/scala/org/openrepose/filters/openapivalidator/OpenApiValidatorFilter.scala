@@ -38,7 +38,7 @@ import org.openrepose.filters.openapivalidator.OpenApiValidatorFilter._
 import org.openrepose.filters.openapivalidator.config.OpenApiValidatorConfig
 import org.springframework.beans.factory.annotation.Value
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.ListMap
 import scala.util.{Failure, Success, Try}
 

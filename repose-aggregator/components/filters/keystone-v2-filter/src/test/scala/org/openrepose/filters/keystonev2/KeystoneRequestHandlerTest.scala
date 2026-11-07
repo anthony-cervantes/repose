@@ -24,7 +24,7 @@ import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.scalatest.matchers.should.Matchers
 
 import jakarta.servlet.http.HttpServletResponse.SC_OK
-import javax.ws.rs.core.HttpHeaders.RETRY_AFTER
+import jakarta.ws.rs.core.HttpHeaders.RETRY_AFTER
 import org.apache.http.HttpVersion
 import org.apache.http.message.BasicHttpResponse
 import org.junit.runner.RunWith

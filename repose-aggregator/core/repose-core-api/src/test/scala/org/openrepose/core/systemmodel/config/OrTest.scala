@@ -30,7 +30,7 @@ import org.scalatestplus.mockito.MockitoSugar
 
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class OrTest extends FunSpec with Matchers with MockitoSugar {

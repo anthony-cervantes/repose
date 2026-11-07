@@ -33,7 +33,7 @@ import jakarta.inject.{Inject, Named}
 import jakarta.servlet._
 import jakarta.servlet.http.HttpServletResponse._
 import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.ws.rs.core.HttpHeaders.RETRY_AFTER
+import jakarta.ws.rs.core.HttpHeaders.RETRY_AFTER
 import org.apache.http.client.methods._
 import org.apache.http.util.EntityUtils
 import org.openrepose.commons.utils.http.CommonHttpHeader.{AUTH_TOKEN, TRACE_GUID}
@@ -53,7 +53,7 @@ import play.api.libs.json._
 
 import scala.Function.tupled
 import scala.annotation.tailrec
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.Source
 import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
@@ -86,7 +86,7 @@ class ValkyrieAuthorizationFilter @Inject()(configurationService: ConfigurationS
     val tracingHeader = nullOrWhitespace(Option(httpRequest.getHeader(TRACE_GUID)))
     val urlPath: String = new URL(httpRequest.getRequestURL.toString).getPath
     val matchingResources: Seq[Resource] = Option(configuration.getCollectionResources)
-      .map(_.getResource.asScala.filter(resource => {
+      .map(_.getResource.asScala.toList.filter(resource => {
         val pathRegex = resource.getPathRegex
         (pathRegex.getValue =~ urlPath) && {
           val httpMethods = pathRegex.getHttpMethods
@@ -320,7 +320,7 @@ class ValkyrieAuthorizationFilter @Inject()(configurationService: ConfigurationS
         case (Some(username), Some(password)) =>
           val requestHeaders = Map("X-Auth-User" -> username, "X-Auth-Token" -> password) ++ requestTracingHeader
           val requestBuilder = RequestBuilder.get(valkyrieServer.getUri + uri)
-          requestHeaders.foreach(tupled(requestBuilder.addHeader))
+          requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
           val request = requestBuilder.build()
 
           val cacheContext = CachingHttpClientContext.create()
@@ -330,7 +330,7 @@ class ValkyrieAuthorizationFilter @Inject()(configurationService: ConfigurationS
         case _ =>
           val requestHeaders = authToken.map(token => Map(AUTH_TOKEN -> token)).getOrElse(Map.empty) ++ requestTracingHeader
           val requestBuilder = RequestBuilder.get(valkyrieServer.getUri + uri)
-          requestHeaders.foreach(tupled(requestBuilder.addHeader))
+          requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
           val request = requestBuilder.build()
 
           val cacheContext = CachingHttpClientContext.create()
@@ -433,7 +433,7 @@ class ValkyrieAuthorizationFilter @Inject()(configurationService: ConfigurationS
         // Full path from root ($); all partial/relative paths are expanded/merged.
         s"$collectionPath[*]${devicePath.getPath.replaceFirst("^\\$", "")}"
       )) map(_.asScala.map(processDeviceId)) match {
-        case Success(keepRemoveSeq: Seq[Boolean]) =>
+        case Success(keepRemoveSeq) =>
           if (keepRemoveSeq.isEmpty) {
             throw InvalidJsonPathException(s"Invalid path specified for device id: ${devicePath.getPath}")
           }
@@ -450,7 +450,7 @@ class ValkyrieAuthorizationFilter @Inject()(configurationService: ConfigurationS
           // Check to see if the Item Count Path exists.
           val pathToItemCount = pathTriplet.getPathToItemCount
           try {
-            jsonDoc.read(pathToItemCount)
+            jsonDoc.read[AnyRef](pathToItemCount)
           } catch {
             case pnfe: PathNotFoundException =>
               throw InvalidJsonPathException(s"Invalid path specified for count: $pathToItemCount", pnfe)

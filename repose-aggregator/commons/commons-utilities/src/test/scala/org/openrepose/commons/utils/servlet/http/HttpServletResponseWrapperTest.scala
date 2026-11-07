@@ -25,7 +25,7 @@ import org.scalatest.matchers.should.Matchers
 import java.nio.charset.UnsupportedCharsetException
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.{ServletOutputStream, ServletResponse}
-import javax.ws.rs.core.HttpHeaders._
+import jakarta.ws.rs.core.HttpHeaders._
 
 import org.apache.http.client.utils.DateUtils
 import org.apache.logging.log4j.LogManager

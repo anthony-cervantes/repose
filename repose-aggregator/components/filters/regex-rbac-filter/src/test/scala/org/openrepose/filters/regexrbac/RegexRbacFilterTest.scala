@@ -43,7 +43,7 @@ import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 import scala.util.Success
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.ROLES
@@ -207,7 +207,7 @@ class RegexRbacFilterTest
       Then("the filter's configuration should be modified")
       !filter.isInitialized
       exception.getLocalizedMessage should include("Malformed RBAC Resource")
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: /path/to/bad")) shouldBe 1
     }
     it("should log if the resources list has a bad line with to many elements") {
@@ -233,7 +233,7 @@ class RegexRbacFilterTest
       Then("the filter's configuration should be modified")
       !filter.isInitialized
       exception.getLocalizedMessage should include("Malformed RBAC Resource")
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: /path/to/bad")) shouldBe 1
       events.count(_.contains("use a non-breaking space")) shouldBe 1
     }
@@ -260,7 +260,7 @@ class RegexRbacFilterTest
       Then("the filter's configuration should be modified")
       !filter.isInitialized
       exception.getLocalizedMessage should include("Malformed RBAC Resource")
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: ")) shouldBe 1
     }
   }

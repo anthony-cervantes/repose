@@ -24,8 +24,8 @@ import org.openrepose.commons.config.resource.ConfigurationResource;
 import org.openrepose.commons.utils.pooling.ResourceContext;
 import org.openrepose.commons.utils.pooling.ResourceContextException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

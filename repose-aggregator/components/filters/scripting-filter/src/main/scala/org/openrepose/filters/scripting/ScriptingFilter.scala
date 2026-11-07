@@ -100,8 +100,8 @@ class ScriptingFilter @Inject()(configurationService: ConfigurationService)
       case Some(engine) =>
         ScriptRunner(configurationObject.getValue, engine)
       case None =>
-        logger.error(configurationObject.getLanguage + " is not a supported language")
-        throw new UpdateFailedException(configurationObject.getLanguage + " is not a supported language", null)
+        logger.error(configurationObject.getLanguage.toString + " is not a supported language")
+        throw new UpdateFailedException(configurationObject.getLanguage.toString + " is not a supported language", null)
     }
 
     initialized = true

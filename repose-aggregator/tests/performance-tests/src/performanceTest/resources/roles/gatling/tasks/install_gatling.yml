@@ -19,7 +19,7 @@
 #
 
 - name: Install the Java runtime
-  include_tasks: "{{ playbook_dir }}/tasks/install_java.yml"
+  import_tasks: "{{ playbook_dir }}/tasks/install_java.yml"
 
 - name: Create the Gatling installation directories
   file:

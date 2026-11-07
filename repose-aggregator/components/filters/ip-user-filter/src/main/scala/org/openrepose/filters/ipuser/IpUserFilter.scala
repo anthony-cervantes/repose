@@ -108,8 +108,8 @@ class IpUserFilter @Inject()(configurationService: ConfigurationService) extends
     //Update all the CIDRs
     //Create a new list to replace the old one
 
-    import scala.collection.JavaConversions._
-    val groups = classificationConfig.getGroup.toList
+    import scala.jdk.CollectionConverters._
+    val groups = classificationConfig.getGroup.asScala.toList
 
     /**
       * This guy builds a List[List[LabeledCIDR]] I flat map it to remove that extra list, so it's just a
@@ -118,7 +118,7 @@ class IpUserFilter @Inject()(configurationService: ConfigurationService) extends
       */
     val replacementCidrList: List[LabeledCIDR] = groups.flatMap { group =>
       val label = group.getName
-      group.getCidrIp.map { cidr =>
+      group.getCidrIp.asScala.map { cidr =>
         LabeledCIDR(label, new CIDRUtils(cidr))
       }
     }

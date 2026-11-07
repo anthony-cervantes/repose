@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.openrepose.commons.utils.http.normal.{QueryParameter, QueryParameterCollection}
 import org.openrepose.filters.openapivalidator.HttpServletValidatorRequest._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.Source
 
 /**
@@ -55,7 +55,7 @@ class HttpServletValidatorRequest(httpServletRequest: HttpServletRequest)
   private lazy val queryParameters: Seq[QueryParameter] = {
     Option(httpServletRequest.getQueryString)
       .map(new QueryParameterCollection(_))
-      .map(_.getParameters.asScala)
+      .map(_.getParameters.asScala.toList)
       .getOrElse(Seq.empty)
   }
 

@@ -27,8 +27,8 @@ import org.openrepose.core.services.ratelimit.config.ObjectFactory;
 import org.openrepose.filters.ratelimiting.util.combine.CombinedLimitsTransformer;
 import org.openrepose.filters.ratelimiting.util.combine.LimitsTransformPair;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
 import java.io.InputStream;
 import java.io.OutputStream;
 

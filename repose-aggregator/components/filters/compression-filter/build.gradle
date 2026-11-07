@@ -4,7 +4,6 @@ dependencies {
     api project(":repose-aggregator:external:pjl-compressing-filter")
     api "org.springframework:spring-beans"
     api "org.scala-lang:scala-library"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api"

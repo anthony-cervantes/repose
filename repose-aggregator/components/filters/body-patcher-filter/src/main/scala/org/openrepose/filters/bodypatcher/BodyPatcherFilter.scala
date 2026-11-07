@@ -42,7 +42,7 @@ import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.bodypatcher.config.{BodyPatcherConfig, ChangeDetails, Patch}
 import play.api.libs.json.{JsValue, Json => PJson}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 import scala.util.{Failure, Success, Try}
 

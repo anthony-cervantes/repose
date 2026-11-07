@@ -3,7 +3,6 @@ dependencies {
     api project(":repose-aggregator:commons:commons-utilities")
     api project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
     api "org.scala-lang:scala-library"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     api "org.springframework:spring-beans"
     api "org.playframework:play-json_$scalaMajDotMin"
@@ -12,7 +11,7 @@ dependencies {
     api "org.apache.httpcomponents:httpcore"
 
     compileOnly "jakarta.inject:jakarta.inject-api"
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
 
     testImplementation "junit:junit"
     testImplementation "org.hamcrest:hamcrest"

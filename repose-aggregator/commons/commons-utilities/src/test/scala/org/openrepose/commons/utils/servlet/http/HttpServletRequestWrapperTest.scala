@@ -26,14 +26,14 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.util
 
 import jakarta.servlet.ServletInputStream
-import javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
+import jakarta.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.io.stream.ServletInputStreamWrapper
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.io.Source
 

@@ -25,7 +25,7 @@ import org.scalatest.matchers.should.Matchers
 import java.util.{Calendar, GregorianCalendar}
 
 import jakarta.servlet.http.HttpServletResponse._
-import javax.ws.rs.core.HttpHeaders.RETRY_AFTER
+import jakarta.ws.rs.core.HttpHeaders.RETRY_AFTER
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods._
 import org.apache.http.message.BasicHttpResponse
@@ -464,7 +464,7 @@ class OpenStackIdentityV3APITest extends FunSpec with BeforeAndAfterEach with Ma
     Option(entity).foreach(response.setEntity)
     headers.foldLeft(Seq.empty[(String, String)]) { case (aggregate, (headerName, headerValues)) =>
       aggregate ++ headerValues.map(headerName -> _)
-    }.foreach(tupled(response.addHeader))
+    }.foreach { case (name, value) => response.addHeader(name, value) }
     response
   }
 }

@@ -35,11 +35,11 @@ import org.rackspace.deproxy.*
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.core.MediaType
 
 import static jakarta.servlet.http.HttpServletResponse.*
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import static javax.ws.rs.core.HttpHeaders.HOST
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE
+import static jakarta.ws.rs.core.HttpHeaders.HOST
 
 @Tag("scaffold.category.Filters")
 class CorsSameOriginTest extends ReposeValveTest {

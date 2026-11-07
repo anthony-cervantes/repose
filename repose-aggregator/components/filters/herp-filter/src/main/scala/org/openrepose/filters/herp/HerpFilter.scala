@@ -46,7 +46,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 
 import scala.collection.GenTraversable
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 import scala.util.matching.Regex
 

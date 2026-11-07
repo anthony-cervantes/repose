@@ -19,7 +19,7 @@
  */
 package org.openrepose.filters.urinormalization.normalizer
 
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.HttpHeaders
 import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.scalatest.matchers.should.Matchers
 

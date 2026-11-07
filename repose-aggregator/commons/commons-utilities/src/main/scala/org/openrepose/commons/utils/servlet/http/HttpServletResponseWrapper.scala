@@ -27,11 +27,11 @@ import java.util.Date
 import com.typesafe.scalalogging.StrictLogging
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.{ServletOutputStream, ServletResponse}
-import javax.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.HttpHeaders
 import org.apache.http.client.utils.DateUtils
 import org.slf4j.LoggerFactory
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.TreeMap
 import scala.io.Source
 
@@ -227,25 +227,25 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
     throw new UnsupportedOperationException("setResponse is not supported")
   }
 
-  override def getHeaderNamesList: util.List[String] = getHeaderNames.toList
+  override def getHeaderNamesList: util.List[String] = getHeaderNames.asScala.toList.asJava
 
-  override def getHeaderNames: util.Collection[String] = headerMap.keys
+  override def getHeaderNames: util.Collection[String] = headerMap.keys.asJavaCollection
 
   override def containsHeader(name: String): Boolean = headerMap.contains(name)
 
-  override def getHeaders(name: String): util.Collection[String] = getHeaderValues(name)
+  override def getHeaders(name: String): util.Collection[String] = getHeaderValues(name).asJava
 
   override def getPreferredHeaders(name: String): util.List[String] =
-    getPreferredHeaderValues(getHeaderValues(name)).map(_.value)
+    getPreferredHeaderValues(getHeaderValues(name)).map(_.value).asJava
 
   override def getPreferredHeadersWithParameters(name: String): util.List[String] =
-    getPreferredHeaderValues(getHeaderValues(name)).map(_.headerValue)
+    getPreferredHeaderValues(getHeaderValues(name)).map(_.headerValue).asJava
 
   override def getPreferredSplittableHeaders(name: String): util.List[String] =
-    getPreferredHeaderValues(getSplittableHeaders(name)).map(_.value)
+    getPreferredHeaderValues(getSplittableHeaders(name).asScala.toSeq).map(_.value).asJava
 
   override def getPreferredSplittableHeadersWithParameters(name: String): util.List[String] =
-    getPreferredHeaderValues(getSplittableHeaders(name)).map(_.headerValue)
+    getPreferredHeaderValues(getSplittableHeaders(name).asScala.toSeq).map(_.headerValue).asJava
 
   private def getPreferredHeaderValues(values: Seq[String]): Seq[HeaderValue] = {
     values match {
@@ -260,7 +260,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
 
   override def getSplittableHeaders(name: String): util.List[String] =
     getHeaderValues(name).foldLeft(List.empty[String])((list, value) => list ++ value.split(","))
-      .map(_.trim)
+      .map(_.trim).asJava
 
   private def getHeaderValues(name: String): Seq[String] = headerMap.getOrElse(name, Seq.empty[String])
 
@@ -308,7 +308,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
   override def appendHeader(name: String, value: String): Unit = {
     logger.trace("Appending header value to the response with header name: {}, value: {}", name, value)
     ifMutable(headerMode) {
-      val existingValues = getHeadersList(name)
+      val existingValues = getHeadersList(name).asScala.toSeq
       existingValues.headOption match {
         case Some(currentHeadValue) =>
           if (isCommitted) {
@@ -324,7 +324,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
     }
   }
 
-  override def getHeadersList(name: String): util.List[String] = getHeaderValues(name)
+  override def getHeadersList(name: String): util.List[String] = getHeaderValues(name).asJava
 
   private def ifMutable[T](mode: ResponseMode)(processMutable: => T): T = {
     mode match {

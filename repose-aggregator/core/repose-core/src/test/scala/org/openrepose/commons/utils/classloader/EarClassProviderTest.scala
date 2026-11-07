@@ -126,7 +126,7 @@ class EarClassProviderTest extends FunSpec with Matchers {
   }
 
   it("logs a warning if extraction failed") {
-    import scala.collection.JavaConversions._
+    import scala.jdk.CollectionConverters._
 
     appender.clear()
 
@@ -148,7 +148,7 @@ class EarClassProviderTest extends FunSpec with Matchers {
       //Verify that a warning was logged
       appender.getEvents.size() shouldBe 1
 
-      val event = appender.getEvents.toList.head
+      val event = appender.getEvents.asScala.toList.head
       event.getLevel shouldBe Level.WARN
 
 

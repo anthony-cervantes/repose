@@ -7,7 +7,7 @@ dependencies {
     api 'org.spockframework:spock-core'
     api 'org.apache.commons:commons-lang3'
     api 'org.springframework:spring-web'
-    api 'javax.ws.rs:javax.ws.rs-api'
+    api 'jakarta.ws.rs:jakarta.ws.rs-api'
     api 'joda-time:joda-time'
     api 'org.linkedin:org.linkedin.util-groovy'
     api 'com.squareup.okhttp3:okhttp' // Forces the version used by jaeger-core.

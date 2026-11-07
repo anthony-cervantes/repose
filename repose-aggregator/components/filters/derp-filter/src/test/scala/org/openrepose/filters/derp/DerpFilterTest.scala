@@ -34,7 +34,7 @@ import org.mockito.stubbing.Answer
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 
-import scala.collection.JavaConverters.asJavaEnumerationConverter
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class DerpFilterTest extends FunSpec with MockitoSugar {

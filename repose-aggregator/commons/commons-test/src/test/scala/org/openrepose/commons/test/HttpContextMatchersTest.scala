@@ -43,7 +43,7 @@ class HttpContextMatchersTest extends FunSpec with Matchers with MockitoSugar {
         ("testKey", anything(), makeContext(Map("testKey" -> "testValue")), true),
         ("testKey", anything(), makeContext(Map("badKey" -> "testValue")), false),
         ("testKey", equalTo("testValue"), makeContext(Map("testKey" -> "badValue")), false),
-        ("testKey", arrayContaining("testValue"), makeContext(Map("testKey" -> Array.empty)), false))
+        ("testKey", arrayContaining("testValue"), makeContext(Map("testKey" -> Array.empty[String])), false))
         .foreach { case (key: String, valueMatcher: Matcher[_], context: HttpContext, matches: Boolean) =>
           it(s"should return $matches when expecting attribute [$key: $valueMatcher] on $context") {
             HttpContextMatchers.hasAttribute(key, valueMatcher).matches(context) shouldBe matches

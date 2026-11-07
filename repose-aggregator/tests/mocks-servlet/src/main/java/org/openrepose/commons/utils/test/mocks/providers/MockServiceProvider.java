@@ -22,9 +22,9 @@ package org.openrepose.commons.utils.test.mocks.providers;
 import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.xml.bind.JAXBException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 
 public class MockServiceProvider {

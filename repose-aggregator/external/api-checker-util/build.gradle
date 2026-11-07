@@ -1,0 +1,25 @@
+dependencies {
+    api "org.scala-lang:scala-library"
+    api "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "net.sf.saxon:Saxon-EE"
+    api "xerces:xerces-xsd11"
+    api "xalan:xalan"
+    api "commons-pool:commons-pool"
+    api "com.fasterxml.jackson.core:jackson-databind"
+    api "io.dropwizard.metrics:metrics-core"
+    api "io.dropwizard.metrics:metrics-jmx"
+}
+
+license { exclude '**/*' }
+
+tasks.named('processResources') {
+    from('LICENSE.txt') { into 'META-INF' }
+    from('README.adoc') { into 'META-INF'; rename { 'UPSTREAM.adoc' } }
+}
+
+dependencies {
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "junit:junit"
+}

@@ -22,6 +22,7 @@ package org.openrepose.core.services.httplogging
 import java.time.{Duration, Instant}
 import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.scalatest.matchers.should.Matchers
+import scala.jdk.CollectionConverters._
 import java.util
 
 import org.junit.runner.RunWith
@@ -48,9 +49,9 @@ class HttpLoggingContextMapTest extends FunSpec with Matchers {
 
       contextMap should contain key "inboundRequestHeaders"
       contextMap("inboundRequestHeaders") shouldBe a[util.Map[_, _]]
-      contextMap("inboundRequestHeaders").asInstanceOf[util.Map[_, _]] should contain key TestHeaderName
+      contextMap("inboundRequestHeaders").asInstanceOf[util.Map[String, AnyRef]].asScala should contain key TestHeaderName
       contextMap("inboundRequestHeaders").asInstanceOf[util.Map[_, _]].get(TestHeaderName) shouldBe a[util.List[_]]
-      contextMap("inboundRequestHeaders").asInstanceOf[util.Map[_, util.List[_]]].get(TestHeaderName) should contain only("one,two, three", "four")
+      contextMap("inboundRequestHeaders").asInstanceOf[util.Map[_, util.List[_]]].get(TestHeaderName).asScala should contain only("one,two, three", "four")
     }
 
     it("should provide an entry for outbound request headers") {
@@ -64,9 +65,9 @@ class HttpLoggingContextMapTest extends FunSpec with Matchers {
 
       contextMap should contain key "outboundRequestHeaders"
       contextMap("outboundRequestHeaders") shouldBe a[util.Map[_, _]]
-      contextMap("outboundRequestHeaders").asInstanceOf[util.Map[_, _]] should contain key TestHeaderName
+      contextMap("outboundRequestHeaders").asInstanceOf[util.Map[String, AnyRef]].asScala should contain key TestHeaderName
       contextMap("outboundRequestHeaders").asInstanceOf[util.Map[_, _]].get(TestHeaderName) shouldBe a[util.List[_]]
-      contextMap("outboundRequestHeaders").asInstanceOf[util.Map[_, util.List[_]]].get(TestHeaderName) should contain only("one,two, three", "four")
+      contextMap("outboundRequestHeaders").asInstanceOf[util.Map[_, util.List[_]]].get(TestHeaderName).asScala should contain only("one,two, three", "four")
     }
 
     it("should provide an entry for outbound response headers") {
@@ -80,9 +81,9 @@ class HttpLoggingContextMapTest extends FunSpec with Matchers {
 
       contextMap should contain key "outboundResponseHeaders"
       contextMap("outboundResponseHeaders") shouldBe a[util.Map[_, _]]
-      contextMap("outboundResponseHeaders").asInstanceOf[util.Map[_, _]] should contain key TestHeaderName
+      contextMap("outboundResponseHeaders").asInstanceOf[util.Map[String, AnyRef]].asScala should contain key TestHeaderName
       contextMap("outboundResponseHeaders").asInstanceOf[util.Map[_, _]].get(TestHeaderName) shouldBe a[util.List[_]]
-      contextMap("outboundResponseHeaders").asInstanceOf[util.Map[_, util.List[_]]].get(TestHeaderName) should contain only("one,two, three", "four")
+      contextMap("outboundResponseHeaders").asInstanceOf[util.Map[_, util.List[_]]].get(TestHeaderName).asScala should contain only("one,two, three", "four")
     }
 
     it("should provide an entry for the time taken to handle the request") {

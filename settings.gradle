@@ -95,3 +95,8 @@ include 'repose-aggregator',
         'repose-aggregator:tests:test-bundles:second-filter-bundle',
         'repose-aggregator:tests:test-bundles:busted-application-name-ear',
         'repose-aggregator:tests:test-bundles:busted-web-fragment-ear'
+
+include 'repose-aggregator:external:api-checker-core',
+        'repose-aggregator:external:api-checker-util',
+        'repose-aggregator:external:wadl-tools',
+        'repose-aggregator:external:http-delegation'

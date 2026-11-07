@@ -47,7 +47,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.context.support.AbstractApplicationContext
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @Named("reposeFilterLoader")
 class ReposeFilterLoader @Inject()(@Value(ReposeSpringProperties.NODE.NODE_ID) nodeId: String,

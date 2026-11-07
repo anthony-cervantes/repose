@@ -472,5 +472,5 @@ object KeystoneV2AuthorizationFilterTest {
       (JsPath \ "name").writeNullable[String] and
       (JsPath \ "type").writeNullable[String] and
       (JsPath \ "publicURL").write[String]
-    ) (unlift(Endpoint.unapply))
+    ) ((endpoint: Endpoint) => (endpoint.region, endpoint.name, endpoint.endpointType, endpoint.publicURL))
 }

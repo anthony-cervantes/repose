@@ -29,8 +29,8 @@ import org.rackspace.deproxy.Response
 import scaffold.category.Identity
 
 import static jakarta.servlet.http.HttpServletResponse.SC_OK
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON
 import static org.openrepose.commons.utils.http.CommonHttpHeader.AUTH_TOKEN
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.ROLES
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ID

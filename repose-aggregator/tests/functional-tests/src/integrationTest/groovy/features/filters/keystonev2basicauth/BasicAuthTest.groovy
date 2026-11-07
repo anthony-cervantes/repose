@@ -30,8 +30,8 @@ import org.rackspace.deproxy.Response
 import spock.lang.Unroll
 
 import static jakarta.servlet.http.HttpServletResponse.*
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION
-import static javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION
+import static jakarta.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE
 
 @Tag("scaffold.category.Identity")
 class BasicAuthTest extends ReposeValveTest {

@@ -52,7 +52,8 @@ dependencies {
     api "com.fasterxml.jackson.core:jackson-databind"
     api "com.google.guava:guava"
     api "com.typesafe:config"
-    api "javax.ws.rs:javax.ws.rs-api"
+    api "jakarta.ws.rs:jakarta.ws.rs-api"
+    runtimeOnly "org.glassfish.jersey.core:jersey-common"
     api "io.opentracing:opentracing-api"
     api "io.opentracing:opentracing-util"
     api 'com.squareup.okhttp3:okhttp' // Forces the version used by jaeger-core.

@@ -87,7 +87,8 @@ class OpenApiValidatorFilterTest
 
     it("should wrap the request input stream if mark is not supported") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
@@ -108,7 +109,8 @@ class OpenApiValidatorFilterTest
 
     it("should not wrap the request input stream if mark is supported") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
@@ -129,7 +131,8 @@ class OpenApiValidatorFilterTest
 
     it("should allow downstream components to call getInputStream to read the request body") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
@@ -144,7 +147,8 @@ class OpenApiValidatorFilterTest
 
     it("should not allow downstream components to call getReader to read the request body") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
@@ -159,7 +163,8 @@ class OpenApiValidatorFilterTest
 
     it("should not destructively read the request body") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty

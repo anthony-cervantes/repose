@@ -15,7 +15,7 @@ dependencies {
     integrationTestImplementation project(":repose-aggregator:core:repose-core-api")
     integrationTestImplementation project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
     integrationTestImplementation project(":repose-aggregator:tests:functional-test-framework")
-    integrationTestImplementation "javax.ws.rs:javax.ws.rs-api"
+    integrationTestImplementation "jakarta.ws.rs:jakarta.ws.rs-api"
     integrationTestImplementation "org.eclipse.jetty:jetty-server"
     integrationTestImplementation "org.eclipse.jetty.ee11:jetty-ee11-servlet"
     integrationTestImplementation "org.apache.commons:commons-lang3"

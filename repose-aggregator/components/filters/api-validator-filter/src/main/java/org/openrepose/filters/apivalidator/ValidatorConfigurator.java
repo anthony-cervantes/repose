@@ -177,7 +177,7 @@ public class ValidatorConfigurator {
                 LOG.warn("Cannot write to DOT file: " + dotPath, ex);
             }
         }
-        return new DispatchResultHandler(scala.collection.JavaConversions.asScalaBuffer(handlers).toList());
+        return new DispatchResultHandler(scala.jdk.javaapi.CollectionConverters.asScala(handlers).toList());
     }
 
     private String getPath(String path, String configRoot) {

@@ -27,7 +27,7 @@ import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.httplogging.HttpLoggingServiceImpl._
 import org.openrepose.core.services.httplogging.config.HttpLoggingConfig
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 /**

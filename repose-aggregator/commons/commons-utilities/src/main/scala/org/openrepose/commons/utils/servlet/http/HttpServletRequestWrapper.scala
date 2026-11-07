@@ -25,13 +25,13 @@ import java.nio.charset.StandardCharsets
 import java.util
 import jakarta.servlet.ServletInputStream
 import jakarta.servlet.http.HttpServletRequest
-import javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
+import jakarta.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.utils.DateUtils
 import org.openrepose.commons.utils.io.RawInputStreamReader
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.{TreeMap, TreeSet}
 import scala.collection.mutable
 

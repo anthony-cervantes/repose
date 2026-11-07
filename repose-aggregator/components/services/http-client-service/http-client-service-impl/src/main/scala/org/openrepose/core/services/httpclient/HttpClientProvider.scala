@@ -47,7 +47,7 @@ import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.openrepose.core.spring.ReposeSpringProperties
 import org.springframework.beans.factory.annotation.Value
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
 import scala.util.Try
 

@@ -56,7 +56,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse, MockServletConfig}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with MockitoSugar with Matchers {
@@ -112,7 +112,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
         any[UpdateListener[SystemModel]](),
         any[Class[SystemModel]]()
       )
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Reticulating Splines - Initializing Repose Routing Servlet")) shouldBe 1
     }
   }
@@ -125,7 +125,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
         isEq(ReposeRoutingServlet.SystemModelConfigurationFilename),
         any[UpdateListener[SystemModel]]()
       )
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Obfuscated Quigley Matrix - Destroyed Repose Routing Servlet")) shouldBe 1
     }
   }
@@ -235,7 +235,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
       systemModel.getDestinations.getEndpoint.addAll(Seq(
         destinationOne,
         destinationTwo
-      ))
+      ).asJava)
 
       reposeRoutingServlet.configurationUpdated(systemModel)
 
@@ -244,8 +244,18 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
       route.success.value.getDestinationId shouldEqual DefaultDestId
     }
 
+    it("should accept routes supplied in a mutable Scala sequence") {
+      val request = new MockHttpServletRequest()
+      val preferredRoute = new RouteDestination(DefaultDestId, "/mutable-route", 1.0)
+      request.setAttribute(CommonRequestAttributes.DESTINATIONS,
+        scala.collection.mutable.ListBuffer(preferredRoute))
+      reposeRoutingServlet.configurationUpdated(minimalConfiguration())
+
+      reposeRoutingServlet.getRoute(request).success.value should be theSameInstanceAs preferredRoute
+    }
+
     it("should return the highest quality route available (Java)") {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters._
 
       val request = new MockHttpServletRequest()
       val systemModel = minimalConfiguration()
@@ -254,7 +264,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
       systemModel.getDestinations.getEndpoint.addAll(Seq(
         destinationOne,
         destinationTwo
-      ))
+      ).asJava)
       request.setAttribute(CommonRequestAttributes.DESTINATIONS, List(
         new RouteDestination(destinationOne.getId, "", 1.0),
         new RouteDestination(destinationTwo.getId, "", 0.5)
@@ -275,7 +285,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
       systemModel.getDestinations.getEndpoint.addAll(Seq(
         destinationOne,
         destinationTwo
-      ))
+      ).asJava)
       request.setAttribute(CommonRequestAttributes.DESTINATIONS, Seq(
         new RouteDestination(destinationOne.getId, "", 1.0),
         new RouteDestination(destinationTwo.getId, "", 0.5)
@@ -298,7 +308,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
       systemModel.getDestinations.getEndpoint.addAll(Seq(
         destinationOne,
         destinationTwo
-      ))
+      ).asJava)
 
       reposeRoutingServlet.configurationUpdated(systemModel)
 
@@ -315,7 +325,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
       systemModel.getDestinations.getEndpoint.addAll(Seq(
         destinationOne,
         destinationTwo
-      ))
+      ).asJava)
 
       reposeRoutingServlet.configurationUpdated(systemModel)
 

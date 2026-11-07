@@ -55,7 +55,7 @@ class ValveRunnerTest extends FunSpec with Matchers {
     } finally {
       runner.destroy()
     }
-    Await.ready(runnerTask, 3 seconds)
+    Await.ready(runnerTask, 3.seconds)
   }
 
   def updateSystemModel(resource: String): UpdateListener[SystemModel] = {
@@ -82,7 +82,7 @@ class ValveRunnerTest extends FunSpec with Matchers {
     future.isCompleted shouldBe false
 
     runner.destroy()
-    Await.ready(future, 1 second)
+    Await.ready(future, 1.second)
     future.isCompleted shouldBe true
   }
 
@@ -301,7 +301,7 @@ class ValveRunnerTest extends FunSpec with Matchers {
       updateContainerConfig("/valveTesting/without-keystore.cfg.xml")
       updateSystemModel("/valveTesting/0node/system-model-0.cfg.xml")
       runner.getActiveNodes shouldBe empty
-      val exitCode = Await.result(runnerTask, 1 second)
+      val exitCode = Await.result(runnerTask, 1.second)
       exitCode shouldBe 0
     }
   }

@@ -28,7 +28,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfter}
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class HttpRequestCarrierTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfter {
@@ -105,7 +105,7 @@ class HttpRequestCarrierTest extends FunSpec with Matchers with MockitoSugar wit
       tracerExtractor.iterator().hasNext shouldBe true
 
       var numberOfEntries = 0
-      for (entry <- tracerExtractor) {
+      for (entry <- tracerExtractor.asScala) {
         println(s"no uniques entry: $entry")
         numberOfEntries += 1
       }
@@ -128,7 +128,7 @@ class HttpRequestCarrierTest extends FunSpec with Matchers with MockitoSugar wit
       var duplicateHeaderCounter = 0
       var numberOfEntries = 0
 
-      for (entry <- tracerExtractor) {
+      for (entry <- tracerExtractor.asScala) {
         if (entry.getKey == "accept") duplicateHeaderCounter += 1
         println(s"non-uniques wrapper $entry")
         numberOfEntries += 1

@@ -31,7 +31,7 @@ import org.rackspace.deproxy.Response
 import spock.lang.Unroll
 
 import static jakarta.servlet.http.HttpServletResponse.*
-import static javax.ws.rs.core.HttpHeaders.*
+import static jakarta.ws.rs.core.HttpHeaders.*
 import static org.openrepose.commons.utils.http.normal.ExtendedStatusCodes.SC_TOO_MANY_REQUESTS
 
 /**

@@ -34,10 +34,7 @@ file('versions.properties').eachLine { line ->
 
 ext {
     reposeCodename = "Falco"
-    scalaMajor = '2'
-    scalaMinor = '12'
-    scalaPatch = '21'
-    scalaMajDotMin = "$scalaMajor.$scalaMinor"
+    scalaMajDotMin = '3'
 }
 
 configurations {
@@ -128,8 +125,6 @@ allprojects {
                 substitute module("org.hamcrest:$artifact") using module(
                     "org.hamcrest:hamcrest:${rootProject.versionProperties.get('org.hamcrest:hamcrest')}")
             }
-            substitute module('javax.xml.bind:jaxb-api') using module(
-                "jakarta.xml.bind:jakarta.xml.bind-api:${rootProject.versionProperties.get('jakarta.xml.bind:jakarta.xml.bind-api')}")
             all { substitution ->
                 def requested = substitution.requested
                 if (requested instanceof org.gradle.api.artifacts.component.ModuleComponentSelector &&
@@ -141,7 +136,7 @@ allprojects {
                 "org.apache.logging.log4j:log4j-slf4j2-impl:${rootProject.versionProperties.get('log4jVersion')}")
             ['play-json', 'play-functional'].each { artifact ->
                 substitute module("com.typesafe.play:${artifact}_$scalaMajDotMin") using module(
-                    "org.playframework:${artifact}_$scalaMajDotMin:${rootProject.versionProperties.get('org.playframework:play-json_2.12')}")
+                    "org.playframework:${artifact}_$scalaMajDotMin:${rootProject.versionProperties.get('org.playframework:play-json_3')}")
             }
         }
     }
@@ -186,14 +181,15 @@ subprojects {
     }
 
     dependencies {
-        jaxb "com.sun.xml.bind:jaxb-xjc"
-        jaxb "com.sun.xml.bind:jaxb-impl"
+        jaxb "org.glassfish.jaxb:jaxb-xjc"
+        jaxb "org.glassfish.jaxb:jaxb-runtime"
         jaxb "jakarta.xml.bind:jakarta.xml.bind-api"
-        jaxb "org.jvnet.jaxb2_commons:jaxb2-basics"
+        jaxb "org.jvnet.jaxb:jaxb-plugins"
 
+        api "org.scala-lang:scala3-library_3"
         api "jakarta.xml.bind:jakarta.xml.bind-api"
         api "jakarta.annotation:jakarta.annotation-api"
-        runtimeOnly "com.sun.xml.bind:jaxb-impl"
+        runtimeOnly "org.glassfish.jaxb:jaxb-runtime"
 
         testImplementation "org.spockframework:spock-junit4"
         testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
@@ -225,10 +221,9 @@ subprojects {
         }
     }
 
-    // The API checker uses the Scala 2.12 binary API. Its compiler runs on the
-    // Java 27 toolchain but still emits JVM 8 bytecode.
+    // Compile maintained application and checker sources against Java 27 APIs.
     tasks.withType(ScalaCompile).configureEach {
-        scalaCompileOptions.additionalParameters = ['-target:jvm-1.8']
+        scalaCompileOptions.additionalParameters = ['-release:27', '-source:3.0-migration']
     }
 
     task transformXSDs() {
@@ -326,7 +321,7 @@ subprojects {
 
     dependencies {
         generatedImplementation "jakarta.xml.bind:jakarta.xml.bind-api"
-        generatedImplementation "org.jvnet.jaxb2_commons:jaxb2-basics-runtime"
+        generatedImplementation "org.jvnet.jaxb:jaxb-plugins-runtime"
     }
 
     [JavaCompile, ScalaCompile, GroovyCompile].collect { type ->

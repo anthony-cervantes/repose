@@ -23,7 +23,7 @@ import java.io.{IOException, StringWriter}
 import org.openrepose.commons.utils.opentracing.ScopeHelper
 import java.net.{URI, UnknownServiceException}
 
-import akka.actor._
+import org.apache.pekko.actor._
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.Tracer
 import io.opentracing.tag.Tags
@@ -174,7 +174,7 @@ class FeedReader(feedURIString: String,
     case ScheduleReading =>
       schedule = schedule orElse {
         logger.info("Scheduled feed reader for URI: " + feedURIString)
-        val newSchedule = Some(context.system.scheduler.schedule(
+        val newSchedule = Some(context.system.scheduler.scheduleAtFixedRate(
           Duration.Zero,
           pollingFrequency.seconds,
           self,

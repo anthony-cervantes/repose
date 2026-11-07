@@ -28,7 +28,7 @@ import org.openrepose.core.filter.AbstractConfiguredFilter
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.splitheader.config.{HeaderList, SplitHeaderConfig}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
   * This filter will "split" configured HTTP message headers (defined by header name)

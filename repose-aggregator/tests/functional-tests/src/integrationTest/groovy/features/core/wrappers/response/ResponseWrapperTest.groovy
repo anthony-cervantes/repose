@@ -26,8 +26,8 @@ import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import spock.lang.Unroll
 
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.core.HttpHeaders
+import jakarta.ws.rs.core.MediaType
 
 @Tag("scaffold.category.Core")
 class ResponseWrapperTest extends ReposeValveTest {
@@ -59,7 +59,7 @@ class ResponseWrapperTest extends ReposeValveTest {
         |import java.io.ByteArrayOutputStream
         |import jakarta.servlet.ServletOutputStream
         |import jakarta.servlet.WriteListener
-        |import javax.ws.rs.core.MediaType
+        |import jakarta.ws.rs.core.MediaType
         |""".stripMargin()
 
     static final String SCRIPT_CLASSES_FUNCTIONS = """\

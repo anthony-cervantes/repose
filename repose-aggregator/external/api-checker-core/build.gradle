@@ -1,0 +1,42 @@
+configurations { optimizerXslt }
+
+dependencies {
+    api project(":repose-aggregator:external:api-checker-util")
+    api project(":repose-aggregator:external:wadl-tools")
+    api project(":repose-aggregator:external:http-delegation")
+    api "jakarta.servlet:jakarta.servlet-api"
+    api "com.google.guava:guava"
+    api "commons-codec:commons-codec"
+    api "com.fasterxml.jackson.module:jackson-module-scala_$scalaMajDotMin"
+    api "com.github.java-json-tools:json-schema-validator:2.2.14"
+    api "io.lemonlabs:scala-uri_$scalaMajDotMin:4.0.3"
+    optimizerXslt "net.sf.saxon:Saxon-EE"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework:spring-test"
+}
+
+['removeDups': '', 'headerJoin': '.header', 'commonJoin': '.common', 'joinSetup': '.setup'].each { name, suffix ->
+    def generate = tasks.register("generate${name.capitalize()}Stylesheet", JavaExec) {
+        def resources = file('src/main/resources/xsl/opt')
+        def rules = new File(resources, 'removeDups-rules.xml')
+        def stylesheet = new File(resources, "${name}Template.xsl")
+        def output = layout.buildDirectory.file("generated/optimizer/xsl/opt/removeDups-rules${suffix}.xsl")
+        inputs.files(rules, stylesheet)
+        outputs.file(output)
+        classpath = configurations.optimizerXslt
+        mainClass = 'net.sf.saxon.Transform'
+        args "-s:${rules}", "-xsl:${stylesheet}", "-o:${output.get().asFile}"
+        doFirst { output.get().asFile.parentFile.mkdirs() }
+    }
+    tasks.named('processResources') { dependsOn generate }
+}
+sourceSets.main.resources.srcDir(layout.buildDirectory.dir('generated/optimizer'))
+license { exclude '**/*' }
+
+tasks.named('processResources') {
+    from('LICENSE.txt') { into 'META-INF' }
+    from('README.adoc') { into 'META-INF'; rename { 'UPSTREAM.adoc' } }
+}

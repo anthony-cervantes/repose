@@ -33,8 +33,8 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 import static jakarta.servlet.http.HttpServletResponse.SC_OK
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON
 import static org.openrepose.commons.utils.http.CommonHttpHeader.AUTH_TOKEN
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ID
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ROLES_MAP

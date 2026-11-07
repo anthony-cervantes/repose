@@ -50,7 +50,7 @@ import org.openrepose.nodeservice.response.LocationHeaderBuilder
 import org.openrepose.powerfilter.ReposeRoutingServlet._
 import org.springframework.beans.factory.annotation.Value
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 @Named("reposeRoutingServlet")
@@ -185,7 +185,7 @@ class ReposeRoutingServlet @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_V
     val attributeRoutes = Option(servletRequest.getAttribute(CommonRequestAttributes.DESTINATIONS)) match {
       case None => Seq.empty
       case Some(destinations: java.util.List[RouteDestination]) => destinations.asScala
-      case Some(destinations: Seq[RouteDestination]) => destinations
+      case Some(destinations: scala.collection.Seq[RouteDestination]) => destinations.toSeq
       case _ => throw new Exception("Route could not be determined from the servlet request -- the destinations attribute was not a supported type")
     }
     val defaultRoute = new RouteDestination(defaultDestination.getId, servletRequest.getRequestURI, -1)

@@ -22,7 +22,7 @@ package org.openrepose.nodeservice.atomfeed.impl
 import jakarta.annotation.{PostConstruct, PreDestroy}
 import jakarta.inject.{Inject, Named}
 
-import akka.actor._
+import org.apache.pekko.actor._
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.Tracer
 import org.openrepose.commons.config.manager.UpdateListener
@@ -41,7 +41,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.support.AbstractApplicationContext
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
@@ -141,7 +141,7 @@ class AtomFeedServiceImpl @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VE
         initialized = true
 
         // Destroy FeedReaders that have been removed from, or changed in, the configuration
-        feedConfigurations.diff(configurationObject.getFeed) foreach { deadFeedConfig =>
+        feedConfigurations.diff(configurationObject.getFeed.asScala.toSeq) foreach { deadFeedConfig =>
           feedActors.get(deadFeedConfig.getId) foreach { actorTrio =>
             actorTrio.notifierManager ! PoisonPill
             actorTrio.feedReader foreach (_ ! PoisonPill)
@@ -151,7 +151,7 @@ class AtomFeedServiceImpl @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VE
         }
 
         // Create FeedReaders that are defined in the configuration
-        configurationObject.getFeed.diff(feedConfigurations) foreach { newFeedConfig =>
+        configurationObject.getFeed.asScala.toSeq.diff(feedConfigurations) foreach { newFeedConfig =>
           val authenticationConfig = Option(newFeedConfig.getAuthentication)
 
           // Define a new Spring context to hold the authentication component and its configuration.

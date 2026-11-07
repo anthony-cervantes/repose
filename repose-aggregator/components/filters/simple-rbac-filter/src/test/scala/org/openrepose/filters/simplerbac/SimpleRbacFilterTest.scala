@@ -38,7 +38,7 @@ import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhenThen with org.scalatest.matchers.should.Matchers with MockitoSugar {
@@ -228,7 +228,7 @@ class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhe
 
       Then("the filter's configuration should be modified")
       filter.isInitialized
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: ")) shouldBe 1
     }
   }
@@ -256,7 +256,7 @@ class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhe
 
       Then("the filter's configuration should be modified")
       filter.isInitialized
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: /path/to/file")) shouldBe 1
     }
   }
@@ -280,7 +280,7 @@ class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhe
           filter.doFilter(servletRequest, servletResponse, filterChain)
 
           Then(s"the API Checker path ${enableShould(isEnabled)} be logged.")
-          val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+          val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
           events.count(_.contains("""{"steps":["S0","""")) shouldBe total
         }
       }

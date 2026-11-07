@@ -18,23 +18,23 @@
 #=_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_=_
 #
 
-- include_tasks: debug_info.yml
+- import_tasks: debug_info.yml
   tags: [repose, origin]
 
-- include_tasks: install_mocks.yml
+- import_tasks: install_mocks.yml
   tags: [repose, origin]
 
-- include_tasks: run_mocks.yml
+- import_tasks: run_mocks.yml
   tags: [repose, origin]
 
-- include_tasks: install_repose.yml
+- import_tasks: install_repose.yml
   tags: [repose]
 
-- include_tasks: record_repose_version.yml
+- import_tasks: record_repose_version.yml
   tags: [repose]
 
-- include_tasks: configure_repose.yml
+- import_tasks: configure_repose.yml
   tags: [repose]
 
-- include_tasks: run_repose.yml
+- import_tasks: run_repose.yml
   tags: [repose]

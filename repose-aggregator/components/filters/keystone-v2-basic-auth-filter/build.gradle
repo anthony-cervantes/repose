@@ -3,10 +3,9 @@ dependencies {
     api project(":repose-aggregator:commons:commons-utilities")
     api project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
     api project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
-    api "org.openrepose:http-delegation"
+    api project(":repose-aggregator:external:http-delegation")
     api "org.scala-lang:scala-library"
     api "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     api "org.springframework:spring-web"
     api "org.apache.httpcomponents:httpclient"
@@ -14,7 +13,7 @@ dependencies {
 
     compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "jakarta.inject:jakarta.inject-api"
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
 
     testImplementation project(":repose-aggregator:commons:commons-test")
     testImplementation "junit:junit"

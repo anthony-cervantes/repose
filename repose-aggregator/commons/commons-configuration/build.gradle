@@ -19,7 +19,6 @@ dependencies {
     testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
     testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
     testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
-    testImplementation "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     testImplementation "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     testImplementation "org.apache.groovy:groovy-all"
     testImplementation "org.spockframework:spock-core"

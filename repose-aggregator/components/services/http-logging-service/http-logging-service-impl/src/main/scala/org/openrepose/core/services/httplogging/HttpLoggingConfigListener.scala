@@ -34,7 +34,7 @@ import org.openrepose.core.services.httplogging.jtwig.HttpLoggingEnvironmentConf
 import org.slf4j.LoggerFactory
 import play.api.libs.json.Json
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Success, Try}
 
 /**
@@ -108,7 +108,7 @@ object HttpLoggingConfigListener {
           Json.parse(rendering)
         }
       case _ =>
-        Success(Unit)
+        Success(())
     }
   }
 }

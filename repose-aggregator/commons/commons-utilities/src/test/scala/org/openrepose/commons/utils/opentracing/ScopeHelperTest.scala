@@ -63,7 +63,7 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
 
   describe("startSpan") {
     it("should create a new span with the existing span as a parent") {
-      when(tracer.extract(any[Format[_]], any())).thenReturn(spanContext)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(spanContext)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
@@ -81,7 +81,7 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
     }
 
     it("should create a new span with no parent if no parent context exists") {
-      when(tracer.extract(any[Format[_]], any())).thenReturn(null)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(null)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
@@ -111,7 +111,7 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
       request.setMethod(method)
       request.setRequestURI(path)
 
-      when(tracer.extract(any[Format[_]], any())).thenReturn(spanContext)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(spanContext)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
@@ -128,7 +128,7 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
     it("should set the span kind tag") {
       val spanKind = Tags.SPAN_KIND_PRODUCER
 
-      when(tracer.extract(any[Format[_]], any())).thenReturn(null)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(null)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
@@ -143,7 +143,7 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
     }
 
     it("should set the repose version tag") {
-      when(tracer.extract(any[Format[_]], any())).thenReturn(null)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(null)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)

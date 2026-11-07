@@ -2,11 +2,10 @@ dependencies {
     api project(":repose-aggregator:core:repose-core-api")
     api project(":repose-aggregator:commons:commons-utilities")
     api "org.scala-lang:scala-library"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     api "org.springframework:spring-beans"
     api "org.springframework:spring-web"
-    api "org.openrepose:http-delegation"
+    api project(":repose-aggregator:external:http-delegation")
     api "com.github.jknack:handlebars"
 
     compileOnly "jakarta.servlet:jakarta.servlet-api"

@@ -19,7 +19,7 @@
  */
 package org.openrepose.valve.jetty
 
-import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.scalatest.matchers.should.Matchers
 import org.eclipse.jetty.http.HttpHeader
@@ -125,6 +125,41 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
     repose.server.getConnectors.length shouldBe 1
     // and it should have the new idleTimeout
     repose.server.getConnectors.head.getIdleTimeout shouldBe idleTimeout.get
+  }
+
+  it("accepts encoded slashes while rejecting other ambiguous paths") {
+    val repose = new ReposeJettyServer(
+      nodeContext, "node", Some(0), None, None, None,
+      mock[HttpLoggingServiceChannelListener], null, testMode = true
+    )
+    val context = repose.server.getHandler.asInstanceOf[org.eclipse.jetty.ee11.servlet.ServletContextHandler]
+    context.getServletHandler.setFilterMappings(Array.empty[org.eclipse.jetty.ee11.servlet.FilterMapping])
+    context.getServletHandler.setFilters(Array.empty[org.eclipse.jetty.ee11.servlet.FilterHolder])
+    context.getServletHandler.getServlets.head.setServlet(new HttpServlet {
+      override def doGet(request: HttpServletRequest, response: HttpServletResponse): Unit = {
+        response.getWriter.write(request.getPathInfo)
+      }
+    })
+
+    val client = java.net.http.HttpClient.newHttpClient()
+    try {
+      repose.server.start()
+      val port = repose.httpConnector.get.getLocalPort
+      def get(path: String): java.net.http.HttpResponse[String] = {
+        val request = java.net.http.HttpRequest.newBuilder(java.net.URI.create(s"http://localhost:$port$path")).build()
+        client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString())
+      }
+
+      val encodedSlash = get("/servers/abc/instances%2F123")
+      encodedSlash.statusCode() shouldBe 200
+      encodedSlash.body() shouldBe "/servers/abc/instances/123"
+      get("/servers/%2e%2e/private").statusCode() shouldBe 400
+      get("/healthy").statusCode() shouldBe 200
+    } finally {
+      client.close()
+      repose.server.stop()
+      repose.server.destroy()
+    }
   }
 
   it("raises an exception when an HTTPS port is specified, but no ssl config is provided") {

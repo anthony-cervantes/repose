@@ -35,7 +35,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.springframework.http.{HttpHeaders, HttpMethod, MediaType}
 import org.springframework.mock.web.{DelegatingServletInputStream, MockHttpServletRequest}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class HttpServletValidatorRequestTest

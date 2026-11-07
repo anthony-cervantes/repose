@@ -65,11 +65,11 @@ class RegexStringOperatorsTest extends FunSpec with Matchers {
 
   describe("RegexStringOperators") {
     it("should implicitly convert a String to a RegexString") {
-      val anonymousTrait = new RegexStringOperators {
+      class TestOperators extends RegexStringOperators {
         def convert(regex: String): RegexString = regex
       }
 
-      anonymousTrait.convert("/foo/\\d+") shouldBe a[RegexString]
+      new TestOperators().convert("/foo/\\d+") shouldBe a[RegexString]
     }
   }
 }

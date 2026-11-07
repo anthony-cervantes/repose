@@ -26,7 +26,7 @@ import java.nio.file.{FileVisitResult, Files, Path, SimpleFileVisitor}
 import java.util.zip.{CRC32, ZipFile, ZipInputStream}
 
 import com.oracle.javaee6.{ApplicationType, FilterType, ObjectFactory, WebFragmentType}
-import javax.xml.bind.JAXBContext
+import jakarta.xml.bind.JAXBContext
 import org.openrepose.commons.config.parser.jaxb.JaxbConfigurationParser
 import org.openrepose.commons.config.resource.impl.BufferedURLConfigurationResource
 import org.slf4j.LoggerFactory
@@ -46,7 +46,7 @@ class EarClassProvider(earFile: File, val outputDir: File) {
   private lazy val computeClassLoader: ClassLoader = {
     unpack()
 
-    val mutableList = mutable.MutableList[Path]()
+    val mutableList = mutable.ListBuffer[Path]()
 
     Files.walkFileTree(outputDir.toPath(), new SimpleFileVisitor[Path] {
       override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
@@ -91,7 +91,7 @@ class EarClassProvider(earFile: File, val outputDir: File) {
     val webFragmentParser = new JaxbConfigurationParser[WebFragmentType](classOf[WebFragmentType], jaxbContext, null)
     val webFragment = webFragmentParser.read(new BufferedURLConfigurationResource(webFragmentUrl))
 
-    import scala.collection.JavaConversions._
+    import scala.jdk.CollectionConverters._
 
     //http://stackoverflow.com/a/4719732/423218
     //The .toSeq in here is to be able to get the for comprehension to properly create map/flatmap calls
@@ -99,7 +99,7 @@ class EarClassProvider(earFile: File, val outputDir: File) {
       for {
         fragment <- Option(webFragment).toSeq
         elementCollection <- Option(fragment.getNameOrDescriptionAndDisplayName).toSeq
-        element <- elementCollection if element.getDeclaredType.equals(classOf[FilterType])
+        element <- elementCollection.asScala if element.getDeclaredType.equals(classOf[FilterType])
         filterType = element.getValue.asInstanceOf[FilterType]
         filterNameType <- Option(filterType.getFilterName) if Option(filterType.getFilterClass).isDefined
         filterName <- Option(filterNameType.getValue)
@@ -112,7 +112,7 @@ class EarClassProvider(earFile: File, val outputDir: File) {
       throw new EarProcessingException(s"There aren't any usable filters in ${earFile.getName}! Check your web-fragment!")
     }
 
-    new EarDescriptor(appName, filterMap)
+    new EarDescriptor(appName, filterMap.asJava)
   }
   val log = LoggerFactory.getLogger(classOf[EarClassProvider])
 

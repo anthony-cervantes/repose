@@ -5,7 +5,6 @@ dependencies {
     api "org.scala-lang:scala-library"
     api "org.slf4j:slf4j-api"
     api "commons-pool:commons-pool"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     api "commons-io:commons-io"
     api "commons-codec:commons-codec"
@@ -14,12 +13,12 @@ dependencies {
     api "com.fasterxml.jackson.core:jackson-databind"
     api "org.apache.httpcomponents:httpclient"
     api "org.apache.httpcomponents:httpcore"
-    api "org.jvnet.jaxb2_commons:jaxb2-basics-runtime"
+    api "org.jvnet.jaxb:jaxb-plugins-runtime"
     api "org.playframework:play-json_$scalaMajDotMin"
     api "io.opentracing:opentracing-api"
     api "io.opentracing:opentracing-util"
 
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
     compileOnly "jakarta.servlet:jakarta.servlet-api"
 
     testImplementation project(':repose-aggregator:commons:commons-test')

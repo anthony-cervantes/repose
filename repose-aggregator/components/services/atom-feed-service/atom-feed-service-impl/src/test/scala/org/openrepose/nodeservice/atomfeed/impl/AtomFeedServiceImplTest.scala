@@ -23,8 +23,8 @@ import java.net.URL
 import org.scalatest.funspec.{AnyFunSpecLike => FunSpecLike}
 import org.scalatest.matchers.should.Matchers
 
-import akka.actor.ActorSystem
-import akka.testkit.{TestKit, TestProbe}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.testkit.{TestKit, TestProbe}
 import io.opentracing.Tracer
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
@@ -46,7 +46,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.test.util.ReflectionTestUtils
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class AtomFeedServiceImplTest
@@ -139,8 +139,8 @@ class AtomFeedServiceImplTest
 
       atomFeedService.unregisterListener("notRegisteredFeedId")
 
-      serviceListAppender.getEvents.exists(_.getMessage.getFormattedMessage.contains("Attempting to unregister")) shouldBe true
-      serviceListAppender.getEvents.exists(_.getMessage.getFormattedMessage.contains("not registered")) shouldBe true
+      serviceListAppender.getEvents.asScala.exists(_.getMessage.getFormattedMessage.contains("Attempting to unregister")) shouldBe true
+      serviceListAppender.getEvents.asScala.exists(_.getMessage.getFormattedMessage.contains("not registered")) shouldBe true
     }
   }
 

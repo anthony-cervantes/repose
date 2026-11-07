@@ -19,7 +19,7 @@
  */
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
-import akka.actor.{Actor, Props}
+import org.apache.pekko.actor.{Actor, Props}
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, LifecycleEvents}
 
 object Notifier {

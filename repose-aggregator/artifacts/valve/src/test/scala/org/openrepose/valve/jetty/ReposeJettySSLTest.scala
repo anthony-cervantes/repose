@@ -123,13 +123,13 @@ class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
     s.setKeystorePassword("password")
 
     implicit val listToSslCipherConfig: List[String] => SslCipherConfiguration = { list =>
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters._
       val cfg = new SslCipherConfiguration()
       cfg.getCipher.addAll(list.asJava)
       cfg
     }
     implicit val listToSslProtocolConfig: List[String] => SslProtocolConfiguration = { list =>
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters._
       val cfg = new SslProtocolConfiguration()
       cfg.getProtocol.addAll(list.asJava)
       cfg

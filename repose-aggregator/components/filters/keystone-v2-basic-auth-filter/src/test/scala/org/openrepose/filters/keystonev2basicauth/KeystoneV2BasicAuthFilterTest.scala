@@ -42,7 +42,7 @@ import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class KeystoneV2BasicAuthFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar with StrictLogging {
@@ -83,7 +83,7 @@ class KeystoneV2BasicAuthFilterTest extends FunSpec with BeforeAndAfterEach with
       filter.init(mockFilterConfig)
 
       // then:
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("WARNING: This filter cannot be used alone, it requires an AuthFilter after it.")) shouldBe 1
     }
   }
@@ -129,7 +129,7 @@ class KeystoneV2BasicAuthFilterTest extends FunSpec with BeforeAndAfterEach with
       filter.doFilter(mockServletRequest, mockServletResponse, filterChain)
 
       // then:
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("TEST")) shouldBe 1
     }
   }

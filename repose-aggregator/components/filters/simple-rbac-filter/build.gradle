@@ -2,11 +2,10 @@ dependencies {
     api project(":repose-aggregator:core:repose-core-api")
     api project(":repose-aggregator:commons:commons-utilities")
     api "org.scala-lang:scala-library"
-    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
     api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
     api "xalan:xalan" // Forces the version used by api-checker.
     api "com.google.guava:guava" // Forces the version used by api-checker.
-    api "com.rackspace.papi.components.api-checker:checker-core"
+    api project(":repose-aggregator:external:api-checker-core")
     api "io.dropwizard.metrics:metrics-jmx"
     api "org.springframework:spring-beans"
     api "org.apache.commons:commons-lang3"

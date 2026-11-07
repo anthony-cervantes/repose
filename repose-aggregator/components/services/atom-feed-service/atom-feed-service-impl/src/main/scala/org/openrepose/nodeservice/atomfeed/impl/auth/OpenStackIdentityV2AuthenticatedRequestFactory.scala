@@ -24,7 +24,7 @@ import java.util
 import com.typesafe.scalalogging.StrictLogging
 import jakarta.inject.Inject
 import jakarta.servlet.http.HttpServletResponse._
-import javax.ws.rs.core.{HttpHeaders, MediaType}
+import jakarta.ws.rs.core.{HttpHeaders, MediaType}
 import org.apache.http.client.HttpClient
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.RequestBuilder
@@ -97,7 +97,7 @@ class OpenStackIdentityV2AuthenticatedRequestFactory @Inject()(feedConfig: AtomF
       .build()
     val requestBuilder = RequestBuilder.post(s"$serviceUri$TOKENS_ENDPOINT")
       .setEntity(requestEntity)
-    requestHeaders.foreach(tupled(requestBuilder.addHeader))
+    requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
     val request = requestBuilder.build()
 
     val cacheContext = CachingHttpClientContext.create()

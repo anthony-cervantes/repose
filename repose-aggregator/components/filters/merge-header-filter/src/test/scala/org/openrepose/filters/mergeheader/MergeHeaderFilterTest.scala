@@ -32,7 +32,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {
@@ -109,8 +109,8 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
 
       filter.doFilter(servletRequest, servletResponse, filterChain)
 
-      servletRequest.getHeaderNames.toSet should contain only "Foo"
-      servletRequest.getHeaders("Foo").toSeq should (contain("bar") and contain("baz"))
+      servletRequest.getHeaderNames.asScala.toSet should contain only "Foo"
+      servletRequest.getHeaders("Foo").asScala.toSeq should (contain("bar") and contain("baz"))
     }
 
     it("should not modify response headers if the configured header is not present") {
@@ -121,8 +121,8 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
 
       filter.doFilter(servletRequest, servletResponse, filterChain)
 
-      servletResponse.getHeaderNames.toSet should contain only "Foo"
-      servletResponse.getHeaders("Foo").toSeq should (contain("bar") and contain("baz"))
+      servletResponse.getHeaderNames.asScala.toSet should contain only "Foo"
+      servletResponse.getHeaders("Foo").asScala.toSeq should (contain("bar") and contain("baz"))
     }
   }
 
@@ -130,10 +130,10 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
     val config = new MergeHeaderConfig
 
     val requestHeaderList = new HeaderList
-    requestHeaderList.getHeader.addAll(requestHeaders)
+    requestHeaderList.getHeader.addAll(requestHeaders.toList.asJava)
 
     val responseHeaderList = new HeaderList
-    responseHeaderList.getHeader.addAll(responseHeaders)
+    responseHeaderList.getHeader.addAll(responseHeaders.toList.asJava)
 
     config.setRequest(requestHeaderList)
     config.setResponse(responseHeaderList)
