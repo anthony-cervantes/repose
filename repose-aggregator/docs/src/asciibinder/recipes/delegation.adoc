@@ -1,3 +1,15 @@
 = Delegation
 
-include::./_includes/in-progress.adoc[]
+Filters that support delegation can record a rejection in the `X-Delegated` request header and continue the chain.
+Enable delegation in each participating filter's configuration and assign its quality value.
+A later component must enforce the decision before the request reaches the origin.
+
+For the existing HERP/DeRP pattern, place the delegating authentication or validation filters first,
+then <<../filters/herp.adoc#,HERP>> to record the event, followed by <<../filters/derp.adoc#,DeRP>> to reject delegated failures.
+DeRP selects the highest-quality failure and passes its status and message to Servlet error handling.
+Malformed delegation data produces `500`.
+
+HERP and DeRP remain available but are deprecated in the source.
+For new access logging, consider the <<../services/http-logging.adoc#,HTTP Logging Service>>.
+Logging alone does not enforce a delegated authorization failure.
+See each filter's schema for delegation options, and <<reason-phrase-normalization.adoc#,Response Status Messages>> for current error-body behavior.

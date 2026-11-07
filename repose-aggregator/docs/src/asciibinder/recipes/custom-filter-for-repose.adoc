@@ -1,6 +1,108 @@
 = Custom Filter for Repose
 
-Unfortunately, this page is not going to teach you how to create a custom filter for *Repose*.
-Fortunately, this page is going to direct you to a page that will teach you how to create a custom filter for *Repose*.
+Custom filters for this branch must target Java 27 and implement Jakarta Servlet 6.1.
+Rebuild older filters that use `javax.servlet` or Scala 2.12; see <<../welcome/java-27-upgrade-notes.adoc#,Java 27 Upgrade Notes>>.
 
-For a detailed guide on how to create a custom filter for *Repose*, see https://github.com/rackerlabs/repose-hello-world[our hello world filter project].
+== Implement a Filter
+
+Create a separate project with the following files.
+This example adds a response header and continues the filter chain.
+
+[source,java]
+.src/main/java/example/ExampleFilter.java
+----
+package example;
+
+import jakarta.inject.Named;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Named("example-filter")
+public class ExampleFilter implements Filter {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        ((HttpServletResponse) response).setHeader("X-Example-Filter", "enabled");
+        chain.doFilter(request, response);
+    }
+}
+----
+
+== Package the EAR
+
+The Java API is Jakarta, but the *Repose* bundle loader still reads Java EE 6 XML descriptors.
+Keep the descriptor namespaces below: changing them to Jakarta namespaces prevents registration.
+The `application-name` identifies the bundle, and the web fragment maps the system-model filter name to its class.
+
+[source,xml]
+.src/main/application/WEB-INF/web-fragment.xml
+----
+<web-fragment xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
+    <filter>
+        <filter-name>example-filter</filter-name>
+        <filter-class>example.ExampleFilter</filter-class>
+    </filter>
+</web-fragment>
+----
+
+[source,groovy]
+.settings.gradle
+----
+rootProject.name = 'example-filter-bundle'
+----
+
+[source,groovy]
+.build.gradle
+----
+plugins {
+    id 'java'
+    id 'ear'
+}
+
+version = '1.0'
+repositories { mavenCentral() }
+java { toolchain { languageVersion = JavaLanguageVersion.of(27) } }
+
+dependencies {
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+    compileOnly 'jakarta.inject:jakarta.inject-api:2.0.1'
+}
+
+ear {
+    dependsOn tasks.named('jar')
+    from(tasks.named('jar')) { into 'lib' }
+    deploymentDescriptor {
+        version = '6'
+        applicationName = 'example-filter-bundle'
+    }
+}
+----
+
+With JDK 27 and Gradle 9.9, run `gradle ear` from this example project.
+You can also use the *Repose* wrapper: `/path/to/repose/gradlew -p /path/to/example-project ear`.
+The generated EAR contains `META-INF/application.xml`, `WEB-INF/web-fragment.xml`, and the filter JAR under `lib/`.
+The host supplies the Servlet and Inject APIs; keep them as `compileOnly` dependencies.
+Package any private runtime dependencies inside the EAR and avoid duplicating *Repose* platform libraries.
+
+== Deploy and Activate
+
+Copy `build/libs/example-filter-bundle-1.0.ear` into the artifact directory configured in `container.cfg.xml`.
+The usual package installation uses `/usr/share/repose/filters`.
+Allow the *Repose* process to read the archive and write to its deployment directory.
+
+Add this entry at the desired position inside the existing system-model `filters` element:
+
+[source,xml]
+.system-model.cfg.xml (fragment)
+----
+<filter name="example-filter"/>
+----
+
+Restart *Repose* after changing bundle code, and check startup logs for registration or initialization failures.
+The next successful request through this filter will contain `X-Example-Filter: enabled` in its response.
+For services, configuration injection, and request/response wrappers, consult the existing component implementations and <<../architecture/filter-chain.adoc#,Filter Chain>> documentation.

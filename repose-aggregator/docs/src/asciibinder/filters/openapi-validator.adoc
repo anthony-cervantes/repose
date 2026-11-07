@@ -7,10 +7,10 @@ If a request fails validation against the OpenAPI document, this filter will rej
 For example, if the OpenAPI document requires a query parameter for a particular operation and the request for that operation is missing the query parameter, this filter will discontinue processing of the request and send an error response.
 
 == General filter information
-* *Name:* openapi-validator
+* *Name:* `openapi-validator`
 * *Default Configuration:* openapi-validator.cfg.xml
 * *Released:* 9.0.1.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/openapi-validator.xsd[Schema]
 
 == Prerequisites & Postconditions

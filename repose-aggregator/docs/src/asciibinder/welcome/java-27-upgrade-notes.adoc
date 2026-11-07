@@ -1,0 +1,58 @@
+= Java 27 Upgrade Notes
+
+These notes describe the current development baseline. They supplement the
+historical <<ver-9-upgrade-notes.adoc#,Version 9 upgrade notes>>.
+
+== Build and Runtime
+
+Install JDK 27 and set `JAVA_HOME` to that installation before using `./gradlew`.
+The wrapper pins Gradle 9.9.0 and verifies its distribution checksum.
+Application Java and Scala sources, including generated XML-binding classes,
+compile to Java 27 class-file version 71. Scala application modules use Scala 3.10.
+
+Rebuild custom filters and other extensions against this baseline. Existing Scala
+2.12 binaries and filters using `javax.servlet`, `javax.inject`, `javax.ws.rs`, or
+`javax.xml.bind` must be migrated before they can be loaded.
+Use `jakarta.servlet`, `jakarta.inject`, `jakarta.ws.rs`, and `jakarta.xml.bind`.
+Java SE packages such as `javax.xml.transform` and `javax.management` remain valid.
+
+== XML and REST APIs
+
+XML bindings use JAXB 4. Binding customization files use the Jakarta JAXB namespace
+`https://jakarta.ee/xml/ns/jaxb` and binding-schema version `3.0`, which is also
+used by JAXB 4. The XJC extension namespace remains
+`http://java.sun.com/xml/ns/jaxb/xjc`.
+EAR registration also retains the Java EE 6 XML namespace read by the bundle loader.
+These descriptor namespaces are separate from the migrated Jakarta Java APIs; see <<../recipes/custom-filter-for-repose.adoc#,Custom Filter for Repose>>.
+The mock servlet uses Jersey 4, Jakarta REST 4, and Jakarta Servlet 6.1.
+
+The embedded server uses Jetty 12.1 and services use Spring 7. The Atom Feed
+Consumption service uses Apache Pekko 2 rather than Akka.
+
+== WADL and Delegation
+
+WADL validation and Simple RBAC remain available. API Checker core/util,
+WADL Tools, and HTTP Delegation are built from source as `org.openrepose` modules
+with the same project version as Repose. Their upstream licenses and import
+provenance are included in the repository and resulting artifacts.
+The functional-test connector Deproxy still receives a Jakarta/Groovy binary adaptation.
+
+Validation errors from API Validator and Simple RBAC include UTF-8 `text/plain`
+diagnostics in the response body and `Cache-Control: no-store`.
+Read these diagnostics from the body, together with the numeric status code.
+Custom HTTP/1.1 reason phrases are not forwarded to the wire response.
+See <<../recipes/reason-phrase-normalization.adoc#,Response Status Messages>>.
+
+== Testing
+
+Functional specifications use Spock tags on JUnit Platform. The default Gradle
+selection is the smoke tag. Use `-Prun=all` with a class filter to select a
+specific specification, or to run every specification except those tagged as bugs:
+
+[source,shell]
+----
+./gradlew test
+./gradlew :repose-aggregator:tests:functional-tests:integrationTest -Prun=all --tests features.filters.apivalidator.ApiValidatorTest
+----
+
+See <<../developer/functional.adoc#,Functional Testing>> for all tag selections.

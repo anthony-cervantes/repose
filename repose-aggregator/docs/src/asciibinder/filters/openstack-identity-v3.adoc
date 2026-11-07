@@ -19,10 +19,10 @@ It includes things like the user's name, ID, roles, groups, and service catalog.
 
 == General filter information
 
-* *Name:* openstack-identity-v3
+* *Name:* `openstack-identity-v3`
 * *Default Configuration:* openstack-identity-v3.cfg.xml
 * *Released:* v6.1.0.3
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/openstack-identity-v3.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -254,7 +254,7 @@ The the `X-Identity-Status` header is in addition to the regular `X-Delegated` d
 You can configure this filter to allow no-op processing of requests that do not require authentication.
 For example, a service might want all calls authenticated with the exception of the call for WADL retrieval.
 In this situation, you can configure the whitelist as shown in the example below.
-The whitelist contains a list of https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expressions] that *Repose* attempts to match against the full request URI.
+The whitelist contains a list of https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expressions] that *Repose* attempts to match against the full request URI.
 If the URI matches an expression in the white list, then the request is passed to the origin service.
 Otherwise, authentication is performed against the request.
 
@@ -272,7 +272,7 @@ Otherwise, authentication is performed against the request.
                                 uri="http://identity.example.com"/>
 </openstack-identity-v3>
 ----
-<1> The https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expression] to allow matching URI's to pass without requiring authentication.
+<1> The https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expression] to allow matching URI's to pass without requiring authentication.
 
 === Configuring Cache Timeouts
 
@@ -334,7 +334,7 @@ https://one.rackspace.com/display/auth/Identity+Endpoints#IdentityEndpoints-Endp
 <?xml version="1.0" encoding="UTF-8"?>
 <openstack-identity-v3 xmlns="http://docs.openrepose.org/repose/openstack-identity-v3/v1.0">
     <cache>
-        <atom-feed id="myAtomFeed"> <!--1-->
+        <atom-feed id="myAtomFeed"/> <!--1-->
     </cache>
     <openstack-identity-service username="myUsername"
                                 password="myPassword"
@@ -376,7 +376,7 @@ Project ID authorization is the capability of this filter to parse a tenant ID o
 <2> If this element is included, then project ID validation will be enforced based on the value extracted from the request.
 <3> A `/` delimited list of prefixes to attempt to strip from the project ID in the token response from the Keystone v2 Identity service.
     The post-strip project ID is only used in the project validation check.
-<4> The https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expression] with at least one capture group.
+<4> The https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expression] with at least one capture group.
     The first capture group must be around the portion of the URI to extract the project ID from for validation.
 <5> If this element is included, then include quality parameters on all the project ID headers sent.
 <6> The default project ID has the highest quality by default. +

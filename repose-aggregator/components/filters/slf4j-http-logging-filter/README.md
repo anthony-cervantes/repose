@@ -1,7 +1,10 @@
-The SLF4J HTTP Logging filter logs information sent to and from repose in HTTP requests and responses,
-using SLF4J as indicated by its name.
+# SLF4J HTTP Logging Filter
 
-It does not need to be followed or preceded by any specific filters, but it should be the first filter
-in the filter chain when used.
+Logs configured request and response fields through SLF4J loggers around the
+downstream filter chain. Place it early to observe the whole chain. Configuration
+is read from `slf4j-http-logging.cfg.xml`.
 
-This filter replaces the HTTP Logging filter, which is deprecated.
+The separate HTTP Logging Service also remains available; its JTwig configuration
+is described in [HTTP Logging Service](../../../docs/src/asciibinder/services/http-logging.adoc).
+See the [filter page](../../../docs/src/asciibinder/filters/slf4j-http-logging.adoc)
+for this filter's configuration example.

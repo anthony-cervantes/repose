@@ -32,5 +32,10 @@ Returns token data.
 To run this service, follow these steps:
 1. Make sure that [NodeJS](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/) are installed.
 1. Navigate to the directory containing the `app.js` file.
-1. Execute `npm install` to install all dependencies.
+1. Execute `npm ci` to install all dependencies.
 1. Run the service using `node app.js`.
+
+## Runtime requirements
+
+Use Node.js 22.12 or later and npm 10 or later, as declared in `package.json`.
+Run `npm ci` in this directory to install the locked dependencies, then `node app.js` to start the service.

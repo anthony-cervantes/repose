@@ -11,9 +11,9 @@ Configuring CORS improperly could expose https://en.wikipedia.org/wiki/Cross-sit
 ====
 
 == General Filter Information
-* *Name:* cors
+* *Name:* `cors`
 * *Released:* v7.2.0.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * *Default Configuration:* cors.cfg.xml
 * *Configuration Schema:* link:../schemas/cors-configuration.xsd[cors-configuration.xsd]
 
@@ -326,7 +326,7 @@ This is an example configuration with notes on all of the required and optional 
 <1> At least one `origin` element is required.
 <2> The `regex` attribute is not required.
     If it is not present, it is defaulted to `false` and the specified URI is treated as a literal string.
-<3> When the `regex` attribute is `true`, the specified URI will be treated as a https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#sum[Java regular expression].
+<3> When the `regex` attribute is `true`, the specified URI will be treated as a https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html#sum[Java regular expression].
 <4> At least one `method` element is required.
 <5> The `resources` element is optional.
 <6> At least one `resource` element is required when the `resources` element is present.

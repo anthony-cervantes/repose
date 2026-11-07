@@ -1,6 +1,6 @@
 = Frequently Asked Questions (FAQ)
 
-include::_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 These are frequently asked questions.
 If you don't find an answer to your question here, check out the http://www.openrepose.org/#contact-us[contact us] section for information on getting in touch with the team.
@@ -23,4 +23,7 @@ Requests with any other HTTP method will be rejected with a response code of `40
 Please read our <<troubleshooting.adoc#,Troubleshooting>> page.
 
 == Why Use *Repose*’s Client Authentication as opposed to Keystone, Cloud Auth, or Global Auth?
-*IN PROGRESS*
+SSL/TLS client authentication verifies a certificate when a connection is established.
+Keystone authentication verifies an application token on each request and supplies user, tenant, and role information to later filters.
+Choose certificate authentication for transport-level access control, and token authentication when the API needs user or tenant authorization.
+They can be used together; see <<../recipes/client-authentication.adoc#,SSL/TLS Client Authentication>>.

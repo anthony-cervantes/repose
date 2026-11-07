@@ -1,51 +1,13 @@
 = Echo Filter
 
-include::./_includes/in-progress.adoc[]
+Copies incoming request headers to the response and sets status `200`.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-experimental-filter-bundle
+== General Filter Information
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+* *Name:* `echo`
+* *Default Configuration:* `None`
+* *Bundle:* `repose-experimental-filter-bundle`
 
-=== Required Preceding Filters
-???.
+== Behavior and Ordering
 
-=== Request Headers Created
-???.
-
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
-
-[source,xml]
-.???.cfg.xml
-----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
-----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*
+This is a terminal diagnostic filter: it does not call the rest of the filter chain or the origin service, and does not echo the request body. It has no configuration file and is shipped in the experimental bundle.

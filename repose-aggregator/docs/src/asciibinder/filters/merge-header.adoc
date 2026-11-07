@@ -5,10 +5,10 @@ The Merge Header Filter merges multiple header lines with the same name into a s
 This filter can process both requests and responses.
 
 == General filter information
-* *Name:* merge-header
+* *Name:* `merge-header`
 * *Default Configuration:* merge-header.cfg.xml
 * *Released:* v7.1.0.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/merge-header.xsd[Schema]
 
 == Prerequisites & Postconditions

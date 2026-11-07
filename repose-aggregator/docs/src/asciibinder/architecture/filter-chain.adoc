@@ -1,7 +1,7 @@
 = Filter Chain
 
 The *Repose* filter chain is the work horse of the system, and is responsible for nearly all enrichment that *Repose* provides.
-It's based on and uses the same contract as the https://docs.oracle.com/javaee/7/api/javax/servlet/FilterChain.html[JEE Filter Chain].
+It's based on and uses the same contract as the https://jakarta.ee/specifications/servlet/6.1/apidocs/jakarta.servlet/jakarta/servlet/FilterChain.html[Jakarta Servlet FilterChain].
 As the name implies it is a chain of filters that are followed in order.
 A request goes through them from the first, one after another, until the last is reached when the request which has possibly been mutated along the way is sent on to the origin service.
 When the response comes back from the origin service it works it's way back up the chain in the opposite order.
@@ -21,7 +21,7 @@ The *Repose* filter chain allows you to determine if a filter should be run whil
 This method of determining if a filter should be run is *DEPRECATED* and will be removed in *Repose* 10.
 ====
 
-You can decide whether or not a filter should run based on the path of it's URI using a https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression].
+You can decide whether or not a filter should run based on the path of it's URI using a https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[regular expression].
 Here's a simple example:
 
 [source,xml]
@@ -46,8 +46,8 @@ You can configure whether or not a filter should run based on each of the follow
 
 * Method verb
 * Header presence
-* Header Value based on a https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression]
-* URI based on a https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[regular expression]
+* Header Value based on a https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[regular expression]
+* URI based on a https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[regular expression]
 
 This is further customizable through the use of the following boolean logic operators:
 

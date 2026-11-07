@@ -3,10 +3,10 @@
 The IP User filter populates request headers using the client's IP address and matching configured group, if any.
 
 == General filter information
-* *Name:* ip-user
+* *Name:* `ip-user`
 * *Default Configuration:* ip-user.cfg.xml
 * *Released:* v7.2.2.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/ip-user.xsd[Schema]
 
 == Prerequisites & Postconditions

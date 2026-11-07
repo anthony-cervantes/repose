@@ -113,12 +113,12 @@ atomFeedService.unregisterListener(myListenerId);
 ----
 
 == Architecture
-The Atom Feed Consumption service is built on top of the Akka framework.
-It utilizes the Akka actor system to scale horizontally as the number of Atom Feeds being monitored grows.
-In addition, most processing done by the Atom Feed Consumption service is asynchronous and non-blocking.
+The Atom Feed Consumption service is built on top of the Apache Pekko framework.
+It utilizes the Apache Pekko actor system to scale horizontally as the number of Atom Feeds being monitored grows.
+Feed readers and notifiers run as actors. HTTP feed reads use the configured blocking Apache HTTP client; actor scheduling and listener notification are asynchronous.
 
 [NOTE]
 ====
-Due to the nature of the Akka actor system, if the Atom Feed Consumption Service is configured to poll a feed more quickly than that feed can be read, the Akka actor queue for that Feed will grow perpetually.
+Due to the nature of the Apache Pekko actor system, if the Atom Feed Consumption Service is configured to poll a feed more quickly than that feed can be read, the Apache Pekko actor queue for that Feed will grow perpetually.
 This will result in high memory usage, and eventually the JVM will run out of memory and crash.
 ====

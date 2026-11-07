@@ -1,0 +1,39 @@
+= Repose Documentation
+
+The guides under `src/asciibinder` describe the current source implementation.
+Start with `welcome/index.adoc` and `welcome/java-27-upgrade-notes.adoc`.
+Release notes and the version 9 upgrade notes preserve historical behavior.
+
+== Preview and Check References
+
+Use Node.js 22.12 or later. From this directory:
+
+[source,shell]
+----
+npm ci
+npm run preview
+python3 -m http.server 8000 --directory build/preview
+----
+
+Open `http://localhost:8000`.
+The preview renders every full guide page with the pinned Asciidoctor.js version,
+copies images and configuration schemas, and checks local includes, cross-reference
+files/section IDs, images, and file links. Parser messages and missing references
+cause a nonzero exit status. It does not check external web services or validate XML
+examples against their schemas.
+
+The preview uses `development` for version attributes. Set `REPOSE_DOC_VERSION`
+when previewing a specific release. Diagram extensions and the original site theme,
+navigation, and search are not part of this lightweight preview.
+
+== Publishing Status
+
+The Gradle AsciiBinder build and publishing tasks in `build.gradle` are commented
+out. `./gradlew build` does not publish this documentation or refresh the upstream
+website. The old Docker/Ruby publisher remains as historical infrastructure and
+needs a separate update before it can be used for a release.
+
+Keep includes relative to the page directory so that examples from component
+sources render in a checkout. Before submitting documentation changes, render all
+pages, verify configuration examples against their matching production schemas,
+and compile any new executable examples with the documented toolchain.

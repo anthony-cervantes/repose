@@ -33,6 +33,8 @@ Topics:
   #   File: debugging.adoc
   - Name: Release Notes
     File: release-notes.adoc
+  - Name: Java 27 Upgrade Notes
+    File: java-27-upgrade-notes.adoc
   - Name: Version 9 Upgrade Notes
     File: ver-9-upgrade-notes.adoc
   - Name: Style Guide
@@ -133,8 +135,6 @@ Topics:
     File: destination-router.adoc
   - Name: Echo Filter
     File: echo.adoc
-  - Name: Exception Filter
-    File: exception.adoc
   - Name: Forwarded Protocol Filter
     File: forwarded-proto.adoc
   - Name: Header Normalization filter
@@ -157,7 +157,7 @@ Topics:
     File: keystone-v2-basic-auth.adoc
   - Name: Merge Header Filter
     File: merge-header.adoc
-  - Name: OpenAPI Validatort Filter
+  - Name: OpenAPI Validator Filter
     File: openapi-validator.adoc
   - Name: Openstack Identity v3 Filter
     File: openstack-identity-v3.adoc
@@ -169,7 +169,7 @@ Topics:
     File: scripting.adoc
   - Name: Simple Role Based Access Control (RBAC) Filter
     File: simple-rbac.adoc
-  - Name: SFL4J HTTP Logging Filter
+  - Name: SLF4J HTTP Logging Filter
     File: slf4j-http-logging.adoc
   - Name: Split Header Filter
     File: split-header.adoc

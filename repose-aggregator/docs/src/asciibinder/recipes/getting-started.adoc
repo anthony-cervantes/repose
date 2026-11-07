@@ -41,7 +41,7 @@ Following are some of the most common ones:
 * <<../filters/api-validator.adoc#,Validating>> that requests conform to XSD and WADL specifications.
 * <<../filters/slf4j-http-logging.adoc#,Logging>> to keep inventories of events.
 * <<../filters/header-normalization.adoc#,Blacklisting>> to prevent others from spoofing authentication credentials and roles.
-* <<../filters/keystone-v2.adoc#Cache,Caching>> to reduce load on authentication services.
+* <<../filters/keystone-v2.adoc#_configuring_cache_timeouts,Caching>> to reduce load on authentication services.
 * <<role-based-access-control.adoc#,Role-based access control (RBAC)>> to restrict access to authorized users.
 * <<../filters/api-validator.adoc#,API Coverage>> to map the state of your API.
 * <<../architecture/container.adoc#,HTTP Client Authentication>> for federated applications.

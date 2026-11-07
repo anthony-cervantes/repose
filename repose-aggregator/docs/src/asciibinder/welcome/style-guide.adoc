@@ -1,6 +1,6 @@
 = Style Guide
 
-include::_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 == One Sentence Per Line
 Don’t wrap text at a fixed column width.

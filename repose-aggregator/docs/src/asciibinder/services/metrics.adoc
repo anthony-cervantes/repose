@@ -49,7 +49,7 @@ For more information about what the Metrics service can do, see the http://metri
 
 All metrics reported to this service will be reported to JMX.
 
-In order to report metrics to JMX, this service must translate metric names into https://docs.oracle.com/javase/8/docs/api/javax/management/ObjectName.html[JMX ObjectNames].
+In order to report metrics to JMX, this service must translate metric names into https://docs.oracle.com/en/java/javase/27/docs/api/java.management/javax/management/ObjectName.html[JMX ObjectNames].
 A metric can be named virtually anything, but names often follow the `<segment1>.<segment2>.<...>.<segmentn>` convention.
 A simplified general form for an object name is `<domain>:<key1>=<value1>,<key2>=<value2>,<...>,<keyn>=<valuen>`.
 To go from metric name to object name, the translation process will start by prepending the metric name with the hostname of the host running *Repose*.

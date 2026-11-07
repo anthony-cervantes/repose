@@ -1,3 +1,6 @@
-The echo filter is a simple filter that responds to an HTTP Request with a 200 status,
-and echos back the same headers that were passed through. The filter loops through
-all the headers and adds them onto the HTTP Response. 
+# Echo Filter
+
+This terminal diagnostic filter copies incoming request headers to the response
+and sets status 200. It does not echo the request body, contact the origin, or
+invoke the rest of the filter chain. It is registered as `echo` in the experimental
+filter bundle and has no configuration file.

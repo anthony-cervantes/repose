@@ -1,5 +1,12 @@
 = Upgrade to Version 9 from Version 8 Notes
 
+[NOTE]
+====
+This page records the original version 9 migration. For the current development
+baseline, also read the <<java-27-upgrade-notes.adoc#,Java 27 upgrade notes>>.
+====
+
+
 == Core Behavior Changes
 . Headers will no longer be split unnecessarily at the boundaries of *Repose*.
   If you were counting on this behavior, or for a list of headers that were being split, see <<../recipes/header-splitting.adoc#, Pre 9.0 Header Splitting>>.
@@ -77,8 +84,8 @@
 ]]></scripting>
 ----
 . The <<../architecture/filter-chain.adoc#, Filter Chain>> now determines whether or not a filter should run based on the current state of the request rather than the state of the request when it was initially received.
-  If you are applying a condition to filter activation (e.g., using the <<../architecture/filter-chain.adoc#uri-regex, uri-regex attribute>>) and you modify some part of the request (e.g., the URL) in one of your filters, you may be impacted by this change.
-  For more details, see <<../architecture/filter-chain.adoc#filter-activation-determination, filter activation determination>>.
+  If you are applying a condition to filter activation (e.g., using the <<../architecture/filter-chain.adoc#_uri_regex, uri-regex attribute>>) and you modify some part of the request (e.g., the URL) in one of your filters, you may be impacted by this change.
+  For more details, see <<../architecture/filter-chain.adoc#_filter_activation_determination, filter activation determination>>.
 
 == System Model Configuration
 . Support for multi-cluster deployments has been removed.
@@ -106,7 +113,7 @@
 . The <<../filters/scripting.adoc#, Scripting Filter>> has been moved from the `repose-experimental-filter-bundle` to the `repose-filter-bundle`.
 
 == HTTP Client/Connection Pool Service
-. If setting the `chunked-encoding` attribute, it will no longer be set in <<../services/http-client.adoc#configuration, HTTP Client Service configuration>> but instead will be set in the <<../architecture/system-model.adoc#configuration, System Model configuration>>.
+. If setting the `chunked-encoding` attribute, it will no longer be set in <<../services/http-client.adoc#_configuration, HTTP Client Service configuration>> but instead will be set in the <<../architecture/system-model.adoc#_configuration, System Model configuration>>.
 .. Deprecated configuration values have been removed; change `0` to `false` and `1` to `true`.
 . The `http.connection.max-status-line-garbage` configuration attribute has been removed from the schema, and thus must be removed from configuration instances if present.
   This attribute has never affected the processing performed by *Repose*, and so it should be safe to remove in all cases.
@@ -120,7 +127,7 @@
 == URL Extractor to Header Filter
 . All capture groups in the URL regex will now add their captured values to the desired header.
 .. If you have configured a URL regex with multiple capture groups but do not desire the values of some of those groups to be added to the header, use the non-capturing group construct (i.e., `(?:X)`).
-   See https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#special[the special constructs portion of the Java Pattern documentation] for more information.
+   See https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html#special[the special constructs portion of the Java Pattern documentation] for more information.
 
 == OpenStack Identity v3 Filter
 . Removed deprecated caching attributes:

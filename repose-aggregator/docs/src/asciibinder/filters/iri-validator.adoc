@@ -5,10 +5,10 @@ This filter verifies that the request URI has been properly converted from an IR
 In other words, in the case where a request URI is a valid URI but, after conversion, is an invalid IRI, this filter will reject the request.
 
 == General filter information
-* *Name:* iri-validator
+* *Name:* `iri-validator`
 * *Default Configuration:* No configuration
 * *Released:* v6.2.2.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 
 == Prerequisites & Postconditions
 === Required Request Headers

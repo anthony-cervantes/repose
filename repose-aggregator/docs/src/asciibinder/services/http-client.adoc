@@ -162,7 +162,7 @@ Some services require a static header be present just for the purposes of identi
 .http-connection-pool.cfg.xml
 ----
 <http-connection-pools xmlns="http://docs.openrepose.org/repose/http-connection-pool/v1.0">
-    <pool id="default">
+    <pool id="default" default="true">
         <headers> <!--1-->
             <header name="foo" value="bar"/> <!--2-->
         </headers>

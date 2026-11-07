@@ -13,9 +13,9 @@ The first thing to do is to use the <<../filters/url-extractor-to-header.adoc#,U
 .url-extractor-to-header.cfg.xml
 ----
 <url-extractor-to-header xmlns="http://docs.openrepose.org/repose/url-extractor-to-header/v1.0">
-    <extraction header="Requested-Tenant-Id" url-regex="/(\d*)/.*"> <!--1-->
+    <extraction header="Requested-Tenant-Id" url-regex="/([^/]+)/.*"/> <!--1-->
 
-    <extraction header="Requested-Tenant-Id" url-regex=".*/do/something/on/(\d*)"/> <!--2-->
+    <extraction header="Requested-Tenant-Id" url-regex=".*/do/something/on/([^/]+)"/> <!--2-->
 </url-extractor-to-header>
 ----
 <1> This regex will grab the first tenant with the assumption that the tenant is used throughout your api.
@@ -98,4 +98,4 @@ To get per tenant based access control you need to configure the <<../filters/ap
 <1> This indicates that for all calls on this resource the user must have the `a:admin` role on the first tenant.
 <2> This indicates that for POST requests to this resource the user must have the `a:creator` role on the second tenant.
 
-You can find more info about configuring Role Based Access Control, <<./role-based-access-control.adoc#3-utilize-tenanted-rax-roles,here>>
+You can find more info about configuring Role Based Access Control, <<./role-based-access-control.adoc#_3_utilize_tenanted_rax_roles,here>>

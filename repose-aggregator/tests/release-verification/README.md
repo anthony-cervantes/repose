@@ -11,16 +11,19 @@ can be used for quickly troubleshooting issues, or experimenting with
 different facets of Repose or its environment.
 
 # Gradle Management
+
+Use JDK 27 and a running Docker daemon. Run wrapper commands from the repository
+root unless the command explicitly gives a relative wrapper path.
 A number of Gradle tasks have been defined to either stand up a Repose
 sandbox or run a smoke test against a sandboxed instance of Repose.
-These tasks can be viewed using the `gradle tasks` command on this
+These tasks can be viewed using the `../../../gradlew tasks` command on this
 project.
 
 A number of Gradle properties are used as the parameters for the
 Repose sandbox environment. These properties are described by the
 table below. Remember that Gradle accepts properties by using the
 following command form to invoke a Gradle task:
-`gradle <task> -P<property-key>=<property-value>`
+`./gradlew <task> -P<property-key>=<property-value>`
 
 | Property Name   | Default Value          | Description |
 | --------------- | ---------------------- | ----------- |
@@ -34,12 +37,11 @@ build the project locally and set up the built artifacts. A value of
 
 # Verifying A Release
 Gradle tasks have been set up to allow for verifying either the DEB
-packages, the RPM packages, or both. To verify a release, simply
-run `gradle smokeTest -Prelease-version=<version>` (e.g. 8.1.0.0) from
-this project. If the build succeeds, then the release succeeded! Different
+packages, the RPM packages, or both. To verify a release, run `./gradlew :repose-aggregator:tests:release-verification:smokeTest -Prelease-version=<version>` (use an actually published release tag) from the repository root.
+A successful run confirms the configured smoke checks for those packages. Different
 versions require different configurations to test all of the artifacts.
 To verify a v7.x release from the main project dir, run something like
-`gradle :repose-aggregator:tests:release-verification:smokeTest -Prelease-version=7.3.7.1 -Pconfig-dir=/Fully/Qualified/Path/repose/repose-aggregator/tests/release-verification/src/config_7`
+`./gradlew :repose-aggregator:tests:release-verification:smokeTest -Prelease-version=7.3.7.1 -Pconfig-dir=/Fully/Qualified/Path/repose/repose-aggregator/tests/release-verification/src/config_7`
 
 # Repose As A Sandbox
 A sandbox can only be started in Docker -- Vagrant is no longer supported.
@@ -55,6 +57,6 @@ To debug the instance of Repose running in the sandbox, connect a remote
 debugger to the port mapped by docker to the exposed JDWP port. So if
 the Docker container was started with
 `docker run -p 127.0.0.1:18028:10037 -t repose:deb-release-verification tail -f /var/log/repose.log`
-then a debugger can be connected to the localhost on port 18038.
+then a debugger can be connected to the localhost on port 18028.
 Note that we overrode the Docker `CMD` instruction with
 `tail -f /var/log/repose.log` to keep the Docker container running.

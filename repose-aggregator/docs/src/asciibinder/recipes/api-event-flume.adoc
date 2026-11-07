@@ -1,3 +1,9 @@
 = API Access Event Recording with Flume
 
-include::./_includes/in-progress.adoc[]
+*Repose* includes the Log4j2 Flume appender dependency, but the shipped `log4j2.xml` does not configure a Flume destination.
+Configure access-event messages with the <<../services/http-logging.adoc#,HTTP Logging Service>>, then configure a Log4j2 appender and logger to send them to your collector.
+The collector address, transport, buffering, and delivery requirements belong to your deployment.
+
+Refer to the https://logging.apache.org/log4j/2.x/manual/appenders.html[Log4j2 appender documentation] matching the installed appender version.
+Verify delivery against your collector before relying on it for auditing.
+For existing HERP-based event logging, see <<../filters/herp.adoc#,HERP>> and <<delegation.adoc#,Delegation>>.

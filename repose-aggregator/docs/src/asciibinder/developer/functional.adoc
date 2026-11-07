@@ -1,22 +1,56 @@
 = Functional Testing
 
-== Test Categorization
-The functional tests are categorized for easy division of labor when running the build.
-The primary categorization is along package lines `Core`, `Services`, and `Filters`.
-If a test needs further consideration because of unique needs we use the additional categories `Bug`, `Intense`, `XmlParser`, `Smoke`, and `Recipe`.
+Run the functional suite through the Gradle wrapper with JDK 27. Tests use
+Groovy 5, Spock 2, JUnit Platform, and `spock.lang.Tag`.
 
-While the build could be split strictly along package lines with the unique status categories applied on top, for ease of understanding and configuring the build it was decided to map packages onto categories as well.
-For the same reasons it was decided to only allow one category per test, with a special status category taking precedence over a package category.
+[source,shell]
+----
+./gradlew :repose-aggregator:tests:functional-tests:integrationTest
+./gradlew :repose-aggregator:tests:functional-tests:integrationTest -Prun=all --tests features.filters.apivalidator.ApiValidatorTest
+----
 
-=== Package Categories
-* `Core` - Denotes a test that cares about core *Repose* functionality such as configuration loading and startup.
-* `Services` - Denotes a test that is primarily about testing the functionality of one the services that *Repose* provides.
-* `Filters` - Denotes a test that is designed to test a specific filter and it's behavior.
+The default selection is `smoke`. A `--tests` class filter is applied in addition
+to the tag selection; use `-Prun=all` to select a specification outside the smoke tag.
 
-=== Status Categories
-* `Bug` - Denotes a test that highlights a known issue with *Repose* behavior.
-* `Intense` - Denotes a test that is known to be particularly resource intensive, typically because it starts up two or more instances of *Repose*.
-* `XmlParser` - Denotes a test that can potentially use *Saxon* for *XML* parsing, these tests will be run twice once with a *Saxon* license present and once without.
-* `Smoke` - Denotes a super simple test designed to prove that *Repose* can standup and process requests at all, generally there should only ever be one of these.
-* `Recipe` - Denotes a test that has a complex configuration design to test a needed use-case from end to end.
-* `Identity` - Denotes a test that deals with the integration with *Rackspace* identity services.
+== Tag Selection
+
+[cols="1,2",options="header"]
+|===
+| `-Prun` value | JUnit Platform selection
+| `all` | All specifications except `scaffold.category.Bug`
+| `bug` | `scaffold.category.Bug`
+| `core` | `scaffold.category.Core`
+| `filters` | `scaffold.category.Filters`
+| `identity` | `scaffold.category.Identity`
+| `intense` | `scaffold.category.Intense`
+| `recipe` | `scaffold.category.Recipe`
+| `services` | `scaffold.category.Services`
+| `xml` | `scaffold.category.XmlParsing`
+| `smoke` or omitted | `scaffold.category.Smoke`
+|===
+
+For example:
+
+[source,groovy]
+----
+import spock.lang.Tag
+
+@Tag("scaffold.category.Filters")
+class MyFilterTest extends ReposeValveTest {
+    // Configure and exercise the filter here.
+}
+----
+
+Tags can be combined; the build selects the tag requested by `run`.
+`xml` selects parser-related tests but does not install a Saxon license or
+run a second licensed pass automatically.
+
+== Execution and Reports
+
+The default is one fork. Set `-PintegrationTestMaxParallelForks=<count>` to
+change the fork count, and `-PshowLog` to show standard output and error.
+Test homes are created below `build/test-homes` in the functional-tests project.
+HTML reports are written to `build/reports/tests/integrationTest` and XML results
+to `build/test-results/integrationTest`.
+
+For framework setup, see <<../recipes/functional-test-framework.adoc#,Functional Test Framework>>.

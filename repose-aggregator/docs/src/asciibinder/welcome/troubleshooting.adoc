@@ -1,6 +1,6 @@
 = Troubleshooting
 
-include::_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 This page summarizes the different methods which can be used to get more information on the state of *Repose* and how it interacts with the clients, origin service, and third party services.
 Most of these methods can be used in a production deployment.
@@ -346,4 +346,4 @@ endif::[]
 This information is published through JMX and can be accessed through any JMX client.
 JConsole is a popular choice to access information published through JMX as it is shipped with the JDK.
 
-*IN PROGRESS*
+See <<../services/metrics.adoc#,Metrics Service>> for reporter configuration and the available metric names.

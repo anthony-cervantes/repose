@@ -3,10 +3,10 @@
 This filter will extract a value from the request body and put it in a request header.
 
 == General filter information
-* *Name:* body-extractor-to-header
+* *Name:* `body-extractor-to-header`
 * *Default Configuration:* body-extractor-to-header.cfg.xml
 * *Released:* v7.3.5.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/body-extractor-to-header.xsd[Schema]
 
 == Prerequisites & Postconditions

@@ -128,8 +128,8 @@ For managing keystores and truststores, the aptly named keytool can be used.
 For more details, see:
 
 * http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html#loading-keys-and-certificates[Loading Keys and Certificates]
-* https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html[Keytool Documentation]
-* https://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/CryptoSpec.html#KeystoreImplementation[Keystore Specification]
+* https://docs.oracle.com/en/java/javase/27/docs/specs/man/keytool.html[Keytool Documentation]
+* https://docs.oracle.com/en/java/javase/27/security/java-cryptography-architecture-jca-reference-guide.html[Keystore Specification]
 
 === Distribution
 The distributed datastore shares key-space with all of the enabled cluster nodes.

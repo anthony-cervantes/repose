@@ -28,37 +28,37 @@ JAR directly). *Repose* can be run on the same server or on a different server, 
 it can be run across multiple servers for horizontal scaling. At its core, *Repose* is a
 proxy that allows services to use Enterprise Integration Patterns (EIP).
 
-For more information, check out our http://www.openrepose.org/versions/latest/recipes/getting-started.html[Getting Started with *Repose*] guide.
+For more information, check out our link:repose-aggregator/docs/src/asciibinder/recipes/getting-started.adoc[Getting Started with *Repose*] guide.
 
 
 == Benefits
 
 * *Scalable*. *Repose* is incredibly scalable because it is designed to be stateless.
-* *Flexible*. *Repose* is run as a http://www.openrepose.org/versions/latest/recipes/valve-installation.html[standalone Linux service (Valve)].
-* *Extensible*. New http://www.openrepose.org/versions/latest/filters/index.html[components]
+* *Flexible*. *Repose* is run as a link:repose-aggregator/docs/src/asciibinder/recipes/valve-installation.adoc[standalone Linux service (Valve)].
+* *Extensible*. New link:repose-aggregator/docs/src/asciibinder/filters/index.adoc[components]
   are being added all of the time, and you can even build your own
-  https://github.com/rackerlabs/repose-hello-world[custom component].
-* *High performance*. *Repose* can handle http://www.openrepose.org/versions/latest/recipes/performance-best-practices.html[high loads] with high accuracy.
+  link:repose-aggregator/docs/src/asciibinder/recipes/custom-filter-for-repose.adoc[custom component].
+* *High performance*. *Repose* can handle link:repose-aggregator/docs/src/asciibinder/recipes/performance-best-practices.adoc[high loads] with high accuracy.
 * *Improving*. *Repose* continues to be under https://github.com/rackerlabs/repose/releases[active development].
 
 
 == *Repose* Components
 
-*Repose* includes several http://www.openrepose.org/versions/latest/filters/index.html[filters] and http://www.openrepose.org/versions/latest/services/index.html[services]
+*Repose* includes several link:repose-aggregator/docs/src/asciibinder/filters/index.adoc[filters] and link:repose-aggregator/docs/src/asciibinder/services/index.adoc[services]
 out of the box.  These include:
 
-* http://www.openrepose.org/versions/latest/filters/rate-limiting.html[Rate Limiting]
-* http://www.openrepose.org/versions/latest/filters/keystone-v2.html[Keystone v2 Auth]
-* http://www.openrepose.org/versions/latest/filters/openstack-identity-v3.html[OpenStack v3 Auth]
-* http://www.openrepose.org/versions/latest/filters/api-validator.html[API Validation]
-* http://www.openrepose.org/versions/latest/filters/translation.html[Translation]
-* http://www.openrepose.org/versions/latest/filters/compression.html[Compression]
-* http://www.openrepose.org/versions/latest/filters/cors.html[CORS]
-* http://www.openrepose.org/versions/latest/filters/versioning.html[Versioning]
-* http://www.openrepose.org/versions/latest/filters/slf4j-http-logging.html[HTTP Logging]
+* link:repose-aggregator/docs/src/asciibinder/filters/rate-limiting.adoc[Rate Limiting]
+* link:repose-aggregator/docs/src/asciibinder/filters/keystone-v2.adoc[Keystone v2 Auth]
+* link:repose-aggregator/docs/src/asciibinder/filters/openstack-identity-v3.adoc[OpenStack v3 Auth]
+* link:repose-aggregator/docs/src/asciibinder/filters/api-validator.adoc[API Validation]
+* link:repose-aggregator/docs/src/asciibinder/filters/translation.adoc[Translation]
+* link:repose-aggregator/docs/src/asciibinder/filters/compression.adoc[Compression]
+* link:repose-aggregator/docs/src/asciibinder/filters/cors.adoc[CORS]
+* link:repose-aggregator/docs/src/asciibinder/filters/versioning.adoc[Versioning]
+* link:repose-aggregator/docs/src/asciibinder/filters/slf4j-http-logging.adoc[HTTP Logging]
 
 *Repose* also makes it easy to create your own custom components.  Check out
-our https://github.com/rackerlabs/repose-hello-world[example custom filter] for more details.
+our link:repose-aggregator/docs/src/asciibinder/recipes/custom-filter-for-repose.adoc[custom filter guide] for more details.
 
 
 == Building from source
@@ -90,9 +90,9 @@ HTTP/1.1 reason phrases. Successful and delegated response bodies are unchanged.
 == Installation
 You can install *Repose* using the following methods:
 
-* http://www.openrepose.org/versions/latest/recipes/valve-installation.html#yum-based-linux-distributions[yum]
-* http://www.openrepose.org/versions/latest/recipes/valve-installation.html#apt-based-linux-distributions[apt]
-* http://www.openrepose.org/versions/latest/recipes/docker.html[Docker]
+* link:repose-aggregator/docs/src/asciibinder/recipes/valve-installation.adoc#_yum_based_linux_distributions[yum]
+* link:repose-aggregator/docs/src/asciibinder/recipes/valve-installation.adoc#_apt_based_linux_distributions[apt]
+* link:repose-aggregator/docs/src/asciibinder/recipes/docker.adoc[Docker]
 * https://github.com/rackerlabs/puppet-repose[Puppet]
 * https://github.com/rackerlabs/cookbook-repose[Chef]
 
@@ -123,7 +123,7 @@ Some dependencies are under other licenses.
 By using, modifying, or distributing *Repose* you may also be subject to the
 terms of those licenses.
 
-See the full list of dependencies in DEPENDENCIES.txt.
+See the dependency and license notices shipped with each artifact for its included dependencies.
 
 By contributing to this project, you agree to abide to the terms and conditions
 outlined in CONTRIBUTORS.txt.

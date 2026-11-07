@@ -1,3 +1,8 @@
 = Basic Authentication
 
-include::./_includes/in-progress.adoc[]
+The <<../filters/keystone-v2-basic-auth.adoc#,Keystone v2 Basic Auth Filter>> exchanges configured username and secret headers for an Identity v2 token.
+Configure its identity endpoint, header names, datastore, and failure/delegation behavior with `keystone-v2-basic-auth.cfg.xml`.
+Place it before filters that consume `X-Auth-Token`, such as the Keystone v2 authentication filter.
+
+The filter's name does not imply a generic HTTP Basic password database.
+Use TLS when transmitting credentials; see <<client-authentication.adoc#,SSL/TLS Client Authentication>> for certificate-based connection authentication.

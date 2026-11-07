@@ -1,13 +1,19 @@
 = Valve Installation
 :nexus-releases: https://maven.research.rackspacecloud.com/content/repositories/releases/org/openrepose
 
-include::./_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 Covers the typical *Repose* setup -- a Valve installation (i.e., standalone application) running as a Linux service.
 
 For instructions on starting *Repose* after setup, see: <<running-valve.adoc#,Running Valve>>.
 
 For more information about the packages themselves, see: <<../architecture/packages.adoc#,Packages>>.
+
+== Runtime Requirement
+
+Install a Java 27 runtime before starting Repose. Set `JAVA_HOME` when running
+from source; package launchers also check for a compatible runtime. For building
+the project or custom filters, install the full JDK 27.
 
 == APT Based Linux Distributions
 ----
@@ -19,8 +25,8 @@ sudo apt-get upgrade -y
 sudo apt-get install -y apt-transport-https ca-certificates wget
 
 # add openrepose.org repository
-wget -O - https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose | sudo apt-key add -
-sudo sh -c 'echo "deb https://nexus.openrepose.org/repository/debian stable main" > /etc/apt/sources.list.d/openrepose.list'
+sudo wget -O /usr/share/keyrings/openrepose.asc https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose
+sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/openrepose.asc] https://nexus.openrepose.org/repository/debian stable main" > /etc/apt/sources.list.d/openrepose.list'
 sudo apt-get update
 
 # install Repose
@@ -35,8 +41,6 @@ sudo yum update -y
 # install potentially missing packages needed to install Repose
 sudo yum install -y wget
 
-# Add the RPMForge/RepoForge repository to your system using the instructions located at:
-#  - http://repoforge.org/use/
 sudo yum install -y daemonize
 
 # add openrepose.org repository

@@ -5,10 +5,10 @@ This filter allows changes to the request/response body based on a path regex an
 Changes take the form of JSON Patches as defined in https://tools.ietf.org/html/rfc6902[RFC 6902].
 
 == General filter information
-* *Name:* body-patcher
+* *Name:* `body-patcher`
 * *Default Configuration:* body-patcher.cfg.xml
 * *Released:* v8.0.0.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/body-patcher.xsd[Schema]
 
 == Prerequisites & Postconditions

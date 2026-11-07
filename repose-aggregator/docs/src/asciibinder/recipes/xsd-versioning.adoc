@@ -1,3 +1,12 @@
 = XSD Versioning Guidelines
 
-include::./_includes/in-progress.adoc[]
+Configuration schemas live under the owning component's `src/main/resources/META-INF/schema` directory.
+The current XML-binding compiler is JAXB 4 and produces Jakarta classes for Java 27.
+Binding files use the Jakarta JAXB namespace and version `3.0`; see <<../welcome/java-27-upgrade-notes.adoc#,Java 27 Upgrade Notes>>.
+
+Keep XML namespaces and existing configuration documents compatible when making an additive change.
+Update the schema, generated-binding customization, shipped examples, and configuration tests together.
+For an incompatible format, define the new namespace and its migration explicitly rather than silently changing the meaning of an existing document.
+
+Some production schemas use XML Schema 1.1 assertions.
+Validate examples with the same XSD 1.1-capable parser used by the configuration service; an XSD 1.0 validator cannot verify those assertions.
