@@ -1,0 +1,62 @@
+version: 2
+
+updates:
+  # One root entry covers the Gradle multi-project build and version catalog.
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      gradle-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directories:
+      - /repose-aggregator/docs
+      - /repose-aggregator/tests/performance-tests/src/performanceTest/resources/roles/repose/files/mocks
+      - /repose-aggregator/tests/release-verification/src/fake-services/*
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: pip
+    directory: /repose-aggregator/tests/release-verification/src/scripts
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      pip-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  # Active package and release-verification images. The retired documentation
+  # publisher's Dockerfiles are intentionally omitted.
+  - package-ecosystem: docker
+    directories:
+      - /repose-aggregator/artifacts/docker/src/docker/resources/*/*
+      - /repose-aggregator/tests/release-verification/src/docker/*
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      docker-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
