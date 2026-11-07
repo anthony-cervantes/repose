@@ -23,13 +23,20 @@ buildscript {
 
 apply plugin: 'com.netflix.nebula.gradle-git-scm'
 
+// Keep existing version lookups and Nebula recommendations backed by the
+// standard Gradle catalog, which Dependabot can read and update directly.
+def dependencyCatalog = extensions.getByType(VersionCatalogsExtension).named('libs')
 project.ext.versionProperties = new Properties()
-// Maven coordinates contain colons, so only '=' separates catalog keys/values.
-file('versions.properties').eachLine { line ->
-    int separator = line.indexOf('=')
-    if (!line.startsWith('#') && separator > 0) {
-        versionProperties.setProperty(line.substring(0, separator).trim(), line.substring(separator + 1).trim())
-    }
+def catalogRecommendations = [:]
+dependencyCatalog.versionAliases.each { alias ->
+    versionProperties.setProperty(alias, dependencyCatalog.findVersion(alias).get().requiredVersion)
+}
+dependencyCatalog.libraryAliases.each { alias ->
+    def dependency = dependencyCatalog.findLibrary(alias).get().get()
+    def module = dependency.module.toString()
+    def requiredVersion = dependency.versionConstraint.requiredVersion
+    versionProperties.setProperty(module, requiredVersion)
+    catalogRecommendations[module] = requiredVersion
 }
 
 ext {
@@ -522,5 +529,5 @@ subprojects {
 }
 
 dependencyRecommendations {
-    propertiesFile file: file('versions.properties')
+    map recommendations: catalogRecommendations
 }

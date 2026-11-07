@@ -16,7 +16,6 @@ def filesToKeep = [
     './gradlew.bat',
     './build.gradle',
     './settings.gradle',
-    './versions.properties',
     './repose-aggregator/build.gradle',
     './repose-aggregator/tests/functional-tests/build.gradle',
     './repose-aggregator/src/docs/asciidoc/filters/attribute-mapping-policy-validation.adoc',

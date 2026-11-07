@@ -20,4 +20,4 @@
 * Then go make the filter
 
 Be careful with refactoring functions if you copied the files directly.
-Add any new dependencies to the `<REPOSE_DIR>/versions.properties` so anything else using it in the future will bring in the same one.
+Add any new dependencies to the `<REPOSE_DIR>/gradle/libs.versions.toml` so anything else using it in the future will bring in the same one.
