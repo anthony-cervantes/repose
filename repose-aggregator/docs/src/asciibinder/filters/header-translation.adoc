@@ -1,52 +1,24 @@
 = Header Translation Filter
 
-include::./_includes/in-progress.adoc[]
+Copies configured request-header values to new header names.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
+
+* *Name:* `header-translation`
+* *Default Configuration:* `header-translation.cfg.xml`
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/header-translation.xsd[Schema]
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+== Behavior and Ordering
 
-=== Required Preceding Filters
-???.
+Rules control whether quality values are preserved and whether the original header is removed. This filter must run before components that consume the translated headers. It does not change request bodies or response content and returns `503` until initialized.
 
-=== Request Headers Created
-???.
+== Configuration Example
 
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
+This example is included directly from the configuration shipped with the component.
 
 [source,xml]
-.???.cfg.xml
+.header-translation.cfg.xml
 ----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
+include::../../../../components/filters/header-translation-filter/src/main/resources/META-INF/schema/examples/header-translation.cfg.xml[]
 ----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*

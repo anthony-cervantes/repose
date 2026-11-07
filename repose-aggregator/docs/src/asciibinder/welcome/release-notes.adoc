@@ -76,7 +76,7 @@
 * [.enhancement-tag]#Enhancement# | [.breaking-tag]#Breaking Change# | https://repose.atlassian.net/browse/REP-5147[REP-5147] - The <<../filters/header-normalization.adoc#, Header Normalization>> filter now evaluates all targets not just the first to match.
 * [.enhancement-tag]#Enhancement# | [.breaking-tag]#Breaking Change# | https://repose.atlassian.net/browse/REP-3589[REP-3589] - Rewrote the <<../services/http-client.adoc#, HTTP Client Service>>.
 ** Redesigned the <<../services/http-client.adoc#, HTTP Client Service>> API.
-** Moved the `chunked-encoding` configuration from the <<../services/http-client.adoc#configuration, HTTP Client Service configuration>> to the <<../architecture/system-model.adoc#configuration, System Model configuration>>.
+** Moved the `chunked-encoding` configuration from the <<../services/http-client.adoc#_configuration, HTTP Client Service configuration>> to the <<../architecture/system-model.adoc#_configuration, System Model configuration>>.
 ** Removed the `http.connection.max-status-line-garbage` configuration attribute.
 ** Updated HTTP Components dependencies:
 *** `httpclient`:  4.5.3 → 4.5.6
@@ -94,7 +94,7 @@
 * [.enhancement-tag]#Enhancement# | [.breaking-tag]#Breaking Change# | https://repose.atlassian.net/browse/REP-7231[REP-7231] - Switching over to new filter, filter chain, and servlet classes.
 ** Many unused and deprecated classes have been removed.
 ** The <<../filters/scripting.adoc#, Scripting Filter>> has been moved from the `repose-experimental-filter-bundle` to the `repose-filter-bundle`.
-** <<../architecture/filter-chain.adoc#filter-activation-determination, Filter activation>> has been made more dynamic.
+** <<../architecture/filter-chain.adoc#_filter_activation_determination, Filter activation>> has been made more dynamic.
 ** Headers are no longer automatically split.
 ** Headers with an empty value are now supported and will not be removed from requests/responses.
 *** When querying rate limits via the the <<../filters/rate-limiting.adoc#, Rate Limiting Filter>>, an `Accept` header with an empty value will now result in a `406` response rather than a response of the default `Content-Type: application/json`.
@@ -272,7 +272,7 @@ As part of this correction, any configurations that were taking advantage of thi
 ====
 
 * https://repose.atlassian.net/browse/REP-5748[REP-5748] - Updated the <<../services/phone-home.adoc#, Phone Home Service>> to correct a bug that was preventing the message from actually reaching back.
-* https://repose.atlassian.net/browse/REP-5823[REP-5823] - Updated the <<../filters/keystone-v2.adoc#, Keystone v2 Filter>> to support multiple https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expressions] for URI tenant extraction.
+* https://repose.atlassian.net/browse/REP-5823[REP-5823] - Updated the <<../filters/keystone-v2.adoc#, Keystone v2 Filter>> to support multiple https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expressions] for URI tenant extraction.
 * https://repose.atlassian.net/browse/REP-5853[REP-5853] - Updated the SAML Policy Translation Filter and Attribute Mapping Policy Validation Filter to recover support for XML and JSON (which was removed in <<8.6.2.0 (2017-06-13)>>).
 * https://repose.atlassian.net/browse/REP-5617[REP-5617] - Updated the the internal HTTP Servlet Response Wrapper to log a WARNING when addHeader, addIntHeader, addDateHeader, or appendHeader is called after the response has been committed.
 

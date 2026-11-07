@@ -1,51 +1,13 @@
 = Forwarded Protocol Filter
 
-include::./_includes/in-progress.adoc[]
+Adds `X-Forwarded-Proto` if the request does not already contain that header.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+* *Name:* `forwarded-proto`
+* *Default Configuration:* `None`
+* *Bundle:* `repose-filter-bundle`
 
-=== Required Preceding Filters
-???.
+== Behavior and Ordering
 
-=== Request Headers Created
-???.
-
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
-
-[source,xml]
-.???.cfg.xml
-----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
-----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*
+The value is the protocol token before `/` in `ServletRequest.getProtocol()`; for `HTTP/1.1`, the value is `HTTP`. It is not derived from the request scheme or TLS state. Existing header values are preserved. No configuration file is required, and the request and response bodies are unchanged.

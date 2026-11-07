@@ -18,7 +18,11 @@ In an attempt to provide the most meaningful data possible, the following test c
 
 === Design
 
-The overall design of the automatic performance testing framework can be outlined succinctly by the following diagram:
+The repository contains an Ansible/Gatling harness for comparing requests through *Repose* with requests sent directly to a mock origin.
+It builds simulations with JDK 27 and resolves Gatling 3.16 libraries through Gradle.
+
+The following diagram describes the original hosted pipeline.
+Jenkins, cloud accounts, InfluxDB, and Grafana are external infrastructure; cloning this repository does not configure those services.
 
 [ditaa, perf-test-design-diagram, png]
 ....
@@ -44,16 +48,17 @@ The overall design of the automatic performance testing framework can be outline
 \--------/             \-------/
 ....
 
-A code change in the *Repose* GitHub repository on the master branch will trigger a Jenkins job to run.
-The Jenkins job will run the Ansible playbooks for all defined test cases.
-The Ansible playbooks, in turn, will provision the necessary cloud resources and begin executing the Gatling simulations for each test case.
-As Gatling runs, it will pipe the performance data it captures to InfluxDB.
-Once Gatling execution completes, the cloud resources will be cleaned up, and the Ansible playbook will finish executing.
-Grafana will query InfluxDB to retrieve the performance data which is available in the http://grafana.openrepose.org/dashboard/db/performance-tests?orgId=1[Performance Tests dashboard].
+The playbooks provision cloud resources, install *Repose* and Gatling, run the selected simulation, and fetch report archives.
+Resource cleanup is a separate playbook unless `site.yml` is used.
 
 ==== Gatling
 
-Data will be transported from Gatling to InfluxDB using the Graphite line protocol.
+The checked-in `roles/gatling/templates/gatling.conf` still requests the legacy `graphite` writer.
+Gatling 3.16 does not provide that writer.
+Before running the harness, change the template to `writers = [console, file]` for local reports, or supply a compatible metrics integration.
+The historical Graphite/InfluxDB examples below describe the original integration; they do not establish working live reporting with the current Gatling runtime.
+
+The original integration transported Gatling data to InfluxDB using the Graphite line protocol.
 The data being transferred will include numerous statistics calculated for a distinct time.
 To get a better idea of the data in question, a sample has been provided which captures the number of request/response pairs sent at time `1492629621` as well as various statistics calculated from the amount of time taken to service those requests.
 Note that the sample data only captures a single second of the Gatling simulation.
@@ -125,7 +130,7 @@ To learn more about how InfluxDB handles Graphite input, see https://github.com/
 
 The following diagram illustrates the interactions between each component referenced in the <<Design>>.
 
-image::../../_images/performance-test-framework.png[Performance Test Framework]
+image::../_images/performance-test-framework.png[Performance Test Framework]
 
 === Creating a New Test
 
@@ -141,26 +146,27 @@ Armed with this information, these are the basic steps to create a new test:
 
 . Create a vars file for the new test.
 .. This needs to be located at:
-* `repose-aggregator/tests/performance-tests/src/performanceTest/resources/test_vars/{category}/{test}.yaml`
+* `repose-aggregator/tests/performance-tests/src/performanceTest/resources/test_vars/{category}/{test}.yml`
 .. At a minimum, the vars file should contain:
 * `dir_prefix`
 +
 [NOTE]
 ====
-The `dir_prefix` is the `{category}/{test}` used to create the new vars file (e.g., `filters/saml`).
+The `dir_prefix` is the `{category}/{test}` used to create the new vars file (e.g., `use-cases/simple`).
 ====
 * required filter chain
 * Gatling simulation class `package`
 +
 [NOTE]
 ====
-The `package` is similarly created using `{category}.{test}` (e.g., `filters.saml`).
+The `package` is the Scala package declared by the simulation (e.g., `usecases.simple`).
+It need not match the hyphenated `dir_prefix`.
 ====
 * Gatling simulation class `name`
 +
 [NOTE]
 ====
-The `name` should follow the Camel Cased pattern of `{Test}{Category}Simulation` (e.g., `SamlFilterSimulation`, `ComplexUseCaseSimulation`).
+The `name` should follow the Camel Cased pattern of `{Test}{Category}Simulation` (e.g., `SimpleUseCaseSimulation`, `ComplexUseCaseSimulation`).
 ====
 . If necessary, add *Repose* configuration files.
 .. Template files should be placed in the directory:
@@ -177,20 +183,20 @@ Jinja2 templated files must have a `.j2` file extension appended to the file nam
 . Create a http://gatling.io/docs/current/general/concepts/#simulation[Gatling simulation].
 .. The Gatling simulation which will be responsible for generating test traffic and performance test data, should be created in the file:
 * `repose-aggregator/tests/performance-tests/src/performanceTest/scala/{package}/{name}.scala`
-.. The Gatling simulation should, in most cases, extend the `AbstractReposeSimulation` class provided by the *Repose* `performance-test-library`.
+.. The Gatling simulation should, in most cases, extend the `AbstractReposeSimulation` class provided by the *Repose* `performance-test-framework`.
 . If necessary, add mock services.
 .. Create any necessary mocks in the directory:
 * `repose-aggregator/tests/performance-tests/src/performanceTest/resources/roles/repose/files/mocks/{dir_prefix}/`.
 
 === Running a Test Automatically
 
-A Jenkins job is triggered any time that code on the master branch of the https://github.com/rackerlabs/repose[Repose Git Repository] changes.
-The Jenkins job will run the performance tests and publish the results automatically.
+The original Jenkins integration ran these playbooks after changes to master.
+A fork needs its own job, cloud credentials, inventory, and reporting configuration to automate runs.
 <<Design>> describes the full automated process in more detail.
 
 === Running a Test Manually
 
-If you have the appropriate permissions on the *Repose Jenkins* instance, you can run the https://jenkins.openrepose.org/job/performance-test/[performance-test] Jenkins job to manually start a single performance test.
+If you maintain a compatible Jenkins instance, you can run the https://jenkins.openrepose.org/job/performance-test/[performance-test] Jenkins job to manually start a single performance test.
 
 . In the https://jenkins.openrepose.org/job/performance-test/[performance-test] Jenkins job click on the https://jenkins.openrepose.org/job/performance-test/build?delay=0sec[Build with Parameters] link.
 . Populate the build parameters for the test you want to run.
@@ -200,31 +206,34 @@ If you have the appropriate permissions on the *Repose Jenkins* instance, you ca
 [options="header,autowidth"]
 |===
 | Name          | Required | Description                                           | Example
-| perf_test     | Yes      | name of the performance test you wish to perform      | `uses-cases/simple`
+| perf_test     | Yes      | name of the performance test you wish to perform      | `use-cases/simple`
 | extra_options | No       | extra options to pass to the ansible-playbook command | `-e '{gatling: {test: {params: {duration_in_min: 1}}}}'`
 | branch        | Yes      | the branch to build from (Default: `master`)          | `REP-0000_NewPerfTest`
 |===
 
 === Running a Test Locally
 
-. Set up your environment.
-+
-[NOTE]
-====
-We use Puppet to manage our performance test environment.
-The details of our environment can be found in our https://github.com/rackerlabs/repose-infrastructure-ng/blob/master/myModules/repose_jenkins/manifests/performance_slave.pp[Puppet manifest].
-If you have https://puppet.com/[Puppet] installed, you can download our manifest and re-create our environment by running `puppet apply` directly on the downloaded file.
-====
-. Clone the https://github.com/rackerlabs/repose[Repose GitHub repository] from Github. +
-`git clone https://github.com/rackerlabs/repose.git`
-. Navigate to the performance test directory in the project. +
-`cd repose/repose-aggregator/tests/performance-tests`
-. If the test is not on the `master` branch, then you simply indicate the correct branch in the test's `vars` file:
+Prepare JDK 27, Ansible and the roles/collections referenced by the playbooks, SSH access, and credentials for the configured cloud provider.
+Review `ansible.cfg`, `group_vars/`, cloud roles, host images, and external monitoring endpoints before creating resources.
+Apply the Gatling writer change described above in the source template before assembling the harness.
+
+From the repository root, compile the simulations and assemble their dependencies:
+
+[source,bash]
+----
+./gradlew :repose-aggregator:tests:performance-tests:buildAnsibleDirectory
+cd repose-aggregator/tests/performance-tests/build/ansible_root
+----
+
+Run playbooks from `build/ansible_root`, which contains generated resources and `roles/gatling/files/libs`.
+The source playbooks and test variables live under `src/performanceTest/resources`; edits to generated files are overwritten on the next build.
+
+. If the test is not on the `master` branch, then you simply indicate the correct branch in the test's `test_vars` file:
 +
 [source,yaml]
 ----
 {
-  dir_prefix: "filter/saml",
+  dir_prefix: "use-cases/simple",
   repose: {
     install: {
       git: {
@@ -244,43 +253,39 @@ When running the playbook, you may specify which test to run and what configurat
 [source,bash]
 ----
 ansible-playbook start_test.yml \ # <1>
-  -e '{perf_test: filters/saml, # <2>
-       gatling: {test: {params: {duration_in_min: 15, saml: {num_of_issuers: 2}}}}}' \ # <3>
+  -e '{perf_test: use-cases/simple, # <2>
+       gatling: {test: {params: {duration_in_min: 15}}}}' \ # <3>
   -vvvv # <4>
 ----
 <1> Run the `start_test.yml` playbook.
-<2> Set the config value for `perf_test` to `filters/saml` to run the SAML test.
-<3> Override the values for the two config parameters using YAML syntax.
+<2> Set the config value for `perf_test` to `use-cases/simple` to run the simple use-case test.
+<3> Override the test duration using YAML syntax.
 <4> Provide very verbose output.
 . View the <<Results>>.
 . Clean up cloud resources. +
-`ansible-playbook stop_test.yml -e '{perf_test: filters/saml}' -vvvv`
+`ansible-playbook stop_test.yml -e '{perf_test: use-cases/simple}' -vvvv`
 
 
 == Results
 
 === Grafana Dashboard
 
-[IMPORTANT]
-.TODO
-====
-* Describe the dashboard.
-====
-
-Grafana serves as the user interface to performance test data which can be seen in the http://grafana.openrepose.org/dashboard/db/performance-tests?orgId=1[Performance Tests dashboard].
+Grafana requires an independently configured metrics pipeline and dashboard.
+The legacy public dashboard is not a prerequisite for generating the HTML report.
+See the Gatling writer limitation above before enabling live metrics.
 
 
 === HTML Report
 
 After test execution has completed, Gatling will generate an HTML report.
-The report can be found inside an archive residing in the home directory with a file name like `SamlFilterSimulationRepose-1496319945650.tar.gz`.
+The report can be found inside an archive residing in the home directory with a file name like `SimpleUseCaseSimulationRepose-1496319945650.tar.gz`.
 The exact file name will be included in the output of the `Fetch the Gatling results` task which will resemble the following snippet:
 [listing]
 ----
-changed: [perf-filters-saml-testsuite01] => {
+changed: [perf-use-cases-simple-testsuite01] => {
     "changed": true,
     "checksum": "9bf6327e21d9029870e81451287aef61428329bf",
-    "dest": "/home/perftester/SamlFilterSimulationRepose-1496319945650.tar.gz", # <1>
+    "dest": "/home/perftester/SimpleUseCaseSimulationRepose-1496319945650.tar.gz", # <1>
     "md5sum": "aeace1aecfb4949b0e6bbd104e87b7a0",
     "remote_checksum": "9bf6327e21d9029870e81451287aef61428329bf",
     "remote_md5sum": null
@@ -290,7 +295,7 @@ changed: [perf-filters-saml-testsuite01] => {
 
 After the report archive is located, the contents must be extracted before the report can be viewed.
 That can be done with a command like the following: +
-`tar xvf /home/perftester/SamlFilterSimulationRepose-1496319945650.tar.gz`
+`tar xvf /home/perftester/SimpleUseCaseSimulationRepose-1496319945650.tar.gz`
 
 Once the report has been extracted, it can be viewed by opening the `index.html` file with a web browser.
 
@@ -306,12 +311,12 @@ export JAVA_OPTS="-Dtest.base_url=162.200.100.100:7070" # <1>
 export GATLING_HOME="/root/gatling/current" # <2>
 cd $GATLING_HOME
 
-gatling -s filters.saml.SamlFilterSimulation # <3>
+gatling -s usecases.simple.SimpleUseCaseSimulation # <3>
 ----
 <1> The target host and port need to be specified for all of the simulations.
 These JAVA_OPTS are only for Gatling and do not apply to *Repose*.
 <2> `GATLING_HOME` needs to be set for Gatling to run.
-<3> `filters.saml.SamlFilterSimulation` is the package-qualified class name of the simulation to run.
+<3> `usecases.simple.SimpleUseCaseSimulation` is the package-qualified class name of the simulation to run.
 It should be replaced with the FQCN of the simulation that should be run.
 
 === Configuring Gatling Manually
@@ -321,7 +326,8 @@ Files and directories of interest:
 * `conf/logback.xml` - Lets you turn on debug logging; useful to see the request and response data.
 * `conf/application.conf` - The configuration file read by the simulations.
 * `results/` - Contains all of the results.
-* `user-files/simulations/` - Contains the test simulations written in Scala and organized by package.
+* `lib/` - Contains the compiled simulation JAR, `performance-test-framework` JAR, and resolved Gatling dependencies.
+* `user-files/bodies/` - Contains test payloads available on the launcher classpath.
 
 == Additional Information
 
@@ -329,7 +335,8 @@ Files and directories of interest:
 
 The Ansible directory is prepared by running the Gradle task `buildAnsibleDirectory`.
 The base ansible files are processed using an ant based templating, this allows any build time values to be templated in (such as the gatling version to use).
-The simulations are copied in from the source directory.
+The simulations are compiled by Gradle and packaged in the `performance-tests` JAR.
+The test host runs those classes; it does not compile Scala source files.
 Any dependencies of the simulations will be copied into place for placement in the Gatling `lib` directory.
 
 === Performance Test Library
@@ -363,7 +370,7 @@ You can use Ansible tags to specify that only one of those tests should be run.
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml}' \
+  -e '{perf_test: use-cases/simple}' \
   --tags "repose" \
   -vvvv
 ----
@@ -371,7 +378,7 @@ ansible-playbook start_test.yml \
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml}' \
+  -e '{perf_test: use-cases/simple}' \
   --tags "origin" \
   -vvvv
 ----
@@ -383,7 +390,7 @@ You can specify which cloud server flavor to use in the configuration overrides.
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
+  -e '{perf_test: use-cases/simple,
        cloud: {server: {repose: {flavor: performance1-4}}}}' \
   -vvvv
 ----
@@ -396,19 +403,19 @@ If you expect *Repose* to take longer to start (e.g., due to a large WADL), you 
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
+  -e '{perf_test: use-cases/simple,
        repose: {service: {start_timeout_in_sec: 900}}}' \
   -vvvv
 ----
 
 === Saxon
 
-To get *Repose* to use Saxon, add a `saxon-license.lic` file to the `repose-aggregator/tests/performance-tests/roles/repose/files/` directory and pass in the following configuration override:
+To get *Repose* to use Saxon, add a `saxon-license.lic` file to the `repose-aggregator/tests/performance-tests/src/performanceTest/resources/roles/repose/files/` directory and pass in the following configuration override:
 
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
+  -e '{perf_test: use-cases/simple,
        repose: {systemd_opts: {use_saxon: true}}}' \
   -vvvv
 ----
@@ -420,7 +427,7 @@ You can set the JVM Options (`JAVA_OPTS`) used by *Repose* by setting the follow
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
+  -e '{perf_test: use-cases/simple,
        repose: {
          systemd_opts: {
            java_opts: ["-Xmx2g", "-Xms2g", "-XX:+UseG1GC", "-XX:+UseStringDeduplication"]}}}' \
@@ -434,7 +441,7 @@ Use the master playbook to run a performance test and immediately clean up after
 [source,bash]
 ----
 ansible-playbook site.yml \
-  -e '{perf_test: filters/saml}' \
+  -e '{perf_test: use-cases/simple}' \
   -vvvv
 ----
 
@@ -449,7 +456,7 @@ This feature is considered experimental.
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
+  -e '{perf_test: use-cases/simple,
        repose: {service: {state: restarted}, systemd_opts: {use_saxon: true}}}' \
   -vvvv
 ----
@@ -457,13 +464,13 @@ ansible-playbook start_test.yml \
 === Gatling Output Directory Name
 
 You can specify the base name of the directory containing the Gatling results in the configuration overrides.
-For example, if you wanted the base name `custom-base-name` (resulting in a directory name resembling `custom-base-name-repose-1487812914968`), you would run:
+For example, if you wanted the base name `custom-base-name` (resulting in a directory name resembling `custom-base-nameRepose-1487812914`), you would run:
 
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
-       gatling: {results: {output_dir: custom-base-name}}}' \
+  -e '{perf_test: use-cases/simple,
+       gatling: {test: {id: custom-base-name}}}' \
   -vvvv
 ----
 
@@ -474,9 +481,9 @@ Running a performance test with a unique naming prefix enables you to run a part
 [source,bash]
 ----
 ansible-playbook start_test.yml \
-  -e '{perf_test: filters/saml,
-       cloud: {naming_prefix: perf-saml-many-issuers},
-       gatling: {test: {params: {saml: {num_of_issuers: 100}}}}}' \
+  -e '{perf_test: use-cases/simple,
+       cloud: {naming_prefix: perf-simple-one},
+       gatling: {test: {params: {duration_in_min: 15}}}}' \
   -vvvv
 ----
 
@@ -486,8 +493,8 @@ If the prefix is not specified, the wrong cloud resources or no cloud resources 
 [source,bash]
 ----
 ansible-playbook stop_test.yml \
-  -e '{perf_test: filters/saml,
-       cloud: {naming_prefix: perf-saml-many-issuers}}' \
+  -e '{perf_test: use-cases/simple,
+       cloud: {naming_prefix: perf-simple-one}}' \
   -vvvv
 ----
 

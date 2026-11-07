@@ -1,3 +1,9 @@
 = User Access Events
 
-include::./_includes/in-progress.adoc[]
+Use the <<../services/http-logging.adoc#,HTTP Logging Service>> to record HTTP interactions using configured templates.
+Choose the fields and Log4j2 destination needed by your audit process.
+The <<../filters/slf4j-http-logging.adoc#,SLF4J HTTP Logging Filter>> is another available logging mechanism.
+
+The older <<../filters/herp.adoc#,HERP Filter>> records API events and remains available for existing deployments, but is deprecated.
+Its placement matters: a request rejected by an earlier filter never reaches HERP.
+See <<delegation.adoc#,Delegation>> when maintaining an existing HERP/DeRP chain.

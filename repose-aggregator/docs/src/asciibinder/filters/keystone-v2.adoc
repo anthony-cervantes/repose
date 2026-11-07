@@ -3,10 +3,10 @@
 Provides a mechanism for authenticating and enriching requests with data from an OpenStack Keystone v2 Identity service.
 
 == General filter information
-* *Name:* keystone-v2
+* *Name:* `keystone-v2`
 * *Default Configuration:* keystone-v2.cfg.xml
 * *Released:* v7.1.5.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/keystone-v2.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -262,7 +262,7 @@ The the `X-Identity-Status` header is in addition to the regular `X-Delegated` d
 You can configure this filter to allow no-op processing of requests that do not require authentication.
 For example, a service might want all calls authenticated with the exception of the call for WADL retrieval.
 In this situation, you can configure the whitelist as shown in the example below.
-The whitelist contains a list of https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expressions] that *Repose* attempts to match against the full request URI.
+The whitelist contains a list of https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expressions] that *Repose* attempts to match against the full request URI.
 If the URI matches an expression in the white list, then the request is passed to the origin service.
 Otherwise, authentication is performed against the request.
 
@@ -277,7 +277,7 @@ Otherwise, authentication is performed against the request.
     </white-list>
 </keystone-v2>
 ----
-<1> The https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expression] to allow matching URI's to pass without requiring authentication.
+<1> The https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expression] to allow matching URI's to pass without requiring authentication.
 
 === Configuring Cache Timeouts
 This filter caches authentication tokens.
@@ -368,7 +368,7 @@ Tenant ID Validation is the capability of this filter to parse a tenant ID out o
         <send-tenant-id-quality default-tenant-quality="0.9" <!--7--> <!--8-->
                                 validated-tenant-quality="0.7" <!--9-->
                                 roles-tenant-quality="0.5" <!--10-->
-        >
+        />
     </tenant-handling>
 </keystone-v2>
 ----

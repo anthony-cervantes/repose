@@ -8,10 +8,10 @@ This filter performs two primary functions: whitelisting and alphabetizing the q
 Both of these functions may be useful in preventing cache busting.
 
 == General filter information
-* *Name:* uri-normalization
+* *Name:* `uri-normalization`
 * *Default Configuration:* uri-normalization.cfg.xml
 * *Released:* v2.1.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/uri-normalization-configuration.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -188,3 +188,10 @@ This configuration will perform both media type normalization and query paramete
     </uri-filters>
 </uri-normalization>
 ----
+
+== Metrics
+
+When the Metrics Service is configured, query-string normalization records meters
+under `org.openrepose.filters.urinormalization.UriNormalizationFilter.Normalization`.
+Each meter is named by request method and the sanitized matching URI pattern;
+`ACROSS ALL` aggregates the individual meters.

@@ -1,52 +1,24 @@
 = URI Stripper Filter
 
-include::./_includes/in-progress.adoc[]
+Removes configured URI tokens from request paths and configured links in request or response content.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
+
+* *Name:* `uri-stripper`
+* *Default Configuration:* `uri-stripper.cfg.xml`
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/uri-stripper.xsd[Schema]
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+== Behavior and Ordering
 
-=== Required Preceding Filters
-???.
+Configuration selects resources by URI pattern and HTTP method and identifies links using JSONPath or XPath. Location-header rewriting and mismatch behavior are configurable. See the schema for token indexes and the handling of links that do not match.
 
-=== Request Headers Created
-???.
+== Configuration Example
 
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
+This example is included directly from the configuration shipped with the component.
 
 [source,xml]
-.???.cfg.xml
+.uri-stripper.cfg.xml
 ----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
+include::../../../../components/filters/uri-stripper-filter/src/main/resources/META-INF/schema/examples/uri-stripper.cfg.xml[]
 ----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*

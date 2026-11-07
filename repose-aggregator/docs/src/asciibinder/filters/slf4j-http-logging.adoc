@@ -1,52 +1,24 @@
 = SLF4J HTTP Logging Filter
 
-include::./_includes/in-progress.adoc[]
+Logs configured request and response fields using SLF4J loggers.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
+
+* *Name:* `slf4j-http-logging`
+* *Default Configuration:* `slf4j-http-logging.cfg.xml`
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/slf4j-http-logging-configuration.xsd[Schema]
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+== Behavior and Ordering
 
-=== Required Preceding Filters
-???.
+Log messages are produced around the downstream filter chain, so early placement observes the whole request. This filter does not modify headers or bodies. Its message-format configuration is distinct from the <<../services/http-logging.adoc#,HTTP Logging Service>> and its JTwig templates.
 
-=== Request Headers Created
-???.
+== Configuration Example
 
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
+This example is included directly from the configuration shipped with the component.
 
 [source,xml]
-.???.cfg.xml
+.slf4j-http-logging.cfg.xml
 ----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
+include::../../../../components/filters/slf4j-http-logging-filter/src/main/resources/META-INF/schema/examples/slf4j-http-logging.cfg.xml[]
 ----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*

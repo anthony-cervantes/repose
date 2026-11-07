@@ -1,6 +1,6 @@
 = Recipes
 
-include::./_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 == <<quick-start.adoc#,Quick Start>>
 Learn how to stand up Repose as quickly as possible!
@@ -16,7 +16,7 @@ Learn how to create your own custom filter for *Repose*!
 Learn the basics of running and operating *Repose* in a Docker container!
 
 == <<performance-best-practices.adoc#,Performance Best Practices>>
-*IN PROGRESS*
+Covers connection pools, resource limits, and tuning considerations.
 
 == <<role-based-access-control.adoc#,Role Based Access Control>>
 Learn how to implement Role-Based Access Control (RBAC) with *Repose*!
@@ -28,8 +28,8 @@ Details the ways which *Repose Valve* can be run.
 Covers the typical *Repose* setup -- a Valve installation (i.e., standalone application) running as a Linux service.
 
 == <<echo-server.adoc#,Echo Server>>
-*IN PROGRESS*
-If you're evaluating *Repose* and want a simple origin service to test against, you can install a local instance of httpbin that will echo back your requests.
+
+Explains the differences between an inspection origin, the bundled fake origin, and the terminal Echo filter.
 
 == <<rate-limiting.adoc#,Rate Limiting>>
 Rate limiting is a common use case for *Repose* and is easy to test.
@@ -38,22 +38,22 @@ Rate limiting is a common use case for *Repose* and is easy to test.
 Handling authorization when resources have multiple tenants.
 
 == <<user-access-events.adoc#, User Access Events>>
-*IN PROGRESS*
+Shows how to configure request access-event logging.
 
 == <<basic-authentication.adoc#,Basic Authentication>>
-*IN PROGRESS*
+Shows how to authenticate requests using configured username and secret headers.
 
 == <<delegation.adoc#,Delegation>>
-*IN PROGRESS*
+Explains how filters pass authentication and authorization failures to a later decision point.
 
 == <<preventing-xml-bomb.adoc#,Preventing XML bomb attacks>>
 Details how to configure *Repose* to help prevent XML bomb attacks.
 
 == <<api-event-flume.adoc#,API Access Event Recording with Flume>>
-*IN PROGRESS*
+Shows how to send API access events to a Flume collector.
 
 == <<xsd-versioning.adoc#,XSD Versioning Guidelines>>
-*IN PROGRESS*
+Describes schema versioning and backward compatibility for configuration changes.
 
 == <<client-authentication.adoc#, SSL/TLS Client Authentication>>
 Looking for a little more security talking to *Repose* or maybe from *Repose* to your origin service?
@@ -65,8 +65,8 @@ Learn how to use the *Repose* functional test framework to create tests for feat
 == <<header-splitting.adoc#, Header Splitting>>
 Details how to make version 9.0+ of *Repose* split headers like earlier versions did.
 
-== <<reason-phrase-normalization.adoc#, Reason Phrase Normalization>>
-Details how to normalize the reason phrase on the status line of an HTTP response.
+== <<reason-phrase-normalization.adoc#,Response Status Messages>>
+Explains status messages and validation diagnostics with Jakarta Servlet 6.1.
 
 == <<project-karate.adoc#, Problematic Header Handling>>
 Details what to do if *Repose* adds headers that might have non-legal values, that you can't otherwise change your configuration to remove (like if they are needed for rate limiting).

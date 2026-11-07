@@ -15,10 +15,10 @@ Please refer to https://tools.ietf.org/html/rfc7231#section-5[RFC7231] for detai
 ====
 
 == General filter information
-* *Name:* split-header
+* *Name:* `split-header`
 * *Default Configuration:* split-header.cfg.xml
 * *Released:* v8.9.1.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/split-header.xsd[Schema]
 
 == Prerequisites & Postconditions

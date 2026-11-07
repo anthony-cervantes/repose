@@ -1,4 +1,6 @@
-# Repose Performance Test Suite
+= Repose Performance Test Suite
 
-The documentation for this test suite can be found at:
-* http://www.openrepose.org/versions/latest/architecture/performance.html
+See link:../../docs/src/asciibinder/developer/performance.adoc[Performance Testing]
+for the current harness, preparation task, Ansible playbooks, and result collection.
+The source is in `src/performanceTest`; the assembled runnable directory is
+`build/ansible_root` after running, from the repository root, `./gradlew :repose-aggregator:tests:performance-tests:buildAnsibleDirectory`.

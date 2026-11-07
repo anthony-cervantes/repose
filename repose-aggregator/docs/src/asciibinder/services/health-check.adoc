@@ -1,3 +1,22 @@
-= Health Check service
+= Health Check Service
 
-include::./_includes/in-progress.adoc[]
+The Health Check Service tracks issues reported by registered components.
+`HealthCheckService.register()` returns a `HealthCheckServiceProxy`; callers use
+that proxy rather than passing a registration UID on every operation.
+
+The proxy exposes `reportIssue(name, message, severity)`, `resolveIssue(name)`,
+`getDiagnosis(name)`, `getReportIds()`, and `getReports()`.
+`HealthCheckService.isHealthy()` returns false while any registered component has
+a report with severity `BROKEN`. Core request processing rejects requests with
+`503` while the service is unhealthy.
+
+[source,java]
+----
+HealthCheckServiceProxy registration = healthCheckService.register();
+registration.reportIssue("configuration", "Waiting for valid configuration", Severity.BROKEN);
+registration.resolveIssue("configuration");
+registration.deregister();
+----
+
+Call `deregister()` during component shutdown and do not reuse the proxy afterward.
+This service does not require a separate configuration file.

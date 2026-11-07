@@ -1,3 +1,20 @@
 = Performance Best Practices
 
-include::./_includes/in-progress.adoc[]
+Measure a representative workload before changing resource limits.
+Compare requests through *Repose* with the same requests sent directly to the origin, and include warmup time.
+See <<../developer/performance.adoc#,Performance Testing>> for the current Gatling harness and its reporting limitations.
+
+== Connections and Timeouts
+
+Configure the <<../services/http-client.adoc#,HTTP Client Service>> connection pool for the expected concurrency and destination count.
+The total limit and per-route limit both constrain outbound connections.
+Set connection and socket timeouts appropriate to the origin's behavior; increasing a pool without enough CPU, memory, or origin capacity can make overload worse.
+
+== Bodies and Logging
+
+Validation, translation, body patching, and compression can add processing and buffering costs.
+Benchmark the actual filter order, payload sizes, and response types used by the API.
+Request tracing and wire logging produce much more data than normal operation; disable them after diagnosis.
+
+Use the <<../services/metrics.adoc#,Metrics Service>> and host/JVM metrics to identify the limiting resource.
+Re-test changes with the same workload rather than assuming a larger heap or thread count improves throughput.

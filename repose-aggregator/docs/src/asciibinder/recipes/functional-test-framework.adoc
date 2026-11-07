@@ -7,15 +7,19 @@ While there are features of this framework that are can be used without Spock, i
 
 == Download
 
-The *Repose* functional test framework is published to https://maven.research.rackspacecloud.com/[an instance of Nexus hosted by Rackspace].
+Historical releases of the framework were published to https://maven.research.rackspacecloud.com/[an instance of Nexus hosted by Rackspace].
+Those artifacts do not establish that a Java 27 build of this branch has been published.
+Within this repository, use `testImplementation project(":repose-aggregator:tests:functional-test-framework")` to consume the current source.
+External projects need a compatible published or locally built artifact and the same dependency adaptation for Deproxy described in `gradle/jakarta-servlet.gradle`.
 
 It is highly recommended that a build system be used to manage this library.
-The following snippets provide the necessary additions to download this framework with some popular build systems.
+The following snippets apply when a compatible artifact has been published.
+Replace `${version}` with its actual published version.
 
 === Maven
 
 [source,xml]
-.pom.xml
+.pom.xml (partial)
 ----
 <repositories>
     <repository>
@@ -46,9 +50,12 @@ repositories {
 }
 
 dependencies {
-    compile "org.openrepose:functional-test-framework:${version}"
+    testImplementation "org.openrepose:functional-test-framework:${version}"
 }
 ----
+
+The current framework uses Groovy 5 and Spock 2 on JUnit Platform.
+Enable `useJUnitPlatform()` on the consuming Gradle test task and run it with JDK 27.
 
 == Setup
 
@@ -139,7 +146,7 @@ class MyTest extends ReposeValveTest {
 
     def "this is an example test"() {
         when:
-        MessageChain mc = deproxy.makeRequest(reposeEndpoint) // <7>
+        MessageChain mc = deproxy.makeRequest(url: properties.reposeEndpoint) // <7>
 
         then:
         mc.receivedResponse.code.toInteger() == 200 // <8>

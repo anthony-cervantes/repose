@@ -1,56 +1,29 @@
 = Destination Router Filter
 
-include::./_includes/in-progress.adoc[]
+Adds a configured destination ID and quality to the request's routing candidates.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
+
+* *Name:* `destination-router`
+* *Default Configuration:* `destination-router.cfg.xml`
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/destination-router-configuration.xsd[Schema]
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+== Behavior and Ordering
 
-=== Required Preceding Filters
-???.
+The target must refer to a destination in `system-model.cfg.xml`. The routing servlet chooses among candidates by quality after the filter chain completes. This filter preserves request and response bodies and returns `503` until its configuration is initialized.
 
-=== Request Headers Created
-???.
+== Configuration Example
 
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
+This example is included directly from the configuration shipped with the component.
 
 [source,xml]
-.???.cfg.xml
+.destination-router.cfg.xml
 ----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
+include::../../../../components/filters/destination-router-filter/src/main/resources/META-INF/schema/examples/destination-router.cfg.xml[]
 ----
-<1> Specifies ???.
 
-== Additional Information
-
-=== Metrics
+== Metrics
 
 This component reports the following metrics to the <<../services/metrics.adoc#, Metrics Service>>:
 

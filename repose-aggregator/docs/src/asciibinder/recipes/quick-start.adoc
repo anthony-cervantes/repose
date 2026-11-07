@@ -19,8 +19,8 @@ If you can't, then the steps below may get you up and going.
 These are a few minor configuration items that may prevent some platforms from even executing the `docker run hello-world` test.
 They are not always well documented in the installation instructions, but are easily remedied.
 
-You will need to get a https://hub.docker.com[Docker Hub] account.
-Once you have that account, you can verify your credentials by logging in using:
+Public images can be pulled without a Docker Hub account, subject to Docker Hub pull limits.
+Use an account when authentication is needed, for example when pulling private images or publishing:
 
 - `docker login`
 
@@ -36,12 +36,14 @@ Make sure you can successfully run the Docker test:
 - `docker run hello-world`
 
 == Repose Docker Images
-All official Repose Docker images are published on Docker Hub at:
+Upstream Repose Docker images are published on Docker Hub at:
 
 image::http://dockeri.co/image/rackerlabs/repose[Repose Docker,link=https://hub.docker.com/r/rackerlabs/repose/]
 
 == Running a Docker Container
-After you have a running Docker Engine, you can run the latest *Repose* release with the following command:
+The following command runs the upstream `latest` image.
+It does not build this branch or establish which Java version that published image uses.
+For the Java 27 source implementation, <<docker.adoc#_manually_building_a_repose_docker_image,build a local image>> and substitute its tag below.
 
 ----
 docker run                  \ <1>

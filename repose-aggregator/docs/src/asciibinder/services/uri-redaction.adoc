@@ -13,7 +13,7 @@ The URI Redaction service can be used by any service or filter, even custom ones
 === Full Configuration
 The configuration for this service is extremely simple.
 It consists of a root element and a repeating list of a single element.
-The values of the repeating `redact` elements are regular expressions (RegEx's) that need to adhere to the https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expression] syntax.
+The values of the repeating `redact` elements are regular expressions (RegEx's) that need to adhere to the https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expression] syntax.
 Each of the RegEx's will be processed in order from top to bottom.
 The first RegEx will be passed the original URI.
 Then the result passed to the next RegEx and so on through the list.

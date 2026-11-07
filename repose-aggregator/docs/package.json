@@ -1,0 +1,14 @@
+{
+  "name": "repose-documentation",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "preview": "node scripts/preview.cjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@asciidoctor/core": "4.2.1"
+  }
+}

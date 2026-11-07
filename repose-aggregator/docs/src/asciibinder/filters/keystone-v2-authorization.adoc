@@ -3,10 +3,10 @@
 The Keystone v2 Authorization Filter authorizes requests based on data about the user making the request.
 
 == General filter information
-* *Name:* keystone-v2-authorization
+* *Name:* `keystone-v2-authorization`
 * *Default Configuration:* keystone-v2-authorization.cfg.xml
 * *Released:* v8.8.0.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/keystone-v2-authorization.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -158,7 +158,7 @@ This configuration will validate that the user data contains a configured endpoi
 You can configure this filter to allow no-op processing of requests that do not require authorization.
 For example, a service might want all calls authorized with the exception of the call for WADL retrieval.
 In this situation, you can configure the whitelist as shown in the example below.
-The whitelist contains a list of https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expressions] that *Repose* attempts to match against the full request URI.
+The whitelist contains a list of https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expressions] that *Repose* attempts to match against the full request URI.
 If the URI matches an expression in the white list, then the request is passed to the origin service.
 Otherwise, authorization is performed against the request.
 
@@ -178,7 +178,7 @@ Otherwise, authorization is performed against the request.
     </tenant-handling>
 </keystone-v2-authorization>
 ----
-<1> The https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html[Java Regular Expression] to allow matching URI's to pass without requiring authorization.
+<1> The https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html[Java Regular Expression] to allow matching URI's to pass without requiring authorization.
 
 === Pre-authorized Roles
 Pre-authorized roles can be configured to allow a user to bypass authorization if the user data contains a role matching one of the pre-authorized roles.

@@ -7,11 +7,11 @@ Please see our website for more information!
 
 ## Base Image
 
-The primary images are built on top of an Ubuntu image. Ubuntu images are considered primary images because they are named by version number without qualification. Additionally, the latest image will always match the latest version of the Ubuntu-based image.
+The current Dockerfiles use Ubuntu 24.04 and CentOS Stream 10, with the Temurin 27 JRE.
+The Gradle build uses the `centos` directory and `-centos` tag suffix for the Stream image.
+Local builds install packages produced from the current source. Passing `-Prepose-version` selects remote package installation.
 
-CentOS-based images are also provided for convenience. These images will be qualified with a suffix of `-centos`.
-
-If for any reason a different base image would be useful to you, please let us know!
+These source definitions do not change existing images on Docker Hub. Build and publish a tag before describing it as a Java 27 image.
 
 ## How To Run This Image
 
@@ -22,7 +22,7 @@ Please see the Docker page in our documentation for more information, including 
 
 ## Tags
 
-The tags which are currently maintained follow the format `x.x.x.x` or `x.x.x.x-centos`.
+The publishing tasks use the tag format `x.x.x.x` or `x.x.x.x-centos`.
 
 Tags that have already been published (e.g., older OS-specific tags) will continue to work, but there is no plan to maintain them going forward.
 

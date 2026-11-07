@@ -1,6 +1,6 @@
 = Services
 
-include::./_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 == <<atom-feed-consumption.adoc#,Atom Feed Consumption Service>>
 Consolidates the consumption of Atom feeds and provides a simple interface to retrieve consumed data.
@@ -8,8 +8,8 @@ Consolidates the consumption of Atom feeds and provides a simple interface to re
 == <<datastores.adoc#,Datastores>>
 Enables the local *Repose* node or an entire cluster to store various types of data.
 
-== <<health-check.adoc#,Health Check service>>
-*IN PROGRESS*
+== <<health-check.adoc#,Health Check Service>>
+Tracks component health reports and prevents request processing while a component reports a broken state.
 
 == <<http-client.adoc#,HTTP Client Service>>
 The HTTP client service manages the HTTP clients used for all outbound communication.

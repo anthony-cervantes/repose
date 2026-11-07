@@ -1,3 +1,5 @@
 = Debugging
 
-include::_includes/in-progress.adoc[]
+Start with <<troubleshooting.adoc#,Troubleshooting>> for request tracing, logs, and internal metrics.
+Use JDK 27 when starting or attaching to this branch's JVM processes.
+For a Docker sandbox and an example of mapping a JDWP debug port, see the release-verification README in the source tree.

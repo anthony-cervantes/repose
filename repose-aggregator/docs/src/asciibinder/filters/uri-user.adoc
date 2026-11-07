@@ -1,52 +1,24 @@
 = URI User Filter
 
-include::./_includes/in-progress.adoc[]
+Extracts a user identifier from a configured regular expression matching the request URI.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
+
+* *Name:* `uri-user`
+* *Default Configuration:* `uri-user.cfg.xml`
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/uri-user-configuration.xsd[Schema]
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+== Behavior and Ordering
 
-=== Required Preceding Filters
-???.
+The first matching identification pattern supplies capture group 1 as `X-PP-User`. The configured group and quality are added through `X-PP-Groups` and the user header. Patterns must contain the capture group. Requests with no match continue without added identity headers. Bodies are unchanged; an uninitialized filter returns `503`.
 
-=== Request Headers Created
-???.
+== Configuration Example
 
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
+This example is included directly from the configuration shipped with the component.
 
 [source,xml]
-.???.cfg.xml
+.uri-user.cfg.xml
 ----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
+include::../../../../components/filters/uri-user-filter/src/main/resources/META-INF/schema/examples/uri-user.cfg.xml[]
 ----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*

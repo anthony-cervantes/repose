@@ -9,10 +9,10 @@ With accessible rate limiting data, a user can determine the number of requests 
 See <<Additional Information>> for more details on how rate limiting is performed.
 
 == General Filter Information
-* *Name:* rate-limiting
+* *Name:* `rate-limiting`
 * *Default Configuration:* rate-limiting.cfg.xml
 * *Released:* v1.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/rate-limiting-configuration.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -125,12 +125,12 @@ Provided below are sample requests to give you a better idea of what that looks 
         include-absolute-limits="false"/> <!--3-->
 
     <limit-group id="limited" groups="BETA_Group IP_Standard" default="false">
-        <limit uri="*" uri-regex="/something/(.*)" http-methods="PUT" unit="MINUTE" value="10"/>
-        <limit uri="*" uri-regex="/something/(.*)" http-methods="GET" unit="MINUTE" value="10"/>
+        <limit id="put" uri="*" uri-regex="/something/(.*)" http-methods="PUT" unit="MINUTE" value="10"/>
+        <limit id="get" uri="*" uri-regex="/something/(.*)" http-methods="GET" unit="MINUTE" value="10"/>
     </limit-group>
 
     <limit-group id="limited-all" groups="My_Group" default="true">
-        <limit uri="*" uri-regex="/something/(.*)" http-methods="ALL" unit="HOUR" value="10"/>
+        <limit id="all" uri="*" uri-regex="/something/(.*)" http-methods="ALL" unit="HOUR" value="10"/>
     </limit-group>
 </rate-limiting>
 ----
@@ -305,7 +305,7 @@ Consider the following example.
 Five requests are allowed per minute for each time-block, but the one-minute window that lands in between the two units has seven requests.
 This shows that limits may be broken for a given window of time, however, across multiple units of time, the allowed requests average less than or equal to five requests per minute.
 
-image::../../_images/rl-time-block.png[Rate Limiting Time Block Diagram]
+image::../_images/rl-time-block.png[Rate Limiting Time Block Diagram]
 
 === Querying Limits
 This filter tracks limits by user, and consequently, requires a user be provided when querying limits.

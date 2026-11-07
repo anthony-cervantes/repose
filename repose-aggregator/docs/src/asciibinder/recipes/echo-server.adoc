@@ -1,3 +1,10 @@
 = Echo Server
 
-include::./_includes/in-progress.adoc[]
+For a request-inspection origin, run httpbin or another HTTP test service and configure its host and port as a system-model destination.
+Use <<getting-started.adoc#,Getting Started>> for the destination configuration.
+Choose and pin a maintained test-service distribution for your environment.
+
+The repository's `tests/release-verification/src/fake-services/fake-origin` is a smaller Node.js mock on port `8000`.
+It returns the `X-DEVICE-ID` header as an `id` JSON field or a `deviceId` XML element; it does not echo an arbitrary request body.
+
+The <<../filters/echo.adoc#,Echo Filter>> is different: it terminates the chain inside *Repose*, copies request headers to the response, and does not call an origin.

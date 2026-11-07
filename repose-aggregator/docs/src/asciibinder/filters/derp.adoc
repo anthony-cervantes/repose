@@ -3,19 +3,20 @@
 [WARNING]
 ====
 This filter is considered deprecated and will be removed in a future version.
-Consider using the <<../services/http-logging.adoc#,HTTP Logging Service>> instead.
+Use the <<../services/http-logging.adoc#,HTTP Logging Service>> for new access logging.
+When maintaining delegation, retain a component that enforces failures before routing to the origin.
 ====
 
 The Delegation Response Processor (DeRP) filter rejects any request containing the `X-Delegated` header.
-The content of the response will match is determined by the content of the `X-Delegated` header.
+The response status and error message are determined by the content of the `X-Delegated` header.
 
 This filter is part of the <<../recipes/delegation.adoc#, delegation recipe>>.
 
 == General filter information
-* *Name:* derp
+* *Name:* `derp`
 * *Default Configuration:* No configuration
 * *Released:* v7.0.0.1
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 
 == Prerequisites & Postconditions
 === Required Request Headers
@@ -47,7 +48,7 @@ This filter is not strictly required by any other filters.
 When delegation is used, this filter will terminate the processing chain preventing succeeding filters from running.
 
 === Response Body Changes
-This filter does not modify the response body.
+On rejection, this filter calls Servlet `sendError`; the container determines the error response body.
 
 === Response Headers Created
 This filter does not create/modify any response headers.
@@ -55,4 +56,5 @@ This filter does not create/modify any response headers.
 === Response Status Codes
 This filter will only modify the response status code when rejecting a delegated request (i.e., if the request contains a delegation header).
 The response status code will be set to status code associated with the highest quality delegation value, or `500` if the delegation request header exists but is not parsable.
-The response reason phrase will be set to the message associated with the highest quality delegation value.
+The message associated with the highest quality delegation value is passed to Servlet `sendError`.
+The container determines the resulting error response; the message is not forwarded as a custom HTTP status-line reason phrase.

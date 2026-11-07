@@ -18,10 +18,10 @@ Most of the ideas described in this conference session are implemented in this f
 ====
 
 == General filter information
-* *Name:* api-validator
+* *Name:* `api-validator`
 * *Default Configuration:* validator.cfg.xml
 * *Released:* v2.1.6
-* *Bundle:* repose-extensions-filter-bundle
+* *Bundle:* `repose-extensions-filter-bundle`
 * link:../schemas/validator-configuration.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -241,11 +241,11 @@ To place this filter in <<../recipes/delegation.adoc#,Delegation>> mode, add the
 .validator.cfg.xml
 ----
 <validators xmlns="http://docs.openrepose.org/repose/validator/v1.0">
+    <delegating quality="0.3"/> <!--1--> <!--2-->
     <validator role="default"
                default="true"
                wadl="file:///path/to/wadl/file.wadl"
     />
-    <delegating quality="0.3"/> <!--1--> <!--2-->
 </validators>
 ----
 <1> If this element is present, then delegation is enabled.

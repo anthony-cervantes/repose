@@ -1,6 +1,6 @@
 = Servlet Specification
 
-The https://javaee.github.io/servlet-spec/[Java Servlet Specification] is a document that details the design and API of a Java-based system that can respond to requests.
+The https://jakarta.ee/specifications/servlet/6.1/[Jakarta Servlet 6.1 specification] is a document that details the design and API of a Java-based system that can respond to requests.
 To learn more about the specification itself, visit the link near the start of this paragraph.
 
 *Repose* is built on top of the servlet specification.
@@ -8,7 +8,10 @@ However, *Repose* also constrains the specification in certain ways.
 For example, *Repose* can only service HTTP requests.
 
 To understand the architecture of *Repose*, it is vital that one understands the servlet specification.
-Currently, *Repose* complies with version 3.0 of the specification.
+The embedded server uses Jetty 12.1 with the Jakarta Servlet 6.1 API.
+Custom filters implement `jakarta.servlet.Filter` and must be rebuilt for Java 27.
+Repose supports synchronous HTTP filter processing; the API version does not imply support for every optional Servlet feature.
+The EAR registration descriptors still use the Java EE 6 XML namespace consumed by `EarClassProvider`; this descriptor format is separate from the Jakarta Java API.
 
 == Filter
 The `ReposeFilter` class implements the `Filter` API and is the only filter in the base containers `FilterChain`.

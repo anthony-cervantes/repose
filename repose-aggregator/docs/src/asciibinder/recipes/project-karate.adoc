@@ -1,7 +1,7 @@
 = Problematic Header Handling
 
 This recipe is meant to provide solutions if *Repose*'s header enrichment is creating headers with non-legal characters.
-The ideal solution is to turn off the generation of the problem headers, but there are situations where that may not be possible because they are needed downstream in the orign service or are required for internal *Repose* usage (like rate limiting).
+The ideal solution is to turn off the generation of the problem headers, but there are situations where that may not be possible because they are needed downstream in the origin service or are required for internal *Repose* usage (like rate limiting).
 
 If the origin service doesn't need any of the problematic headers that *Repose* adds, you can use <<Header Normalization>>.
 If the origin service does use the added headers you'll need to use <<Header Encoding>>.
@@ -21,17 +21,17 @@ The first step is to update your system model and add another <<../filters/heade
 
   <filters>
     <!-- Other filters in chain -->
-    <filter="header-normalization" configuration="karate-headers.cfg.xml"/> <!--1-->
+    <filter name="header-normalization" configuration="karate-headers.cfg.xml"/> <!--1-->
   </filters>
 
   <!-- Rest of system model -->
 
 </system-model>
 ----
-<1> Specifies a new header noramilzation filter and tells it to look for its configuration in `karate-headers.cfg.xml`.
+<1> Specifies a new header normalization filter and tells it to look for its configuration in `karate-headers.cfg.xml`.
 
 === Add the Header Normalization Config
-Create a new header normalization config named `karate-header.cfg.xml`.
+Create a new header normalization config named `karate-headers.cfg.xml`.
 
 [source,xml]
 .karate-headers.cfg.xml

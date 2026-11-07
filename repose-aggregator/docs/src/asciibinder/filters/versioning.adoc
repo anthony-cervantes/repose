@@ -1,56 +1,29 @@
 = Versioning Filter
 
-include::./_includes/in-progress.adoc[]
+Maps public API versions to configured origin destinations and produces version-discovery responses.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-filter-bundle
+== General Filter Information
+
+* *Name:* `versioning`
+* *Default Configuration:* `versioning.cfg.xml`
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/versioning-configuration.xsd[Schema]
 
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
+== Behavior and Ordering
 
-=== Required Preceding Filters
-???.
+Configure version mappings in `versioning.cfg.xml` and destinations in `system-model.cfg.xml`. Recognized resources are routed with the version's internal URI. Discovery requests can return a version document with `200`; unrecognized versions can return a choices document with `300`. An unavailable configured destination returns `502`; an uninitialized filter returns `503`.
 
-=== Request Headers Created
-???.
+== Configuration Example
 
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
+This example is included directly from the configuration shipped with the component.
 
 [source,xml]
-.???.cfg.xml
+.versioning.cfg.xml
 ----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
+include::../../../../components/filters/versioning-filter/src/main/resources/META-INF/schema/examples/versioning.cfg.xml[]
 ----
-<1> Specifies ???.
 
-== Additional Information
-
-=== Metrics
+== Metrics
 
 This component reports the following metrics to the <<../services/metrics.adoc#, Metrics Service>>:
 
@@ -64,4 +37,15 @@ This component reports the following metrics to the <<../services/metrics.adoc#,
 | `org.openrepose.filters.versioning.VersioningFilter.VersionedRequest.<name>`
 | Counts the number of times any request is processed using a version mapping specified by `<name>`.
 `<name>` is the `id` attribute of the `version-mapping` element in this filter's configuration.
+|===
+
+[cols="1,3,3",options="header"]
+|===
+|Metric Type |Metric Name |Description
+|Meter
+|`org.openrepose.filters.versioning.VersioningFilter.VersionedRequest.<version-id>`
+|Counts requests matching a configured version, including that version's discovery document.
+|Meter
+|`org.openrepose.filters.versioning.VersioningFilter.VersionedRequest.Unversioned`
+|Counts requests without a matching version, including service discovery and choices responses.
 |===

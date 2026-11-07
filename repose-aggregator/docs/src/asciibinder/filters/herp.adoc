@@ -12,9 +12,9 @@ The logs can be inspected to view the usage of a service and to perform auditing
 Events are recorded even if the API request is rejected by *Repose* before reaching the origin service.
 
 == General Filter Information
-* *Name:* herp
+* *Name:* `herp`
 * *Released:* v7.0.0.1
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * *Default Configuration:* highly-efficient-record-processor.cfg.xml
 * *Configuration Schema:* link:../schemas/highly-efficient-record-processor.xsd[highly-efficient-record-processor.xsd]
 

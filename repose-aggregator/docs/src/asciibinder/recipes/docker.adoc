@@ -4,7 +4,8 @@ With the advent of container technology, *Repose* can be fully encapsulated and 
 
 By bundling the environment with the software itself, deploying *Repose* has become a much quicker and simpler process.
 Docker boasts security through isolation, and when run on platforms with native support, it requires very little overhead.
-To make everything as easy and versatile as possible, the *Repose* team now publishes Docker images on Docker Hub as part of every release.
+This branch provides Dockerfiles for Ubuntu 24.04 and CentOS Stream 10, both with Temurin 27.
+Build the current source to use the Java 27 implementation; existing upstream Docker Hub tags are separate published artifacts.
 
 Even though the published *Repose Docker* image doesn't do a lot by default, this recipe will show you how to tap into some of that power hidden just below the surface.
 
@@ -22,7 +23,7 @@ If you don't have the basics of these operations memorized, then that is fine.
 You can always look back at the <<quick-start.adoc#,Quick Start>> anytime you need to.
 
 == Using a Repose Docker Image
-All official *Repose Docker* images are published on Docker Hub at:
+Upstream images are available on Docker Hub at:
 
 image::http://dockeri.co/image/rackerlabs/repose[Repose Docker,link=https://hub.docker.com/r/rackerlabs/repose/]
 
@@ -76,41 +77,30 @@ Now if we wanted to, we could change the Docker options that define the environm
 If we wanted to forward random ports instead of explicitly declaring the port mapping, we could replace the `--publish 8080:8080` option with `--publish-all` instead.
 
 == Manually Building a Repose Docker Image
-The Dockerfile's used to build v{project-version} of the *Repose Docker* images published on Docker Hub are:
+The Dockerfile sources are under:
 
-. link:../resources/ubuntu/Dockerfile[Ubuntu]
-. link:../resources/centos/Dockerfile[CentOS]
+* `repose-aggregator/artifacts/docker/src/docker/resources/file/{ubuntu,centos}/Dockerfile` for local packages.
+* `repose-aggregator/artifacts/docker/src/docker/resources/repo/{ubuntu,centos}/Dockerfile` for published packages.
 
-To build a custom *Repose Docker* image, follow these steps:
+From the repository root, prepare a local-package build context:
 
-. Acquire a *Repose* Dockerfile.
-. *Optionally* Modify the Dockerfile.
-. Run the following command from the root of the *Repose* project to build an image based on one of the Dockerfile's linked above.
-+
-[source,bash,subs="verbatim,attributes"]
+[source,bash]
 ----
-docker build                          \ <1>
-   --build-arg REPOSE_VERSION={project-version} \ <2>
-   --tag local/repose:v{project-version}-local  \ <3>
-   /dir/containing/dockerfile/          <4>
+./gradlew :repose-aggregator:artifacts:docker:copyPackages :repose-aggregator:artifacts:docker:copyDockerfiles
+docker build --tag local/repose:java27 repose-aggregator/artifacts/docker/build/docker/ubuntu
 ----
-Let's break that command down and take a closer look at what it is doing:
-+
-<1> This tells Docker to build an image.
-<2> This option is used by the Dockerfile to know what version of *Repose* to install.
-    See our http://www.openrepose.org/versions/latest/welcome/release-notes.html[Release Notes] page for a list of available versions.
-<3> This option defines the tag to apply to the image.
-    It is in `repository:tag` format.
-<4> The last parameter is the path to the `docker build` context.
-    By default, there should be a `Dockerfile` at the root of the context.
-    If you need it to reside somewhere else, then review the https://docs.docker.com/[Official Docker Documentation] for additional options.
-. If the Dockerfile was successfully built, a Docker image should be available within Docker.
-Run the following command to show all available images:
-+
-----
-docker images
-----
+
+The local context contains the Valve and filter-bundle DEB packages.
+Use `build/docker/centos` for the corresponding RPM context.
+Do not run `docker build` on the source `file/` directory alone: it does not contain the packages referenced by `COPY`.
+
+Alternatively, use the Gradle `buildUbuntuImageLocal` or `buildCentosImageLocal` tasks; see <<../developer/docker.adoc#,Docker Development>>.
+Setting `-Prepose-version=<published-version>` selects the `repo/` Dockerfiles and remote package installation instead of building local packages.
+That version must exist in the configured package repository and be compatible with the image's Java runtime.
 
 == Notices
-Custom artifacts are not currently supported by our Docker images.
-If you would like to deploy custom code in *Repose* running in Docker, please http://www.openrepose.org/#contact-us[contact us]!
+Custom EARs use the same bundle loader as a standalone installation.
+Build them against Java 27 and Jakarta APIs, then copy them into a derived image or mount an artifact directory configured in `container.cfg.xml`.
+A mount over `/usr/share/repose/filters` replaces its contents, so include the standard bundles needed by your filter chain.
+The `repose` user must be able to read the EARs and write to the deployment and log directories.
+See <<custom-filter-for-repose.adoc#,Custom Filter for Repose>>.

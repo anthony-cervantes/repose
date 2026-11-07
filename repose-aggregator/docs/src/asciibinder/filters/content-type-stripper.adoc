@@ -6,10 +6,10 @@ If the first eight bytes of the content body are white space, then the body is c
 When a content body is present, requests will pass through to the next filter or the origin service without alteration.
 
 == General filter information
-* *Name:* content-type-stripper
+* *Name:* `content-type-stripper`
 * *Default Configuration:* No configuration
 * *Released:* v6.2.1.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 
 == Prerequisites & Postconditions
 === Required Request Headers

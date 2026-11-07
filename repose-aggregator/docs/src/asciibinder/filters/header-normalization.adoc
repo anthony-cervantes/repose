@@ -7,10 +7,10 @@ The filter uses blacklisting to prevent specific headers and it uses whitelistin
 The headers can be matched by URI regular expression (`uri-regex`) and/or HTTP method type (`http-methods`).
 
 == General filter information
-* *Name:* Header Normalization
+* *Name:* `header-normalization`
 * *Default Configuration:* header-normalization.cfg.xml
 * *Released:* v2.0.0
-* *Bundle:* repose-filter-bundle
+* *Bundle:* `repose-filter-bundle`
 * link:../schemas/header-normalization-configuration.xsd[Schema]
 
 == Prerequisites & Postconditions
@@ -131,7 +131,7 @@ This configuration is a more complex example.
     </target>
 </header-normalization>
 ----
-<1> Since the `http-methods` attribute is not specified, this target applies to all HTTP methods (GET, POST, PUT, etc) that match the `uri-regex`.
+<1> Since `http-methods="ALL"`, this target applies to all supported HTTP methods (GET, POST, PUT, etc) that match the `uri-regex`.
 <2> Even though both request and response elements are optional, at least one must be specified and both can be.
 <3> The following whitelist only applies to the request.
 <4> Even though both whitelist and blacklist elements are optional, one and only one must be specified.
@@ -140,12 +140,12 @@ This configuration is a more complex example.
 <7> The following blacklist will only apply to the response.
 <8> A blacklist specifies exactly which headers to not allow to continue.
 <9> Since the `uri-regex` attribute is not specified, this target applies to all POST and PUT requests. +
-    Valid `http-methods` are: GET, DELETE, POST, PUT, HEAD, OPTIONS, CONNECT, TRACE, and ALL
-<10> Since neither the `uri-regex` nor `http-methods` are specified, this target applies to all requests and responses that don't match one of the previous targets.
+    Valid `http-methods` are: GET, DELETE, POST, PUT, PATCH, HEAD, OPTIONS, CONNECT, TRACE, and ALL
+<10> Since neither the `uri-regex` nor `http-methods` are specified, this target applies to all requests and responses, including those matching earlier targets.
 
 [NOTE]
 ====
-Every target that matches will get evaluated.
+Every target that matches will get evaluated. `CONNECT` is accepted by this filter's schema, but core request processing rejects it as an unsupported HTTP method.
 ====
 
 == Additional Information

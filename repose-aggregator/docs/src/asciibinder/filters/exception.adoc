@@ -1,51 +1,9 @@
-= Exception Filter
+= Exception Handling
 
-include::./_includes/in-progress.adoc[]
+Current Repose bundles do not register a filter named `exception`.
+Do not add `<filter name="exception"/>` to the system model.
 
-== General filter information
-* *Name:* ???
-* *Default Configuration:* ???.cfg.xml
-* *Released:* v?.?.?.?
-* *Bundle:* repose-experimental-filter-bundle
-
-== Prerequisites & Postconditions
-=== Required Request Headers
-???.
-
-=== Required Preceding Filters
-???.
-
-=== Request Headers Created
-???.
-
-=== Request Body Changes
-???.
-
-=== Recommended Follow-On (Succeeding) Filters
-???.
-
-=== Response Body Changes
-???.
-
-=== Response Headers Created
-???.
-
-=== Response Status Codes
-???.
-
-== Examples
-=== Shows how to ???
-This configuration will ???.
-
-[source,xml]
-.???.cfg.xml
-----
-<??? xmlns="http://docs.openrepose.org/repose/???/v1.0">
-    <???> <!--1-->
-    </???>
-</???>
-----
-<1> Specifies ???.
-
-== Additional Information
-*Remove this section if not needed.*
+Core request handling and the servlet container handle uncaught failures.
+Individual filters can also reject requests with documented status codes.
+Consult the <<../architecture/filter-chain.adoc#,Filter Chain>> and each
+filter's response-status documentation when selecting error handling behavior.

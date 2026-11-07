@@ -43,6 +43,12 @@ sudo /etc/init.d/repose stop # <2>
 <2> Stops *Repose*.
 
 == Java JAR
+
+Use Java 27. `java -jar /usr/share/repose/repose.jar --version` prints the build and
+Jetty versions; `--help` lists the launcher options. `-c <directory>` selects a
+configuration directory (default `/etc/repose`).
+The current launcher exits with status `1` after printing `--version` or `--help`; account for that when using these informational options in scripts.
+
 As a Java application, *Repose* can also be run directly from a JAR file.
 
 ----

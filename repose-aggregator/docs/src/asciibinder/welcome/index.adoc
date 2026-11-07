@@ -1,6 +1,9 @@
 = Welcome to Repose
 
-include::_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
+
+The current development baseline requires JDK 27 and uses Scala 3 and Jakarta APIs.
+Read the <<java-27-upgrade-notes.adoc#,Java 27 upgrade notes>> before upgrading extensions or clients.
 
 == How to Navigate These Docs
 Here's loosely how these docs are organized.

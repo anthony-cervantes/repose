@@ -1,6 +1,6 @@
 = System Model
 
-include::./_includes/in-progress.adoc[]
+include::../_includes/in-progress.adoc[]
 
 The *Repose* `system-model.cfg.xml` is the main configuration file for *Repose*.
 It outlines the deployment layout and behavior for *Repose*.
@@ -143,7 +143,7 @@ If set to localhost, any physical node will match and run the *Repose* node.
 <7> Defines that a header named `foo` (case insensitive) must be defined.
 <8> Defines that a header named `bar` (case insensitive) must be defined and have a value of `BaZ` (case sensitive).
 <9> Defines a boolean `NOT` operator that negates the result of the single direct sub-element's evaluation.
-<10> Defines the https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#sum[Java regular expression] the URI must match.
+<10> Defines the https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/util/regex/Pattern.html#sum[Java regular expression] the URI must match.
      This particular one requires that it has exactly four total path segments, the first path segment must be `v1`, the fourth path segment is `public`, and the trailing slash is optional. +
      Example: `/v1/two/three/public`
 <11> Defines a set of services to run.
@@ -207,8 +207,11 @@ If headers got added to the request while processing through *Repose* that conta
 <1> This is a comma separated list of all the headers that should be URL Encoded.
     Default: empty
 
-=== Nova-API Localhost Deployment
-*IN PROGRESS*
+=== Origin Deployment
+Use a destination endpoint with the origin host, protocol, port, and root path.
+The origin may run on the same host as *Repose* or on a remote host.
 
 === Health Check Passthrough
-*IN PROGRESS*
+A request intended for an origin health endpoint follows the configured filter chain.
+Use URI-based filter activation when that endpoint must bypass authentication or other filters; see <<filter-chain.adoc#_filter_activation_determination,Filter Activation Determination>>.
+This is separate from the <<../services/health-check.adoc#,Health Check Service>>, which tracks the health of *Repose* components.

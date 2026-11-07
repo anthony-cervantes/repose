@@ -227,8 +227,8 @@ For example, for a response with the status line `HTTP/1.1 200 OK`, this value w
 
 | outboundResponseReasonPhrase
 | String
-| The reason phrase of the outbound response.
-For example, for a response with the status line `HTTP/1.1 200 OK`, this value would be `OK`.
+| The standard message associated with the outbound status code, obtained from Jetty's `HttpStatus` lookup.
+For example, status `200` produces `OK`. This value does not preserve a custom origin reason phrase.
 
 | outboundResponseContentLength
 | Integer
@@ -265,21 +265,21 @@ This value is taken from the `X-Impersonator-Name` header of the outbound reques
 For example, given the header `X-Impersonator-Name: IAmAnImpersonator`, the value of this variable would be `IAmAnImpersonator`.
 
 | timeRequestReceived
-| https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html[Instant]
+| https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Instant.html[Instant]
 | The time at which the inbound request was received.
-Evaluating this variable in an expression (i.e., `{{ timeRequestReceived }}`) will result in the value of https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html#toString--[Instant.toString] being rendered.
+Evaluating this variable in an expression (i.e., `{{ timeRequestReceived }}`) will result in the value of https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Instant.html#toString()[Instant.toString] being rendered.
 
 | timeToHandleRequest
-| https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html[Duration]
+| https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Duration.html[Duration]
 | The amount of time between receiving an inbound request and sending an outbound response.
-Evaluating this variable in an expression (i.e., `{{ timeToHandleRequest }}`) will result in the value of https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#toString--[Duration.toString] being rendered.
-This value can be rendered as the amount of time in milliseconds by calling the https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#toMillis--[Duration.toMillis] method (i.e., `{{ timeToHandleRequest.toMillis }}`).
+Evaluating this variable in an expression (i.e., `{{ timeToHandleRequest }}`) will result in the value of https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Duration.html#toString()[Duration.toString] being rendered.
+This value can be rendered as the amount of time in milliseconds by calling the https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Duration.html#toMillis()[Duration.toMillis] method (i.e., `{{ timeToHandleRequest.toMillis }}`).
 
 | timeInOriginService
-| https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html[Duration]
+| https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Duration.html[Duration]
 | The amount of time between sending an outbound request to the origin service and receiving an inbound response.
-Evaluating this variable in an expression (i.e., `{{ timeInOriginService }}`) will result in the value of https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#toString--[Duration.toString] being rendered.
-This value can be rendered as the amount of time in milliseconds by calling the https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#toMillis--[Duration.toMillis] method (i.e., `{{ timeToHandleRequest.toMillis }}`).
+Evaluating this variable in an expression (i.e., `{{ timeInOriginService }}`) will result in the value of https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Duration.html#toString()[Duration.toString] being rendered.
+This value can be rendered as the amount of time in milliseconds by calling the https://docs.oracle.com/en/java/javase/27/docs/api/java.base/java/time/Duration.html#toMillis()[Duration.toMillis] method (i.e., `{{ timeInOriginService.toMillis }}`).
 
 | localIpAddress
 | String
