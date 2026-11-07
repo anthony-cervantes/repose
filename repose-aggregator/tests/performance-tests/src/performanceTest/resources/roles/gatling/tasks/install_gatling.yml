@@ -18,59 +18,33 @@
 #=_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_=_
 #
 
-- name: Install git
-  apt: pkg=git state=latest
+- name: Install the Java runtime
+  include_tasks: "{{ playbook_dir }}/tasks/install_java.yml"
 
-- name: Add Java repositories
-  apt_repository: repo="ppa:webupd8team/java" update_cache=yes
-
-- name: Install java 8
-  apt:
-    pkg: openjdk-8-jdk
-    state: latest
-    update_cache: yes
-    cache_valid_time: 86400
+- name: Create the Gatling installation directories
+  file:
+    path: "/root/gatling/current/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop: [bin, lib, conf, results]
   become: yes
 
-- name: Install unzip
-  apt:
-    pkg: unzip
-    update_cache: yes
-    state: installed
+- name: Install the Gatling launcher
+  copy:
+    src: gatling.sh
+    dest: /root/gatling/current/bin/gatling.sh
+    mode: '0755'
 
-- name: Create project directory for Gatling
-  file: state=directory path=gatling
-
-- name: Download Gatling
-  get_url: url={{ gatling.install.download_url }} dest=/root
-
-- name: Unarchive Gatling file
-  unarchive:
-    src: "{{ gatling.install.download_url | basename }}"
-    dest: /root/gatling
-    creates: /root/gatling/{{ gatling.install.dir }}
-    remote_src: yes
-
-- name: Create a symbolic link for /root/gatling/(installation dir) to /root/gatling/current
-  file:
-    src: /root/gatling/{{ gatling.install.dir }}
-    dest: /root/gatling/current
-    state: link
-
-- name: Create a symbolic link for /usr/bin/gatling
+- name: Create the Gatling command
   file:
     src: /root/gatling/current/bin/gatling.sh
     dest: /usr/bin/gatling
     state: link
-
-- name: Remove Gatling example simulations
-  file:
-    path: /root/gatling/current/user-files/simulations/computerdatabase
-    state: absent
+  become: yes
 
 - name: Copy Gatling configuration
   template:
     src: gatling.conf
     dest: /root/gatling/current/conf/gatling.conf
-    mode: 0644
+    mode: '0644'
     backup: yes

@@ -20,8 +20,10 @@
 package org.openrepose.commons.utils.scala
 
 import org.junit.runner.RunWith
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.{AnyWordSpec => WordSpec}
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+
 
 import scala.util.{Failure, Success}
 

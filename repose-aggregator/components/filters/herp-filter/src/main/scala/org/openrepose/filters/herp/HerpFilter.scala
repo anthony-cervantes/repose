@@ -25,9 +25,9 @@ import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.github.jknack.handlebars.{Handlebars, Helper, Options, Template}
 import com.rackspace.httpdelegation._
 import com.typesafe.scalalogging.StrictLogging

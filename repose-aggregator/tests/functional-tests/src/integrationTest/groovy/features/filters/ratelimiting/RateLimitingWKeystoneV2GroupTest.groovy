@@ -20,19 +20,18 @@
 package features.filters.ratelimiting
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
 /**
  * Created by jennyvo on 7/7/15.
  * Update 01/28/16
  *  - replace client-auth with keystone-v2 filter
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class RateLimitingWKeystoneV2GroupTest extends ReposeValveTest {
 
     def static originEndpoint

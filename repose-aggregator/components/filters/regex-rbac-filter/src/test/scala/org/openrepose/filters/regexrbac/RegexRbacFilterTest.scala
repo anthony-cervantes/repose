@@ -20,16 +20,18 @@
 package org.openrepose.filters.regexrbac
 
 import java.net.URL
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse._
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse._
 
 import com.rackspace.httpdelegation.{HttpDelegationHeaderNames, HttpDelegationManager}
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.hamcrest.Matchers.{endsWith, hasProperty}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, argThat, same, eq => eql}
+import org.mockito.ArgumentMatchers.{any, anyString, argThat, same, eq => eql}
 import org.mockito.Mockito
 import org.mockito.Mockito.{when => whenMock, _}
 import org.openrepose.commons.config.manager.UpdateFailedException
@@ -99,7 +101,7 @@ class RegexRbacFilterTest
       verify(mockConfigService).subscribeTo(
         eql("RegexRbacFilter"),
         eql("regex-rbac.cfg.xml"),
-        argThat(hasProperty("path", endsWith("/META-INF/schema/config/regex-rbac.xsd"))),
+        org.mockito.hamcrest.MockitoHamcrest.argThat(hasProperty("path", endsWith("/META-INF/schema/config/regex-rbac.xsd"))),
         same(filter),
         any(classOf[Class[RegexRbacConfig]]))
       !filter.isInitialized

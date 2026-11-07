@@ -20,15 +20,17 @@
 package org.openrepose.commons.utils.servlet.http
 
 import java.io.ByteArrayInputStream
-import javax.servlet.ServletOutputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.ServletOutputStream
 
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
-import org.mockito.Matchers.{eq => mEq}
+import org.mockito.ArgumentMatchers.{eq => mEq}
 import org.mockito.Mockito._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class PassthroughServletOutputStreamTest extends FunSpec with Matchers with MockitoSugar {

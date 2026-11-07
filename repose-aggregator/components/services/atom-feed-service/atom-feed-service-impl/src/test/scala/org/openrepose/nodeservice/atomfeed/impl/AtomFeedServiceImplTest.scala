@@ -20,15 +20,17 @@
 package org.openrepose.nodeservice.atomfeed.impl
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpecLike => FunSpecLike}
+import org.scalatest.matchers.should.Matchers
 
 import akka.actor.ActorSystem
 import akka.testkit.{TestKit, TestProbe}
 import io.opentracing.Tracer
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{eq => isEq, _}
+import org.mockito.ArgumentMatchers.{eq => isEq, _}
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
@@ -39,7 +41,7 @@ import org.openrepose.nodeservice.atomfeed.impl.actors.NotifierManager.RemoveNot
 import org.openrepose.nodeservice.atomfeed.AtomFeedListener
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpecLike, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.test.util.ReflectionTestUtils

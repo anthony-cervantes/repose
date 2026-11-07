@@ -1,4 +1,5 @@
 dependencies {
     compileOnly 'org.projectlombok:lombok'
-    compileOnly "javax.servlet:javax.servlet-api"
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 }

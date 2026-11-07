@@ -19,20 +19,19 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.XmlParsing
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.*
 import static org.openrepose.commons.utils.http.PowerApiHeader.RELEVANT_ROLES
 import static org.openrepose.commons.utils.string.Base64Helper.base64EncodeUtf8
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class ApiValidatorMultiTenantTest extends ReposeValveTest {
 
     static def HDR_OTHER = "X-Other"

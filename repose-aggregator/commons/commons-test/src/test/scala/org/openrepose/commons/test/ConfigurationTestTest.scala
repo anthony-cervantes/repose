@@ -20,10 +20,12 @@
 package org.openrepose.commons.test
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class ConfigurationTestTest extends FunSpec with Matchers with BeforeAndAfterEach {

@@ -24,9 +24,9 @@ import java.util.UUID
 
 import com.oracle.javaee6.FilterType
 import com.typesafe.scalalogging.StrictLogging
-import javax.annotation.{PostConstruct, PreDestroy}
-import javax.inject.{Inject, Named}
-import javax.servlet.{Filter, ServletContext, ServletException}
+import jakarta.annotation.{PostConstruct, PreDestroy}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet.{Filter, ServletContext, ServletException}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.commons.utils.classloader.EarClassLoaderContext
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
@@ -237,7 +237,7 @@ class ReposeFilterLoader @Inject()(@Value(ReposeSpringProperties.NODE.NODE_ID) n
         logger.error(message)
         throw new FilterInitializationException(message, e)
       case e: ClassCastException =>
-        throw new FilterInitializationException(s"Requested filter, $filterClassName is not of type javax.servlet.Filter", e)
+        throw new FilterInitializationException(s"Requested filter, $filterClassName is not of type jakarta.servlet.Filter", e)
       case e@(_: InstantiationException | _: IllegalAccessException) =>
         throw new FilterInitializationException(s"Requested filter, $filterClassName is not an annotated Component nor does it have a public zero-argument constructor.", e)
     }

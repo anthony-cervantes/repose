@@ -1,14 +1,18 @@
 dependencies {
-    compile "org.scala-lang:scala-library"
-    compile "xerces:xerces-xsd11"
-    compile "org.hamcrest:hamcrest-library"
-    compile "org.scalatest:scalatest_$scalaMajDotMin"
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.apache.httpcomponents:httpcore"
-    compile("org.mockito:mockito-core")
+    api "org.scala-lang:scala-library"
+    api "xerces:xerces-xsd11"
+    api "org.hamcrest:hamcrest"
+    api "org.scalatest:scalatest_$scalaMajDotMin"
+    api "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    api "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    api "org.apache.httpcomponents:httpclient"
+    api "org.apache.httpcomponents:httpcore"
+    api("org.mockito:mockito-core")
 
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
 }
 
 dependencyCheck {

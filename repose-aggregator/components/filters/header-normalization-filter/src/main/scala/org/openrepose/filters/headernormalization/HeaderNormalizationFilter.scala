@@ -23,9 +23,9 @@ import java.util.Optional
 
 import com.codahale.metrics.MetricRegistry
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.commons.utils.servlet.http.ResponseMode.{MUTABLE, PASSTHROUGH}
 import org.openrepose.commons.utils.servlet.http.{HttpServletRequestWrapper, HttpServletResponseWrapper}
 import org.openrepose.commons.utils.string.RegexString

@@ -20,14 +20,13 @@
 
 package features.filters.addheader
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class AddHeaderRequestOnlyTest extends ReposeValveTest {
 
     def setupSpec() {

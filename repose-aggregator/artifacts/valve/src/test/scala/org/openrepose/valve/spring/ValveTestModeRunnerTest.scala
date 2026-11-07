@@ -20,6 +20,8 @@
 package org.openrepose.valve.spring
 
 import java.lang.management.ManagementFactory
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import javax.management.{JMX, ObjectName}
 
 import com.typesafe.scalalogging.StrictLogging
@@ -31,7 +33,7 @@ import org.openrepose.core.systemmodel.config.SystemModel
 import org.openrepose.nodeservice.test.FakeContainerConfigurationService
 import org.openrepose.valve.jmx.ValvePortMXBean
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.{Await, Future}

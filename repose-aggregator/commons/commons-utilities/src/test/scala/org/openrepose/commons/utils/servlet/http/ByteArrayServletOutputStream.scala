@@ -20,9 +20,13 @@
 package org.openrepose.commons.utils.servlet.http
 
 import java.io.ByteArrayOutputStream
-import javax.servlet.ServletOutputStream
+import jakarta.servlet.{ServletOutputStream, WriteListener}
 
 class ByteArrayServletOutputStream extends ServletOutputStream {
+  override def isReady: Boolean = true
+
+  override def setWriteListener(listener: WriteListener): Unit =
+    throw new IllegalStateException("This test stream supports blocking I/O only")
   val baos = new ByteArrayOutputStream()
 
   override def write(b: Int): Unit = baos.write(b)

@@ -20,7 +20,7 @@
 package features.filters.herp
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.http.OpenStackServiceHeader
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 import org.openrepose.framework.test.ReposeValveTest
@@ -28,14 +28,13 @@ import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Header
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 import static javax.ws.rs.HttpMethod.GET
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class HerpUserAccessEventFilterTest extends ReposeValveTest {
 
     def setupSpec() {

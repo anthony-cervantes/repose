@@ -20,8 +20,10 @@
 package org.openrepose.nodeservice.atomfeed.impl.auth
 
 import java.net.URI
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import javax.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.HttpServletResponse._
 import org.apache.http.HttpVersion
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpPost, HttpUriRequest}
@@ -30,7 +32,7 @@ import org.apache.http.protocol.HttpContext
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.core.services.httpclient.{HttpClientService, HttpClientServiceClient}
@@ -38,7 +40,7 @@ import org.openrepose.docs.repose.atom_feed_service.v1.{AtomFeedConfigType, Open
 import org.openrepose.nodeservice.atomfeed.{AuthenticationRequestException, FeedReadRequest}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class OpenStackIdentityV2AuthenticatedRequestFactoryTest

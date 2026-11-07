@@ -25,9 +25,9 @@ import java.net.URI
 import com.atlassian.oai.validator.OpenApiInteractionValidator
 import com.atlassian.oai.validator.report.ValidationReport
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.commons.utils.io.BufferedServletInputStream
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.core.filter.AbstractConfiguredFilter

@@ -19,9 +19,8 @@
  */
 package features.core.logging
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
-import scaffold.category.Core
 import spock.lang.IgnoreIf
 import spock.lang.Shared
 
@@ -32,7 +31,7 @@ import java.nio.file.attribute.PosixFilePermission
 
 import static java.nio.file.attribute.PosixFilePermission.*
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class LogFileAccessTest extends ReposeValveTest {
 
     // todo: devise a way to ensure we have a valid username other than the name of the user running the JVM process

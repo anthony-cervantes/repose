@@ -27,7 +27,7 @@ import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.impl.client.HttpClients
 import org.junit.Before
 import org.junit.BeforeClass
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.openrepose.framework.test.server.CustomizableSocketServerConnector
@@ -35,16 +35,15 @@ import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Endpoint
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Services
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.USER_ID
 import static org.openrepose.commons.utils.string.Base64Helper.base64EncodeUtf8
 import static org.rackspace.deproxy.Deproxy.REQUEST_ID_HEADER_NAME
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class LoggingServiceTest extends ReposeValveTest {
     def static identityEndpoint
     @Shared

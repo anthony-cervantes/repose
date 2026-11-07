@@ -19,8 +19,8 @@
  */
 package org.openrepose.nodeservice.atomfeed.impl
 
-import javax.annotation.{PostConstruct, PreDestroy}
-import javax.inject.{Inject, Named}
+import jakarta.annotation.{PostConstruct, PreDestroy}
+import jakarta.inject.{Inject, Named}
 
 import akka.actor._
 import com.typesafe.scalalogging.StrictLogging

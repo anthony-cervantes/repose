@@ -19,13 +19,12 @@
  */
 package features.filters.headertranslation
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 import spock.lang.Unroll
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class HeaderTranslationSchemaAssertionTest extends ReposeValveTest {
     def static params = [:]
 

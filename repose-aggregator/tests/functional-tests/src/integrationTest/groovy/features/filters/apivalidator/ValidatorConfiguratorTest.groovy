@@ -19,16 +19,15 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeLogSearch
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.XmlParsing
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class ValidatorConfiguratorTest extends ReposeValveTest {
     def static params = [:]
 

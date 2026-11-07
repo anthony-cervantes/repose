@@ -19,17 +19,16 @@
  */
 package features.filters.versioning
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
 /**
  * This test ensures that the versioning filter provides metrics via JMX,
  * counting how many requests it services and which endpoints it sends them to.
  */
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class VersioningJMXTest extends ReposeValveTest {
 
     private static final String KEY_PROPERTIES_PREFIX =

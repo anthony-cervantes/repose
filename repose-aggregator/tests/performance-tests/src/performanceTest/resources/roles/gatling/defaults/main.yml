@@ -20,10 +20,6 @@
 
 {
   gatling: {
-    install: {
-      download_url: "https://oss.sonatype.org/content/repositories/releases/io/gatling/highcharts/gatling-charts-highcharts-bundle/@gatlingVersion@/gatling-charts-highcharts-bundle-@gatlingVersion@-bundle.zip",
-      dir: "gatling-charts-highcharts-bundle-@gatlingVersion@"
-    },
     test: {
       config: null,
       params: {

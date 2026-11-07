@@ -20,13 +20,15 @@
 package org.openrepose.valve.spring
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.container.config.ContainerConfiguration
 import org.openrepose.core.spring.CoreSpringProvider
 import org.openrepose.core.systemmodel.config.SystemModel
 import org.openrepose.nodeservice.test.FakeContainerConfigurationService
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.{Await, Future}

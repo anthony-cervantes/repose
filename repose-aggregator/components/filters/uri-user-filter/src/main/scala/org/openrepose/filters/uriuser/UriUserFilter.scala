@@ -22,9 +22,9 @@ package org.openrepose.filters.uriuser
 
 import java.net.URL
 import java.util.regex.Pattern
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener

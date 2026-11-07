@@ -19,12 +19,11 @@
  */
 package features.filters.responsemessaging
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Unroll
@@ -36,7 +35,7 @@ import spock.lang.Unroll
  * 2. RMS is configured to respond with a different status code than what origin service responds with
  */
 @Ignore
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class ResponseMessagingTest extends ReposeValveTest {
 
     def setupSpec() {

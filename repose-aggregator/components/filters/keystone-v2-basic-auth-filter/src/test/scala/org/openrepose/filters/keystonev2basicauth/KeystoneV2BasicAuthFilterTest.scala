@@ -19,15 +19,17 @@
  */
 package org.openrepose.filters.keystonev2basicauth
 
-import javax.servlet.{FilterChain, FilterConfig}
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{FilterChain, FilterConfig}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.typesafe.scalalogging.StrictLogging
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.openrepose.commons.utils.servlet.filter.FilterAction
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper

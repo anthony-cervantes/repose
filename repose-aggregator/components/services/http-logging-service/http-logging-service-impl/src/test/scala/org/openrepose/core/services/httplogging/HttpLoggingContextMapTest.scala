@@ -20,13 +20,15 @@
 package org.openrepose.core.services.httplogging
 
 import java.time.{Duration, Instant}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util
 
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])

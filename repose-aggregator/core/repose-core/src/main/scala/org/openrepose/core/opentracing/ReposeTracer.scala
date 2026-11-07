@@ -23,9 +23,9 @@ import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.noop.{NoopTracer, NoopTracerFactory}
 import io.opentracing.propagation.Format
 import io.opentracing.util.GlobalTracer
-import io.opentracing.{ScopeManager, Span, SpanContext, Tracer}
-import javax.annotation.PostConstruct
-import javax.inject.Named
+import io.opentracing.{Scope, ScopeManager, Span, SpanContext, Tracer}
+import jakarta.annotation.PostConstruct
+import jakarta.inject.Named
 
 /**
   * This is the Global Tracer for Repose and is based on the [[io.opentracing.util.GlobalTracer]].
@@ -69,6 +69,12 @@ class ReposeTracer extends DelegatingTracer with StrictLogging {
 
   override def activeSpan(): Span =
     tracer.activeSpan()
+
+  override def activateSpan(span: Span): Scope =
+    tracer.activateSpan(span)
+
+  override def close(): Unit =
+    tracer.close()
 
   override def toString: String =
     s"${this.getClass.getName.split("\\$").last} {$tracer}"

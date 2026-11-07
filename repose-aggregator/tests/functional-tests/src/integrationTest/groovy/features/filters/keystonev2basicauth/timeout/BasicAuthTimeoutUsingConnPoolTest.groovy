@@ -20,15 +20,14 @@
 package features.filters.keystonev2basicauth.timeout
 
 import org.apache.commons.codec.binary.Base64
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeLogSearch
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Identity
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 import javax.ws.rs.core.HttpHeaders
 import java.util.concurrent.TimeUnit
 
@@ -38,7 +37,7 @@ import java.util.concurrent.TimeUnit
  * Update on 01/21/16
  *  - Replace client-auth-n with keystone-v2 filter
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class BasicAuthTimeoutUsingConnPoolTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

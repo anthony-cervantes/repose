@@ -32,9 +32,9 @@ import org.openrepose.core.services.reporting.metrics.MetricsService;
 import org.openrepose.core.services.datastore.impl.remote.RemoteDatastoreManager;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;

@@ -20,7 +20,7 @@
 package features.filters.keystonev2basicauth
 
 import org.apache.commons.codec.binary.Base64
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.http.HttpDate
 import org.openrepose.framework.test.ReposeLogSearch
 import org.openrepose.framework.test.ReposeValveTest
@@ -32,7 +32,7 @@ import scaffold.category.Identity
 import spock.lang.Ignore
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 import static javax.ws.rs.core.HttpHeaders.*
 import static org.openrepose.commons.utils.http.normal.ExtendedStatusCodes.SC_TOO_MANY_REQUESTS
 
@@ -40,7 +40,7 @@ import static org.openrepose.commons.utils.http.normal.ExtendedStatusCodes.SC_TO
  * Created by jennyvo on 9/17/14.
  * Basic Auth filter can't be used alone, have to use with client-auth filter
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class BasicAuthStandaloneTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

@@ -19,8 +19,8 @@
  */
 package org.openrepose.filters.core.filterfour
 
-import javax.inject.Named
-import javax.servlet._
+import jakarta.inject.Named
+import jakarta.servlet._
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.others.SimplicityDivine

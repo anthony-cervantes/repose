@@ -25,7 +25,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
+import jakarta.inject.{Inject, Named}
 import javax.management.{InstanceNotFoundException, ObjectName}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.container.config.ContainerConfiguration

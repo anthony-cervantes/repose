@@ -22,26 +22,21 @@ package features.services.httpconnectionpool
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
-import org.eclipse.jetty.server.Handler
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.server.handler.DefaultHandler
-import org.eclipse.jetty.server.handler.HandlerList
-import org.eclipse.jetty.server.session.SessionHandler
-import org.eclipse.jetty.servlet.ServletHandler
-import org.junit.experimental.categories.Category
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Services
 
-import javax.servlet.ServletException
-import javax.servlet.http.*
+import jakarta.servlet.ServletException
+import jakarta.servlet.http.*
 import java.util.concurrent.Callable
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class HttpClientStateTest extends ReposeValveTest {
 
     Server server = null
@@ -59,15 +54,10 @@ class HttpClientStateTest extends ReposeValveTest {
         //Stand up a stupid jetty that can do stuff with a proxy
         server = new Server(0)
         //We should always get a new session here, maybe check the debug logging, otherwise we might have to reach in somehow
-        HandlerList handlers = new HandlerList()
-
-        SessionHandler handler = new SessionHandler()
-        ServletHandler servlet = new ServletHandler()
-        servlet.addServletWithMapping(SimpleServlet.class, "/*")
-
-        DefaultHandler defaultHandler = new DefaultHandler()
-        handlers.setHandlers([handler, servlet].toArray() as Handler[])
-        server.setHandler(handlers)
+        ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS)
+        handler.setContextPath("/")
+        handler.addServlet(SimpleServlet.class, "/*")
+        server.setHandler(handler)
 
         server.start()
 

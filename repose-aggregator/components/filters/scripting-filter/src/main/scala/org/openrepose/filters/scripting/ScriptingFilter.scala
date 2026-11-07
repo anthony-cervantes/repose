@@ -20,10 +20,10 @@
 package org.openrepose.filters.scripting
 
 import java.net.URL
-import javax.inject.{Inject, Named}
+import jakarta.inject.{Inject, Named}
 import javax.script._
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.{UpdateFailedException, UpdateListener}

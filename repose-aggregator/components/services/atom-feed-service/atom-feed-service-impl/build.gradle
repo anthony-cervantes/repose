@@ -1,39 +1,41 @@
 dependencies {
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:components:services:atom-feed-service:atom-feed-service-api")
-    compile project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile "org.slf4j:slf4j-api"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "org.slf4j:jcl-over-slf4j"
-    compile "org.scala-lang:scala-library"
-    compile "com.typesafe.akka:akka-actor_$scalaMajDotMin"
-    compile "org.apache.abdera:abdera-core"
-    compile "org.apache.abdera:abdera-parser"
-    compile "org.springframework:spring-beans"
-    compile "org.springframework:spring-context"
-    compile "com.typesafe.play:play-json_$scalaMajDotMin"
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.apache.httpcomponents:httpcore"
-    compile "io.opentracing:opentracing-api"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:components:services:atom-feed-service:atom-feed-service-api")
+    api project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
+    api project(":repose-aggregator:commons:commons-utilities")
+    api "org.slf4j:slf4j-api"
+    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "org.slf4j:jcl-over-slf4j"
+    api "org.scala-lang:scala-library"
+    api "com.typesafe.akka:akka-actor_$scalaMajDotMin"
+    api "org.apache.abdera:abdera-core"
+    api "org.apache.abdera:abdera-parser"
+    api "org.springframework:spring-beans"
+    api "org.springframework:spring-context"
+    api "org.playframework:play-json_$scalaMajDotMin"
+    api "org.apache.httpcomponents:httpclient"
+    api "org.apache.httpcomponents:httpcore"
+    api "io.opentracing:opentracing-api"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "javax.ws.rs:javax.ws.rs-api"
     compileOnly "com.google.code.findbugs:jsr305" //i hate this hack
 
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.apache.logging.log4j:log4j-slf4j-impl"
-    testCompile "org.apache.logging.log4j:log4j-core"
-    testCompile group: 'org.apache.logging.log4j', name: 'log4j-core', classifier: 'tests'
-    testCompile "com.typesafe.akka:akka-testkit_$scalaMajDotMin"
-    testCompile "com.typesafe.akka:akka-http-core_$scalaMajDotMin"
-    testCompile "com.typesafe.akka:akka-stream_$scalaMajDotMin"
-    testCompile "org.springframework:spring-test"
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
+    testImplementation "org.apache.logging.log4j:log4j-core"
+    testImplementation "org.apache.logging.log4j:log4j-core-test"
+    testImplementation "com.typesafe.akka:akka-testkit_$scalaMajDotMin"
+    testImplementation "com.typesafe.akka:akka-http-core_$scalaMajDotMin"
+    testImplementation "com.typesafe.akka:akka-stream_$scalaMajDotMin"
+    testImplementation "org.springframework:spring-test"
 }
 
 jacocoTestCoverageVerification {

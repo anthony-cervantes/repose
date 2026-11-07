@@ -1,0 +1,186 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.eclipse.transformer:org.eclipse.transformer.cli:1.0.0'
+        classpath 'org.ow2.asm:asm:9.11.1'
+        classpath 'org.ow2.asm:asm-commons:9.11.1'
+        classpath 'com.eed3si9n.jarjarabrams:jarjar-abrams-core_2.13:1.18.1'
+    }
+}
+
+import org.eclipse.transformer.cli.TransformerCLI
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Type
+import org.objectweb.asm.commons.ClassRemapper
+import org.objectweb.asm.commons.Remapper
+import com.eed3si9n.jarjarabrams.scalasig.ScalaSigClassVisitor
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
+import org.gradle.api.artifacts.transform.CacheableTransform
+import org.gradle.api.artifacts.transform.InputArtifact
+import org.gradle.api.artifacts.transform.TransformAction
+import org.gradle.api.artifacts.transform.TransformOutputs
+import org.gradle.api.artifacts.transform.TransformParameters
+
+// These libraries have no Jakarta release. Transform their servlet references
+// while keeping the original artifacts and validation behavior unchanged.
+interface ServletTransformParameters extends TransformParameters {
+    @InputFile
+    @PathSensitive(PathSensitivity.NONE)
+    RegularFileProperty getRules()
+}
+
+@CacheableTransform
+abstract class JakartaServletTransform implements TransformAction<ServletTransformParameters> {
+    @InputArtifact
+    @PathSensitive(PathSensitivity.NAME_ONLY)
+    abstract Provider<FileSystemLocation> getInputArtifact()
+
+    @Override
+    void transform(TransformOutputs outputs) {
+        def input = inputArtifact.get().asFile
+        if (!(input.name ==~ /(?:checker-|http-delegation-|jersey-|deproxy-).*\.jar/)) {
+            outputs.file(input)
+            return
+        }
+        def output = outputs.file(input.name)
+        def namespaced = new File(output.parentFile, "namespaced-${input.name}")
+        def cli = new TransformerCLI(System.out, System.err, input.absolutePath,
+            namespaced.absolutePath, '-tr', parameters.rules.get().asFile.absolutePath, '-q')
+        if (TransformerCLI.runWith(cli).ordinal() != 0) {
+            throw new GradleException("Could not migrate servlet references in ${input.name}")
+        }
+        // Servlet 6 removed setStatus(int, String). Keep the status code when
+        // older Jersey binaries call this overload; sendError still keeps its body.
+        def rules = new Properties()
+        parameters.rules.get().asFile.withInputStream { rules.load(it) }
+        def renameScalaType = { String name ->
+            int separator = name.lastIndexOf('.')
+            String renamed = null
+            if (separator > 0 && Character.isUpperCase(name.charAt(separator + 1))) {
+                def targetPackage = rules.getProperty(name.substring(0, separator))
+                if (targetPackage != null) renamed = targetPackage + name.substring(separator)
+            }
+            scala.Option.apply(renamed)
+        } as scala.Function1
+        new ZipInputStream(new FileInputStream(namespaced)).withCloseable { source ->
+            new ZipOutputStream(new FileOutputStream(output)).withCloseable { target ->
+                ZipEntry entry
+                while ((entry = source.nextEntry) != null) {
+                    def bytes = source.readAllBytes()
+                    if (entry.name.endsWith('.class')) {
+                        def writer = new ClassWriter(0)
+                        def reader = new ClassReader(bytes)
+                        reader.accept(
+                            new ScalaSigClassVisitor(
+                                new LegacyGroovySuperVisitor(
+                                    new ClassRemapper(new ServletStatusVisitor(writer), new MetricsJmxRemapper()),
+                                    reader.className),
+                                renameScalaType), 0)
+                        bytes = writer.toByteArray()
+                    }
+                    def copied = new ZipEntry(entry.name)
+                    copied.time = entry.time
+                    target.putNextEntry(copied)
+                    target.write(bytes)
+                    target.closeEntry()
+                }
+            }
+        }
+        namespaced.delete()
+    }
+}
+
+// Deproxy 0.21 was compiled with Groovy 2's superclass-based super-call
+// convention. Groovy 5 expects the class containing that call as its sender.
+class LegacyGroovySuperVisitor extends ClassVisitor {
+    private final String className
+
+    LegacyGroovySuperVisitor(ClassVisitor delegate, String className) {
+        super(Opcodes.ASM9, delegate)
+        this.className = className
+    }
+
+    @Override
+    MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+        def visitor = super.visitMethod(access, name, descriptor, signature, exceptions)
+        if (className != 'org/rackspace/deproxy/DefaultClientConnector' || name != 'sendRequest') return visitor
+        return new MethodVisitor(Opcodes.ASM9, visitor) {
+            @Override
+            void visitLdcInsn(Object value) {
+                if (value instanceof Type && value.internalName == 'org/rackspace/deproxy/BareClientConnector') {
+                    value = Type.getObjectType('org/rackspace/deproxy/DefaultClientConnector')
+                }
+                super.visitLdcInsn(value)
+            }
+        }
+    }
+}
+
+// Metrics 4 extracted the JMX API from metrics-core and moved its package.
+// The API checker binaries still use the Metrics 3 names.
+class MetricsJmxRemapper extends Remapper {
+    MetricsJmxRemapper() {
+        super(Opcodes.ASM9)
+    }
+
+    @Override
+    String map(String name) {
+        if (name ==~ /com\/codahale\/metrics\/(?:JmxReporter(?:\$.*)?|ObjectNameFactory|DefaultObjectNameFactory)/) {
+            return name.replace('com/codahale/metrics/', 'com/codahale/metrics/jmx/')
+        }
+        return name
+    }
+}
+
+class ServletStatusVisitor extends ClassVisitor {
+    ServletStatusVisitor(ClassVisitor delegate) {
+        super(Opcodes.ASM9, delegate)
+    }
+
+    @Override
+    MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+        def visitor = super.visitMethod(access, name, descriptor, signature, exceptions)
+        return new MethodVisitor(Opcodes.ASM9, visitor) {
+            @Override
+            void visitMethodInsn(int opcode, String owner, String method, String desc, boolean isInterface) {
+                if (owner.startsWith('jakarta/servlet/') && method == 'setStatus' && desc == '(ILjava/lang/String;)V') {
+                    super.visitInsn(Opcodes.POP)
+                    super.visitMethodInsn(opcode, owner, method, '(I)V', isInterface)
+                } else {
+                    super.visitMethodInsn(opcode, owner, method, desc, isInterface)
+                }
+            }
+        }
+    }
+}
+
+def servletNamespace = Attribute.of('org.openrepose.servlet-namespace', String)
+dependencies {
+    attributesSchema.attribute(servletNamespace)
+    registerTransform(JakartaServletTransform) {
+        from.attribute(servletNamespace, 'javax')
+        to.attribute(servletNamespace, 'jakarta')
+        parameters.rules = rootProject.layout.projectDirectory.file('gradle/jakarta-servlet.properties')
+    }
+}
+
+plugins.withId('java') {
+    dependencies.artifactTypes.getByName('jar').attributes.attribute(servletNamespace, 'javax')
+}
+
+configurations.configureEach {
+    if (name.endsWith('Classpath') || name in ['jaxb', 'xjc', 'earlib', 'deploy']) {
+        attributes.attribute(servletNamespace, 'jakarta')
+    }
+    exclude group: 'javax.servlet', module: 'javax.servlet-api'
+    exclude group: 'javax.servlet', module: 'servlet-api'
+    exclude group: 'org.glassfish', module: 'javax.servlet'
+}

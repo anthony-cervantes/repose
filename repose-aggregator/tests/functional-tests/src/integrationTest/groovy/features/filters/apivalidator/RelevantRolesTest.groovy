@@ -19,15 +19,14 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.XmlParsing
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class RelevantRolesTest extends ReposeValveTest {
 
     def setupSpec() {

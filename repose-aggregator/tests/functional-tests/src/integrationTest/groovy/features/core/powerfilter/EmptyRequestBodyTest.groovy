@@ -19,14 +19,13 @@
  */
 package features.core.powerfilter
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 import spock.lang.Unroll
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class EmptyRequestBodyTest extends ReposeValveTest {
 
     def setupSpec() {

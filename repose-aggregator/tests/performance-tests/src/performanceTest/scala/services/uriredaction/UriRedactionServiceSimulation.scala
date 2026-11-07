@@ -35,14 +35,14 @@ class UriRedactionServiceSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
     .feed(versionLoop.circular)
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("URI Redaction Service Test")
     .feed(versionLoop.circular)
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
@@ -51,7 +51,7 @@ class UriRedactionServiceSimulation extends AbstractReposeSimulation {
 
   def getRequest: HttpRequestBuilder = {
     http(session => session.scenario)
-    .get("/v${version}/redactMe/a/redactMe/b/redactMe/c/redactMe/d/redactMe/e/redactMe/f/")
+    .get("/v#{version}/redactMe/a/redactMe/b/redactMe/c/redactMe/d/redactMe/e/redactMe/f/")
       .check(status.is(200))
   }
 }

@@ -71,3 +71,6 @@ saxon-license.lic
 # Performance test
 *.raxpub
 *.retry
+
+# Node.js dependencies for the test services
+node_modules/

@@ -20,22 +20,24 @@
 package org.openrepose.powerfilter
 
 import java.io.IOException
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.net.{URI, URL}
 import java.time.Duration
 import java.util.Optional
 
 import com.codahale.metrics.MetricRegistry
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse._
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse._
 import org.apache.http.{HttpVersion, ProtocolVersion}
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpUriRequest}
 import org.apache.http.message.BasicHttpResponse
 import org.apache.http.protocol.HttpContext
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, contains, eq => isEq}
+import org.mockito.ArgumentMatchers.{any, contains, eq => isEq}
 import org.mockito.Mockito._
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.commons.utils.http.CommonRequestAttributes
@@ -51,7 +53,7 @@ import org.openrepose.powerfilter.ReposeRoutingServletTest._
 import org.scalatest.TryValues._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse, MockServletConfig}
 
 import scala.collection.JavaConversions._
@@ -76,7 +78,7 @@ class ReposeRoutingServletTest extends FunSpec with BeforeAndAfterEach with Mock
     mockContainerConfigurationService = mock[ContainerConfigurationService]
     mockHttpClient = mock[HttpClientServiceClient]
     mockHttpClientService = mock[HttpClientService]
-    metricRegistry = spy(new MetricRegistry)
+    metricRegistry = org.openrepose.commons.test.MockitoSpy.spyInstance(new MetricRegistry)
     mockMetricsService = mock[MetricsService]
 
     when(mockMetricsService.getRegistry).thenReturn(metricRegistry)

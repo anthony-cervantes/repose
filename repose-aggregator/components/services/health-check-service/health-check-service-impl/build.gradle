@@ -1,10 +1,10 @@
 dependencies {
-    compile project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
-    compile "org.slf4j:slf4j-api"
+    api project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
+    api "org.slf4j:slf4j-api"
 
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.inject:jakarta.inject-api"
 
-    testCompile "junit:junit"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.codehaus.groovy:groovy-all"
+    testImplementation "junit:junit"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.apache.groovy:groovy-all"
 }

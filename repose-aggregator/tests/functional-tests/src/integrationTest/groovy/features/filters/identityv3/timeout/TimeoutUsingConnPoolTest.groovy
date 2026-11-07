@@ -20,19 +20,18 @@
 package features.filters.identityv3.timeout
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV3Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by jennyvo on 11/9/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class TimeoutUsingConnPoolTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

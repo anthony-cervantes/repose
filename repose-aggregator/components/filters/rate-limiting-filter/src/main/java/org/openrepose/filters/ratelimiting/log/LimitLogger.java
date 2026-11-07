@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openrepose.commons.utils.http.CommonHttpHeader;
 import org.slf4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class LimitLogger {
 

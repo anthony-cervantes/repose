@@ -30,13 +30,13 @@ import org.openrepose.performance.test.AbstractReposeSimulation
 class SplitHeaderFilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Split Header Filter Test")
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 

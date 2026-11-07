@@ -19,7 +19,7 @@
  */
 package features.filters.keystonev2.cache
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
@@ -102,7 +102,7 @@ import scaffold.category.Identity
  assert response code from repose is 401
 
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class InvalidateCacheUsingAtomFeedTest extends ReposeValveTest {
 
     def originEndpoint

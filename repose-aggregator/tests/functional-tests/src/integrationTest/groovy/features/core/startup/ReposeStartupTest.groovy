@@ -20,18 +20,17 @@
 package features.core.startup
 
 import org.apache.commons.io.FileUtils
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.PortFinder
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Core
 
 import java.util.concurrent.TimeoutException
 
 /**
  * D-15183 Ensure passwords are not logged when in DEBUG mode and config files are updated.
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class ReposeStartupTest extends ReposeValveTest {
 
     def setupSpec() {

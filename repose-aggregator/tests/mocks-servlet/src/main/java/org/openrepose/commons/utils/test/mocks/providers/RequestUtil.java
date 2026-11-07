@@ -21,7 +21,7 @@ package org.openrepose.commons.utils.test.mocks.providers;
 
 import org.openrepose.test.*;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;

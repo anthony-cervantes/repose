@@ -20,8 +20,10 @@
 package org.openrepose.commons.test
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.mockito.invocation.InvocationOnMock
-import org.scalatest.{FunSpec, Matchers}
+
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 

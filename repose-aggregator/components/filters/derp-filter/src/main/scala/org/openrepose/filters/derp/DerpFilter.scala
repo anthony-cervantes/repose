@@ -19,8 +19,8 @@
  */
 package org.openrepose.filters.derp
 
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.ws.rs.core.MediaType
 
 import com.rackspace.httpdelegation._

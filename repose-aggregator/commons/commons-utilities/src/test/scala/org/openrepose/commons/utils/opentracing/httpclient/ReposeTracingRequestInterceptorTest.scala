@@ -20,20 +20,22 @@
 package org.openrepose.commons.utils.opentracing.httpclient
 
 import io.opentracing.Tracer.SpanBuilder
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import io.opentracing.tag.Tags.HTTP_URL
 import io.opentracing.{Span, Tracer}
 import org.apache.http.message.BasicHeader
 import org.apache.http.protocol.HttpContext
 import org.apache.http.{HttpRequest, RequestLine}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.commons.utils.http.CommonHttpHeader.{REQUEST_ID, VIA}
 import org.openrepose.commons.utils.opentracing.ReposeTags.ReposeVersion
 import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class ReposeTracingRequestInterceptorTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {

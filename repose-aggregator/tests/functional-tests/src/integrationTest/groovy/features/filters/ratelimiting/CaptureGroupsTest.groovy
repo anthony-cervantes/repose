@@ -19,13 +19,11 @@
  */
 package features.filters.ratelimiting
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Bug
-import scaffold.category.Filters
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class CaptureGroupsTest extends ReposeValveTest {
 
     def setupSpec() {
@@ -430,7 +428,7 @@ class CaptureGroupsTest extends ReposeValveTest {
         mc.handlings.size() == 0
     }
 
-    @Category(Bug)
+    @Tag("scaffold.category.Bug")
     def "Requests to an url and a percent-encoded equivalent form of that url should go into the same bucket"() {
 
         // DEFECT: D-16373
@@ -475,7 +473,7 @@ class CaptureGroupsTest extends ReposeValveTest {
 
     }
 
-    @Category(Bug)
+    @Tag("scaffold.category.Bug")
     def "Capitalization of hex digits in percent-encoded octets should be treated as equivalent"() {
 
         // DEFECT: D-16373

@@ -45,11 +45,11 @@ import org.openrepose.filters.translation.xslt.xmlfilterchain.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import java.io.ByteArrayInputStream;
@@ -60,7 +60,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.openrepose.commons.utils.servlet.filter.FilterAction.PROCESS_RESPONSE;
 import static org.openrepose.commons.utils.servlet.filter.FilterAction.RETURN;

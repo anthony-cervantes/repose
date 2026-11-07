@@ -19,7 +19,9 @@
  */
 package org.openrepose.commons.utils.io.stream;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,6 +31,7 @@ import java.io.InputStream;
 public class ServletInputStreamWrapper extends ServletInputStream {
 
     private final InputStream is;
+    private boolean finished;
 
     public ServletInputStreamWrapper(InputStream is) {
         this.is = is;
@@ -36,17 +39,27 @@ public class ServletInputStreamWrapper extends ServletInputStream {
 
     @Override
     public int read() throws IOException {
-        return is.read();
+        int result = is.read();
+        finished = result == -1;
+        return result;
     }
 
     @Override
     public int read(byte[] b) throws IOException {
-        return is.read(b);
+        int result = is.read(b);
+        if (result != 0) {
+            finished = result == -1;
+        }
+        return result;
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        return is.read(b, off, len);
+        int result = is.read(b, off, len);
+        if (result != 0) {
+            finished = result == -1;
+        }
+        return result;
     }
 
     @Override
@@ -62,6 +75,7 @@ public class ServletInputStreamWrapper extends ServletInputStream {
     @Override
     public void close() throws IOException {
         is.close();
+        finished = true;
     }
 
     @Override
@@ -72,11 +86,36 @@ public class ServletInputStreamWrapper extends ServletInputStream {
     @Override
     public void reset() throws IOException {
         is.reset();
+        finished = false;
     }
 
     @Override
     public boolean markSupported() {
         return is.markSupported();
+    }
+
+    @Override
+    public boolean isFinished() {
+        if (finished) {
+            return true;
+        }
+        if (is instanceof ServletInputStream) {
+            return ((ServletInputStream) is).isFinished();
+        }
+        return is instanceof ByteArrayInputStream && ((ByteArrayInputStream) is).available() == 0;
+    }
+
+    @Override
+    public boolean isReady() {
+        return !(is instanceof ServletInputStream) || ((ServletInputStream) is).isReady();
+    }
+
+    @Override
+    public void setReadListener(ReadListener listener) {
+        if (!(is instanceof ServletInputStream)) {
+            throw new IllegalStateException("Non-blocking reads require a servlet input stream");
+        }
+        ((ServletInputStream) is).setReadListener(listener);
     }
 
 }

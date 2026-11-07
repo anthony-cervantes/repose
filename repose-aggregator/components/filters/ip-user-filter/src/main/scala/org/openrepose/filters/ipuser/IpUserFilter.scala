@@ -22,9 +22,9 @@ package org.openrepose.filters.ipuser
 import java.net.{URL, UnknownHostException}
 import java.util.concurrent.atomic.AtomicReference
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.typesafe.scalalogging.StrictLogging
 import edazdarevic.commons.net.CIDRUtils
 import org.openrepose.commons.config.manager.UpdateListener

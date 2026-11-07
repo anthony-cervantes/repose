@@ -19,8 +19,8 @@
  */
 package org.openrepose.core.spring.testfilter
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
 
 import org.openrepose.core.spring.test.HerpBean
 import org.openrepose.core.spring.test.foo.FooBean

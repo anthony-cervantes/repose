@@ -19,12 +19,11 @@
  */
 package features.filters.translation
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Bug
 
-@Category(Bug.class)
+@Tag("scaffold.category.Bug")
 class ContentRequestTranslationBurstTest extends ReposeValveTest {
 
     def static Map acceptXML = ["accept": "application/xml"]

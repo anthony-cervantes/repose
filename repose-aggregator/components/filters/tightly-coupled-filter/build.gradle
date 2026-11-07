@@ -1,8 +1,8 @@
 dependencies {
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile "org.slf4j:slf4j-api"
+    api project(":repose-aggregator:commons:commons-utilities")
+    api "org.slf4j:slf4j-api"
 
-    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 }
 
 jacocoTestCoverageVerification {

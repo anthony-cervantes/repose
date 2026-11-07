@@ -20,11 +20,13 @@
 package org.openrepose.filters.openstackidentityv3
 
 import java.util.UUID
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
 import org.mockito.Mockito._
-import org.mockito.{Matchers => MockitoMatchers}
+import org.mockito.{ArgumentMatchers => MockitoMatchers}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.datastore.types.PatchableSet
 import org.openrepose.core.services.datastore.{Datastore, DatastoreService}
@@ -34,7 +36,7 @@ import org.openrepose.filters.openstackidentityv3.utilities.Cache._
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, AtomFeedService}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class OpenStackIdentityV3FilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {

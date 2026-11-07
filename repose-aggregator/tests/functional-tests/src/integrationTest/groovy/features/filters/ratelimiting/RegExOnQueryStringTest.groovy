@@ -19,16 +19,15 @@
  */
 package features.filters.ratelimiting
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
  * Created by jennyvo on 6/26/14.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class RegExOnQueryStringTest extends ReposeValveTest {
 
     def setupSpec() {

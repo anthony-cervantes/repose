@@ -20,8 +20,8 @@
 
 package org.openrepose.filters.compression
 
-import javax.inject.Named
-import javax.servlet.FilterConfig
+import jakarta.inject.Named
+import jakarta.servlet.FilterConfig
 
 import org.openrepose.external.pjlcompression.CompressingFilter
 

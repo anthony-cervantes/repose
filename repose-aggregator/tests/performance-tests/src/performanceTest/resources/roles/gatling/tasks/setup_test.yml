@@ -28,18 +28,6 @@
     dest: /root/gatling/current/lib/
     mode: 0644
 
-- name: Create the test directory
-  file:
-    path: /root/gatling/current/user-files/simulations/{{ gatling_test_dir }}
-    state: directory
-  become: yes
-
-- name: Copy the test simulation
-  copy:
-    src: simulations/{{ gatling_test_dir }}/{{ gatling.test.name }}.scala
-    dest: /root/gatling/current/user-files/simulations/{{ gatling_test_dir }}/{{ gatling.test.name }}.scala
-    mode: 0640
-
 - name: Copy the common test configuration
   template:
     src: application.conf.j2

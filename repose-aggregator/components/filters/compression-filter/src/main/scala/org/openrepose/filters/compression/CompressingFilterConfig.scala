@@ -20,7 +20,7 @@
 
 package org.openrepose.filters.compression
 
-import javax.servlet.{ServletContext, FilterConfig}
+import jakarta.servlet.{ServletContext, FilterConfig}
 
 import scala.collection.JavaConverters._
 

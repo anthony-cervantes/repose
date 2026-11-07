@@ -20,21 +20,23 @@
 package org.openrepose.commons.utils.servlet.http
 
 import java.io.{ByteArrayInputStream, IOException, UnsupportedEncodingException}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.UnsupportedCharsetException
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.{ServletOutputStream, ServletResponse}
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.{ServletOutputStream, ServletResponse}
 import javax.ws.rs.core.HttpHeaders._
 
 import org.apache.http.client.utils.DateUtils
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{eq => mEq, _}
+import org.mockito.ArgumentMatchers.{eq => mEq, _}
 import org.mockito.Mockito._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletResponse
 
 import scala.io.Source
@@ -2233,7 +2235,7 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
       wrappedResponse.sendError(errorCode)
       wrappedResponse.commitToResponse()
 
-      verifyZeroInteractions(mockOutputStream)
+      verifyNoMoreInteractions(mockOutputStream)
       verify(mockResponse, never).setContentLength(anyInt)
       verify(mockResponse).addHeader("test", "test")
       verify(mockResponse).sendError(errorCode)
@@ -2255,7 +2257,7 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
       wrappedResponse.sendError(errorCode, errorMsg)
       wrappedResponse.commitToResponse()
 
-      verifyZeroInteractions(mockOutputStream)
+      verifyNoMoreInteractions(mockOutputStream)
       verify(mockResponse, never).setContentLength(anyInt)
       verify(mockResponse).addHeader("test", "test")
       verify(mockResponse).sendError(errorCode, errorMsg)
@@ -2291,7 +2293,7 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
       wrappedResponse.setStatus(statusCode, reasonPhrase)
       wrappedResponse.commitToResponse()
 
-      verify(mockResponse).setStatus(statusCode, reasonPhrase)
+      verify(mockResponse).setStatus(statusCode)
     }
   }
 
@@ -2320,7 +2322,7 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
 
       wrappedResponse.setStatus(418, "TEAPOT")
 
-      verify(mockResponse).setStatus(418, "TEAPOT")
+      verify(mockResponse).setStatus(418)
       wrappedResponse.getReason shouldEqual "TEAPOT"
     }
 
@@ -2333,7 +2335,7 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
       wrappedResponse.setStatus(418, "TEAPOT")
       wrappedResponse.setStatus(200)
 
-      verify(mockResponse).setStatus(418, "TEAPOT")
+      verify(mockResponse).setStatus(418)
       verify(mockResponse).setStatus(200)
       wrappedResponse.getReason shouldBe null
     }
@@ -2348,7 +2350,6 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
         wrappedResponse.setStatus(418)
 
         verify(mockResponse, never).setStatus(anyInt())
-        verify(mockResponse, never).setStatus(anyInt(), anyString())
         wrappedResponse.getStatus shouldEqual 418
         wrappedResponse.getReason shouldBe null
       }
@@ -2362,7 +2363,6 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
         wrappedResponse.setStatus(418, "TEAPOT")
 
         verify(mockResponse, never).setStatus(anyInt())
-        verify(mockResponse, never).setStatus(anyInt(), anyString())
         wrappedResponse.getStatus shouldEqual 418
         wrappedResponse.getReason shouldBe "TEAPOT"
       }
@@ -2458,7 +2458,7 @@ class HttpServletResponseWrapperTest extends FunSpec with BeforeAndAfterEach wit
       wrappedResponse.setStatus(418, "TEAPOT")
       wrappedResponse.sendError(404)
 
-      verify(mockResponse).setStatus(418, "TEAPOT")
+      verify(mockResponse).setStatus(418)
       verify(mockResponse).sendError(404)
       wrappedResponse.getReason shouldBe null
     }

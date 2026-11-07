@@ -20,6 +20,8 @@
 package org.openrepose.core.services.httpclient
 
 import java.io.IOException
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.UUID
 
 import org.apache.http.client.methods.{CloseableHttpResponse, RequestBuilder}
@@ -28,11 +30,11 @@ import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.protocol.HttpContext
 import org.apache.http.{HttpHost, HttpRequest, HttpResponse}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, eq => isEq}
+import org.mockito.ArgumentMatchers.{any, eq => isEq}
 import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class HttpClientServiceClientTest extends FunSpec with BeforeAndAfterEach with MockitoSugar with Matchers {

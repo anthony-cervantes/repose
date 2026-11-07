@@ -20,6 +20,7 @@
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
 import java.io.{IOException, StringWriter}
+import org.openrepose.commons.utils.opentracing.ScopeHelper
 import java.net.{URI, UnknownServiceException}
 
 import akka.actor._
@@ -116,7 +117,7 @@ class FeedReader(feedURIString: String,
       val requestId = java.util.UUID.randomUUID().toString
       MDC.put(TracingKey.TRACING_KEY, requestId)
 
-      val scope = tracer.buildSpan(TracingOperationName).ignoreActiveSpan().startActive(true)
+      val scope = ScopeHelper.startActive(tracer, tracer.buildSpan(TracingOperationName).ignoreActiveSpan())
       scope.span().setTag(ReposeTags.ReposeVersion, reposeVersion)
 
       try {

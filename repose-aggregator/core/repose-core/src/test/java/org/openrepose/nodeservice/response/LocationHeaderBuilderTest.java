@@ -22,8 +22,8 @@ package org.openrepose.nodeservice.response;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
 
 import static javax.ws.rs.core.HttpHeaders.LOCATION;

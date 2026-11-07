@@ -20,6 +20,7 @@
 package org.openrepose.nodeservice.atomfeed.impl
 
 import java.io.StringWriter
+import org.scalatest.funsuite.{AnyFunSuite => FunSuite}
 import java.net.URI
 import java.util.Date
 
@@ -29,7 +30,7 @@ import org.apache.abdera.model.Feed
 import org.apache.http.client.HttpClient
 import org.apache.http.impl.client.HttpClients
 import org.junit.runner.RunWith
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.{AdditionalAnswers, ArgumentCaptor}
 import org.openrepose.commons.utils.http.CommonHttpHeader
@@ -37,7 +38,7 @@ import org.openrepose.nodeservice.atomfeed.impl.auth.AuthenticationRequestContex
 import org.openrepose.nodeservice.atomfeed.{AuthenticatedRequestFactory, AuthenticationRequestContext, AuthenticationRequestException, FeedReadRequest}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.{BeforeAndAfterEach}
 
 import scala.concurrent.TimeoutException
 import scala.concurrent.duration._

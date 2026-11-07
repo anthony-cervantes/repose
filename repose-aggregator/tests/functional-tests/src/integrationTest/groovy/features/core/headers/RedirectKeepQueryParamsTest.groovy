@@ -19,21 +19,20 @@
  */
 package features.core.headers
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeConfigurationProvider
 import org.openrepose.framework.test.ReposeValveLauncher
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Core
 import spock.lang.Unroll
 
 /**
  * Created by jennyvo on 8/27/14.
  * Test with redirect url from header keep query params
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class RedirectKeepQueryParamsTest extends ReposeValveTest {
 
     static int originServicePort

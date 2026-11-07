@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.keystonev2
 
-import javax.inject.{Inject, Named}
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.{ROLES, TENANT_ID, TENANT_ROLES_MAP}

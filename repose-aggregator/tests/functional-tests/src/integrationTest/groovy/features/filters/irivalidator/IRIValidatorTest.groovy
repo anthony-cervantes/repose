@@ -19,15 +19,14 @@
  */
 package features.filters.irivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
 /**
  * Created by jcombs on 1/12/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class IRIValidatorTest extends ReposeValveTest {
 
     def setupSpec() {

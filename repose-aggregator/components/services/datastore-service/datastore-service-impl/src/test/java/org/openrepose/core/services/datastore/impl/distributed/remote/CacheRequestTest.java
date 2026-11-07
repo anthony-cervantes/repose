@@ -27,7 +27,7 @@ import org.openrepose.core.services.datastore.impl.distributed.CacheRequest;
 import org.openrepose.core.services.datastore.impl.distributed.DatastoreHeader;
 import org.openrepose.core.services.datastore.impl.distributed.MalformedCacheRequestException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;

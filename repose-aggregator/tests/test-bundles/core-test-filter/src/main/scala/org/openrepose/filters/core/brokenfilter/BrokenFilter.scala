@@ -19,8 +19,8 @@
  */
 package org.openrepose.filters.core.brokenfilter
 
-import javax.inject.Named
-import javax.servlet._
+import jakarta.inject.Named
+import jakarta.servlet._
 
 @Named
 class BrokenFilter extends Filter {

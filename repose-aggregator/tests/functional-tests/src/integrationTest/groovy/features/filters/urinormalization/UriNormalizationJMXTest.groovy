@@ -19,14 +19,13 @@
  */
 package features.filters.urinormalization
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class UriNormalizationJMXTest extends ReposeValveTest {
 
     private static final String KEY_PROPERTIES_PREFIX =

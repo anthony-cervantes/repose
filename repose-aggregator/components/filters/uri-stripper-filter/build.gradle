@@ -1,27 +1,29 @@
 dependencies {
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile "org.slf4j:slf4j-api"
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "com.typesafe.play:play-json_$scalaMajDotMin"
-    compile "io.gatling:jsonpath_$scalaMajDotMin"
-    compile "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
-    compile "net.sf.saxon:Saxon-EE"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api "org.slf4j:slf4j-api"
+    api "org.scala-lang:scala-library"
+    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "org.playframework:play-json_$scalaMajDotMin"
+    api "io.gatling:jsonpath_$scalaMajDotMin"
+    api "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
+    api "net.sf.saxon:Saxon-EE"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
 
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile project(":repose-aggregator:commons:commons-configuration")
-    testCompile "junit:junit"
-    testCompile "org.codehaus.groovy:groovy-all"
-    testCompile "org.spockframework:spock-core"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.springframework:spring-test"
-    testCompile "org.springframework:spring-web"
-    testCompile "org.slf4j:jcl-over-slf4j"
-    testCompile "xerces:xerces-xsd11"
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation project(":repose-aggregator:commons:commons-configuration")
+    testImplementation "junit:junit"
+    testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-web"
+    testImplementation "org.slf4j:jcl-over-slf4j"
+    testImplementation "xerces:xerces-xsd11"
 }

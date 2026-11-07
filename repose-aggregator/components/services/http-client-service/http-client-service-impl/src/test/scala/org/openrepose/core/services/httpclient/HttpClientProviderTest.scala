@@ -20,6 +20,8 @@
 package org.openrepose.core.services.httpclient
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.file.{Files, Path}
 import java.util
 import java.util.UUID
@@ -38,7 +40,7 @@ import org.apache.http.impl.client.{CloseableHttpClient, HttpClientBuilder, Http
 import org.apache.http.ssl.{SSLContextBuilder, SSLContexts}
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{any, eq => isEq}
+import org.mockito.ArgumentMatchers.{any, eq => isEq}
 import org.mockito.Mockito.{spy, verify, when}
 import org.openrepose.commons.utils.opentracing.httpclient.{ReposeTracingRequestInterceptor, ReposeTracingResponseInterceptor}
 import org.openrepose.core.services.httpclient.config.{Header, HeaderList, PoolConfig}
@@ -46,7 +48,7 @@ import org.openrepose.core.services.reporting.metrics.MetricsService
 import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
@@ -81,14 +83,14 @@ class HttpClientProviderTest extends FunSpec with BeforeAndAfterEach with Mockit
     tracer = new MockTracer()
     uriRedactionService = mock[UriRedactionService]
     metricsService = mock[MetricsService]
-    httpClientProvider = spy(new HttpClientProvider(configRoot.toString, ReposeVersion, tracer, uriRedactionService, metricsService))
+    httpClientProvider = org.openrepose.commons.test.MockitoSpy.spyInstance(new HttpClientProvider(configRoot.toString, ReposeVersion, tracer, uriRedactionService, metricsService))
 
-    socketConfigBuilder = spy(SocketConfig.custom)
-    messageConstraintsBuilder = spy(MessageConstraints.custom)
-    connectionConfigBuilder = spy(ConnectionConfig.custom)
-    sslContextBuilder = spy(SSLContexts.custom)
-    requestConfigBuilder = spy(RequestConfig.custom)
-    httpClientBuilder = spy(HttpClients.custom)
+    socketConfigBuilder = org.openrepose.commons.test.MockitoSpy.spyInstance(SocketConfig.custom)
+    messageConstraintsBuilder = org.openrepose.commons.test.MockitoSpy.spyInstance(MessageConstraints.custom)
+    connectionConfigBuilder = org.openrepose.commons.test.MockitoSpy.spyInstance(ConnectionConfig.custom)
+    sslContextBuilder = org.openrepose.commons.test.MockitoSpy.spyInstance(SSLContexts.custom)
+    requestConfigBuilder = org.openrepose.commons.test.MockitoSpy.spyInstance(RequestConfig.custom)
+    httpClientBuilder = org.openrepose.commons.test.MockitoSpy.spyInstance(HttpClients.custom)
 
     when(metricsService.getRegistry).thenReturn(mock[MetricRegistry])
     when(httpClientProvider.getSocketConfigBuilder).thenReturn(socketConfigBuilder)

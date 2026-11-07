@@ -20,6 +20,8 @@
 package org.openrepose.core.services.logging
 
 import java.io.File
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
@@ -27,14 +29,14 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.ConfigurationFactory
 import org.apache.logging.log4j.status.StatusLogger
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.openrepose.core.services.config.ConfigurationService
 import org.scalatest.concurrent.Eventually
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{FunSpec, Matchers}
+
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.io.Source

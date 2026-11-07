@@ -19,8 +19,8 @@
  */
 package org.openrepose.filters.core.filterthree
 
-import javax.inject.Named
-import javax.servlet._
+import jakarta.inject.Named
+import jakarta.servlet._
 
 import scala.util.{Failure, Success}
 

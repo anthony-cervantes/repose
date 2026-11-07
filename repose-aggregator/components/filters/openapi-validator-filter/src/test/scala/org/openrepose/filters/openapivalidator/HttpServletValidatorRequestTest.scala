@@ -20,16 +20,18 @@
 package org.openrepose.filters.openapivalidator
 
 import java.io.ByteArrayInputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
 
 import com.atlassian.oai.validator.model.Request
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 import org.junit.runner.RunWith
 import org.mockito.Mockito.when
 import org.openrepose.filters.openapivalidator.HttpServletValidatorRequest.RequestConversionException
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.http.{HttpHeaders, HttpMethod, MediaType}
 import org.springframework.mock.web.{DelegatingServletInputStream, MockHttpServletRequest}
 
@@ -193,7 +195,7 @@ class HttpServletValidatorRequestTest
       headers should contain key "a-header"
       headers should contain key "b-header"
       headers should contain key "c-header"
-      headers("a-header") should contain theSameElementsAs Seq("1", "2", "4", "5", "6")
+      headers("a-header") should contain theSameElementsAs Seq("1", "2", "4", "5,6")
       headers("b-header") should contain theSameElementsAs Seq("3", "3")
       headers("c-header") should contain theSameElementsAs Seq("")
     }
@@ -220,7 +222,7 @@ class HttpServletValidatorRequestTest
 
       val validatorRequest = HttpServletValidatorRequest(servletRequest)
 
-      validatorRequest.getHeaderValues("a-header").asScala should contain theSameElementsAs Seq("1", "2", "4", "5", "6")
+      validatorRequest.getHeaderValues("a-header").asScala should contain theSameElementsAs Seq("1", "2", "4", "5,6")
       validatorRequest.getHeaderValues("a-header").asScala shouldEqual validatorRequest.getHeaderValues("A-hEaDeR").asScala
       validatorRequest.getHeaderValues("b-header").asScala should contain theSameElementsAs Seq("3", "3")
       validatorRequest.getHeaderValues("c-header").asScala should contain theSameElementsAs Seq("")

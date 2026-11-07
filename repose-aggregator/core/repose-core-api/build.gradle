@@ -1,22 +1,25 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile "io.dropwizard.metrics:metrics-core"
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api project(":repose-aggregator:commons:commons-utilities")
+    api "io.dropwizard.metrics:metrics-core"
+    api "org.scala-lang:scala-library"
+    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
 
     compileOnly 'org.projectlombok:lombok'
-    compileOnly "org.glassfish:javax.servlet"
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-    testCompile project(":repose-aggregator:core:repose-core")
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.springframework:spring-test"
+    testImplementation project(":repose-aggregator:core:repose-core")
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework:spring-test"
 }
 
 license {

@@ -21,9 +21,9 @@ package org.openrepose.filters.versioning
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.util.Optional
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.xml.bind.JAXBElement
 
 import com.codahale.metrics.MetricRegistry

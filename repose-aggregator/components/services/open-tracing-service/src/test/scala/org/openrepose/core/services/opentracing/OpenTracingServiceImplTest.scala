@@ -20,13 +20,15 @@
 package org.openrepose.core.services.opentracing
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import io.jaegertracing.{Tracer => JaegerTracer}
-import io.jaegertracing.samplers.{ConstSampler, ProbabilisticSampler, RateLimitingSampler}
+import io.jaegertracing.internal.JaegerTracer
+import io.jaegertracing.internal.samplers.{ConstSampler, ProbabilisticSampler, RateLimitingSampler}
 import io.opentracing.Tracer
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{eq => isEq, _}
+import org.mockito.ArgumentMatchers.{eq => isEq, _}
 import org.mockito.Mockito.verify
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.opentracing.DelegatingTracer
@@ -34,7 +36,7 @@ import org.openrepose.core.service.opentracing.config.{JaegerConnectionUdp, Jaeg
 import org.openrepose.core.services.config.ConfigurationService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class OpenTracingServiceImplTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {

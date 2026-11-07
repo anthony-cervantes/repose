@@ -19,13 +19,12 @@
  */
 package features.filters.urinormalization
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Handling
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 import java.util.concurrent.TimeUnit
@@ -33,7 +32,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Functional test for the URI Normalization filter
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class UriNormalizationFilterTest extends ReposeValveTest {
 
     def setupSpec() {

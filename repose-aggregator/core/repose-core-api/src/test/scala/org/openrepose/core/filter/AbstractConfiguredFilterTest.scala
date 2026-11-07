@@ -20,19 +20,22 @@
 package org.openrepose.core.filter
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterChain, FilterConfig}
+import jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{FilterChain, FilterConfig}
 import org.hamcrest.Matchers.{endsWith, hasProperty}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, argThat, same, eq => eql}
+import org.mockito.ArgumentMatchers.{any, anyString, same, eq => eql}
 import org.mockito.Mockito.{verify, when}
+import org.mockito.hamcrest.MockitoHamcrest.argThat
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfter, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfter}
 import org.springframework.mock.web.MockHttpServletResponse
 
 /**
@@ -67,7 +70,7 @@ class AbstractConfiguredFilterTest
     it("should register with default config name") {
       filter.init(mock[FilterConfig])
 
-      verify(configurationService).subscribeTo(anyString(), eql("stubbed.cfg.xml"), any(classOf[URL]),
+      verify(configurationService).subscribeTo(any[String](), eql("stubbed.cfg.xml"), any(classOf[URL]),
         any(classOf[UpdateListener[String]]), any(classOf[Class[String]]))
     }
 
@@ -77,28 +80,28 @@ class AbstractConfiguredFilterTest
 
       filter.init(filterConfig)
 
-      verify(configurationService).subscribeTo(anyString(), eql("banana.cfg.xml"), any(classOf[URL]),
+      verify(configurationService).subscribeTo(any[String](), eql("banana.cfg.xml"), any(classOf[URL]),
         any(classOf[UpdateListener[String]]), any(classOf[Class[String]]))
     }
 
     it("should register with the correct schema location") {
       filter.init(mock[FilterConfig])
 
-      verify(configurationService).subscribeTo(anyString(), anyString(), argThat(hasProperty("path", endsWith("/stubbed.xsd"))),
+      verify(configurationService).subscribeTo(any[String](), anyString(), org.mockito.hamcrest.MockitoHamcrest.argThat(hasProperty("path", endsWith("/stubbed.xsd"))),
         any(classOf[UpdateListener[String]]), any(classOf[Class[String]]))
     }
 
     it("should register with the correct listener") {
       filter.init(mock[FilterConfig])
 
-      verify(configurationService).subscribeTo(anyString(), anyString(), any(classOf[URL]),
+      verify(configurationService).subscribeTo(any[String](), anyString(), any(classOf[URL]),
         same(filter), any(classOf[Class[String]]))
     }
 
     it("should register with the correct config class") {
       filter.init(mock[FilterConfig])
 
-      verify(configurationService).subscribeTo(anyString(), anyString(), any(classOf[URL]),
+      verify(configurationService).subscribeTo(any[String](), anyString(), any(classOf[URL]),
         any(classOf[UpdateListener[String]]), any(classOf[Class[String]]))
     }
 
@@ -138,7 +141,7 @@ class AbstractConfiguredFilterTest
 
       filter.destroy()
 
-      verify(configurationService).unsubscribeFrom(anyString(), same(filter))
+      verify(configurationService).unsubscribeFrom(any[String](), same(filter))
     }
 
     it("should call doDestroy") {

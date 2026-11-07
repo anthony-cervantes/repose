@@ -1,7 +1,5 @@
-echo "-------------------------------------------------------------------------------------------------------------------"
-echo "Installing/Upgrading GUnicorn, HTTPBin, & HTTPie"
-echo "-------------------------------------------------------------------------------------------------------------------"
+#!/bin/sh
+set -eu
 
-pip install --upgrade pip
-pip install --upgrade httpie
-pip install httpbin gunicorn
+python3 -m venv /opt/repose-verification-venv
+/opt/repose-verification-venv/bin/python -m pip install -r "$(dirname "$0")/requirements.txt"

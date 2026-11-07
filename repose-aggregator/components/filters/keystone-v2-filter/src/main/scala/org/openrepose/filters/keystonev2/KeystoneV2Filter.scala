@@ -22,10 +22,10 @@ package org.openrepose.filters.keystonev2
 import java.io.InterruptedIOException
 import java.util.concurrent.TimeUnit
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.ws.rs.core.HttpHeaders
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.HttpClient

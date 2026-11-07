@@ -25,7 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.util.EntityUtils;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
@@ -58,7 +58,7 @@ public class HttpComponentResponseProcessor {
 
     private static void setStatusLine(HttpResponse clientResponse, HttpServletResponse servletResponse) {
         StatusLine statusLine = clientResponse.getStatusLine();
-        servletResponse.setStatus(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+        servletResponse.setStatus(statusLine.getStatusCode());
     }
 
     private static void setHeaders(HttpResponse clientResponse, HttpServletResponse servletResponse) {

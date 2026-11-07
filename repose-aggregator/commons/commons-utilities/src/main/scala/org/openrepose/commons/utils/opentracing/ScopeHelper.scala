@@ -21,8 +21,8 @@ package org.openrepose.commons.utils.opentracing
 
 import io.opentracing.propagation.Format
 import io.opentracing.tag.Tags
-import io.opentracing.{Scope, SpanContext, Tracer}
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import io.opentracing.{Scope, Span, SpanContext, Tracer}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.slf4j.Logger
 
@@ -32,7 +32,21 @@ import scala.util.{Failure, Success, Try}
 // todo: or do the scala test thing and make a companion object that implements it for those still in java
 object ScopeHelper {
 
-  def startSpan(req: HttpServletRequest, tracer: Tracer, logger: Logger, spanKind: String, reposeVersion: String, uriRedactionService: UriRedactionService): Scope = {
+  // OpenTracing 0.33 separates scope activation from span completion.
+  final class SpanScope(private val scope: Scope, private val underlyingSpan: Span) extends Scope {
+    def span(): Span = underlyingSpan
+
+    override def close(): Unit = {
+      try scope.close() finally underlyingSpan.finish()
+    }
+  }
+
+  def startActive(tracer: Tracer, builder: Tracer.SpanBuilder): SpanScope = {
+    val span = builder.start()
+    new SpanScope(tracer.activateSpan(span), span)
+  }
+
+  def startSpan(req: HttpServletRequest, tracer: Tracer, logger: Logger, spanKind: String, reposeVersion: String, uriRedactionService: UriRedactionService): SpanScope = {
     logger.trace("Let's see if there were any OpenTracing spans passed-in")
     val context: Option[SpanContext] =
       Try(tracer.extract(Format.Builtin.HTTP_HEADERS, new HttpRequestCarrier(req))) match {
@@ -47,17 +61,17 @@ object ScopeHelper {
       }
 
     logger.debug("The span context obtained from the request: {}", context.getOrElse("NONE"))
-    val scope = tracer.buildSpan(s"${req.getMethod} ${uriRedactionService.redact(req.getRequestURI)}")
+    val builder = tracer.buildSpan(s"${req.getMethod} ${uriRedactionService.redact(req.getRequestURI)}")
       .asChildOf(context.orNull)
       .withTag(Tags.SPAN_KIND.getKey, spanKind)
       .withTag(ReposeTags.ReposeVersion, reposeVersion)
-      .startActive(true)
+    val scope = startActive(tracer, builder)
 
     logger.debug("New span: {}", scope.span)
     scope
   }
 
-  def closeSpan(res: HttpServletResponse, scope: Scope): Unit = {
+  def closeSpan(res: HttpServletResponse, scope: SpanScope): Unit = {
     scope.span.setTag(Tags.HTTP_STATUS.getKey, res.getStatus)
     scope.close()
   }

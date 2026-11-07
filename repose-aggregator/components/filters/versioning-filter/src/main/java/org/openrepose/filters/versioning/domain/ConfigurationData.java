@@ -35,7 +35,7 @@ import org.openrepose.filters.versioning.schema.VersionChoiceList;
 import org.openrepose.filters.versioning.util.RequestMediaRangeInterrogator;
 import org.openrepose.filters.versioning.util.VersionChoiceFactory;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
 

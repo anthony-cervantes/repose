@@ -21,7 +21,7 @@ package org.openrepose.core.services.httplogging
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.Named
+import jakarta.inject.Named
 import org.jtwig.environment.{EnvironmentConfiguration, EnvironmentConfigurationBuilder}
 import org.jtwig.exceptions.JtwigException
 import org.jtwig.value.Undefined

@@ -22,8 +22,8 @@ package org.openrepose.nodeservice.distributed.jetty;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.ee11.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee11.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.openrepose.commons.utils.io.FileUtilities;
 import org.openrepose.core.services.datastore.distributed.config.DistributedDatastoreConfiguration;
@@ -67,7 +67,7 @@ public class DistributedDatastoreServer {
 
             ServerConnector conn;
             if (ddConfig.getKeystoreFilename() != null) {
-                SslContextFactory cf = new SslContextFactory();
+                SslContextFactory.Server cf = new SslContextFactory.Server();
                 cf.setKeyStorePath(FileUtilities.guardedAbsoluteFile(configRoot, ddConfig.getKeystoreFilename()).getAbsolutePath());
                 cf.setKeyStorePassword(ddConfig.getKeystorePassword());
                 cf.setKeyManagerPassword(ddConfig.getKeyPassword());
@@ -92,7 +92,8 @@ public class DistributedDatastoreServer {
             this.port = port; //Save the port so we know if it's changed
             server.addConnector(conn);
 
-            ServletContextHandler rootContext = new ServletContextHandler(server, "/");
+            ServletContextHandler rootContext = new ServletContextHandler();
+            rootContext.setContextPath("/");
 
             ServletHolder holder = new ServletHolder(ddServlet);
             holder.setName("DistDatastoreServlet-" + nodeId);

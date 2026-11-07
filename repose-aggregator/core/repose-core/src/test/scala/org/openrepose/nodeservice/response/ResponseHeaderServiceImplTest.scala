@@ -20,16 +20,18 @@
 package org.openrepose.nodeservice.response
 
 import java.util.Optional
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import org.junit.runner.RunWith
-import org.mockito.Matchers.anyString
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.{never, verify, when}
 import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.nodeservice.containerconfiguration.ContainerConfigurationService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class ResponseHeaderServiceImplTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {

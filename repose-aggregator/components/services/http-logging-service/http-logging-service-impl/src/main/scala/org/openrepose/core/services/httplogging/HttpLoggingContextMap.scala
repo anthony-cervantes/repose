@@ -22,7 +22,7 @@ package org.openrepose.core.services.httplogging
 import java.time.Duration
 import java.util
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.commons.utils.http.{CommonHttpHeader, OpenStackServiceHeader}
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 

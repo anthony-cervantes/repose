@@ -1,37 +1,34 @@
 dependencies {
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
-    compile project(":repose-aggregator:components:services:rate-limiting-service")
-    compile project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
-    compile "org.slf4j:slf4j-api"
-    compile "org.eclipse.jetty:jetty-server"
-    compile "org.eclipse.jetty:jetty-servlet"
-    compile "org.springframework:spring-beans"
-    compile "net.sf.ehcache:ehcache-core"
-    compile "io.opentracing:opentracing-api"
-    // TODO: Add this dependency. Beware! Doing so pulls in a transitive "ehcache" artifact
-    //       which shares some classes with "ehcache-core" above. The classpath conflict
-    //       should be resolved before this dependency is uncommented.
-    //       Note that "ehcache-core" appears to be discouraged for use. It was moved into the
-    //       "net.sf.ehcache.internal" package. Perhaps the standard "ehcache" should be used instead.
-    // compile "io.dropwizard.metrics:metrics-ehcache"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
+    api project(":repose-aggregator:components:services:rate-limiting-service")
+    api project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
+    api "org.slf4j:slf4j-api"
+    api "org.eclipse.jetty:jetty-server"
+    api "org.eclipse.jetty.ee11:jetty-ee11-servlet"
+    api "org.springframework:spring-beans"
+    api "net.sf.ehcache:ehcache"
+    api "io.opentracing:opentracing-api"
+    // api "io.dropwizard.metrics:metrics-ehcache"
 
-    compileOnly "javax.inject:javax.inject"
-    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.codehaus.groovy:groovy-all"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.springframework:spring-test"
-    testCompile "io.opentracing:opentracing-mock"
-    testCompile "org.apache.logging.log4j:log4j-core"
-    testCompile group: 'org.apache.logging.log4j', name: 'log4j-core', classifier: 'tests'
-    testCompile "org.apache.logging.log4j:log4j-slf4j-impl"
-    testCompile "org.slf4j:jcl-over-slf4j"
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "io.opentracing:opentracing-mock"
+    testImplementation "org.apache.logging.log4j:log4j-core"
+    testImplementation "org.apache.logging.log4j:log4j-core-test"
+    testImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
+    testImplementation "org.slf4j:jcl-over-slf4j"
 }
 
 jacocoTestCoverageVerification {

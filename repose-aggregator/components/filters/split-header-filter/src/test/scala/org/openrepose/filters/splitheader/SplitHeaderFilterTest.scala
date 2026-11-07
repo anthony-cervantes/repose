@@ -19,14 +19,16 @@
  */
 package org.openrepose.filters.splitheader
 
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.junit.runner.RunWith
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.splitheader.config.{HeaderList, SplitHeaderConfig}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.collection.JavaConverters._

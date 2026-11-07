@@ -61,6 +61,19 @@ out of the box.  These include:
 our https://github.com/rackerlabs/repose-hello-world[example custom filter] for more details.
 
 
+== Building from source
+
+Install JDK 27 and set `JAVA_HOME` to that installation.
+The Gradle wrapper downloads the pinned Gradle distribution and verifies its SHA-256 checksum.
+
+Custom filters use the Jakarta Servlet and Jakarta Inject APIs (`jakarta.servlet` and `jakarta.inject`).
+The build retains the Scala 2.12 binary API required by the API checker and adapts its legacy servlet references during dependency resolution.
+
+[source,shell]
+----
+./gradlew build
+----
+
 == Installation
 You can install *Repose* using the following methods:
 

@@ -94,11 +94,11 @@
     }
   },
   nodejs: {
-    nodesource_pin_priority: 600,
-    repo: "node"
+    version: "22.23.4"
   },
   mock: {
     npm_package_file: "package.json",
+    npm_lock_file: "package-lock.json",
     backends: [
       "main_backend.js"
     ],

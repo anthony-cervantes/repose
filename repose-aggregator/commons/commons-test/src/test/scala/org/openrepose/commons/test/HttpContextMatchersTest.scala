@@ -20,15 +20,17 @@
 package org.openrepose.commons.test
 
 import org.apache.http.entity.ContentType
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.apache.http.protocol.{BasicHttpContext, HttpContext}
 import org.hamcrest.Matchers.{anything, arrayContaining, equalTo}
 import org.hamcrest.{Description, Matcher, SelfDescribing}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyObject, anyString}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 import scala.Function.tupled
 
@@ -56,7 +58,7 @@ class HttpContextMatchersTest extends FunSpec with Matchers with MockitoSugar {
         val description = mock[Description]
 
         when(description.appendText(anyString())).thenReturn(description)
-        when(description.appendValue(anyObject())).thenReturn(description)
+        when(description.appendValue(any())).thenReturn(description)
         when(description.appendDescriptionOf(any[SelfDescribing])).thenReturn(description)
 
         HttpContextMatchers.hasAttribute(key, valueMatcher).describeTo(description)

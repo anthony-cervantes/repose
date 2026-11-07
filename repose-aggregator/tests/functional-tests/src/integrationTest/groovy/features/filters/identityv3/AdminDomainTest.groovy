@@ -20,17 +20,16 @@
 package features.filters.identityv3
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV3Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
 /**
  * Created by jennyvo on 4/22/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class AdminDomainTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

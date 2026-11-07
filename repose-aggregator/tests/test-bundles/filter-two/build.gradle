@@ -1,8 +1,8 @@
 dependencies {
-    compile "org.scala-lang:scala-library"
+    api "org.scala-lang:scala-library"
 
-    compileOnly 'javax.servlet:javax.servlet-api'
-    compileOnly 'javax.inject:javax.inject'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+    compileOnly 'jakarta.inject:jakarta.inject-api'
 }
 
 dependencyCheck {

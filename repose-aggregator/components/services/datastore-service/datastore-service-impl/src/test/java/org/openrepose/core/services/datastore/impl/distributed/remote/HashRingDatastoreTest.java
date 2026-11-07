@@ -125,7 +125,7 @@ public class HashRingDatastoreTest {
         StringValue.Patch patch = new StringValue.Patch(value);
         when(localDatastore.patch(eq(key), same(patch), eq(5), eq(DAYS))).thenReturn(new StringValue(value));
         StringValue patchedValue = (StringValue) hashRingDatastore.patch(key, id, patch, 5, DAYS, ALLOW_FORWARDING);
-        verifyZeroInteractions(remoteCommandExecutor);
+        verifyNoMoreInteractions(remoteCommandExecutor);
         verify(localDatastore).patch(any(String.class), any(StringValue.Patch.class), anyInt(), any(TimeUnit.class));
         assertThat(patchedValue.getValue(), equalTo(value));
     }
@@ -144,7 +144,7 @@ public class HashRingDatastoreTest {
         when(localDatastore.patch(eq(key), same(secondPatch), eq(5), eq(DAYS))).thenReturn(new StringValue("1, 2, 3, 4, 5"));
         hashRingDatastore.patch(key, id, new StringValue.Patch(value), 5, DAYS, ALLOW_FORWARDING);
         StringValue patchedValue = (StringValue) hashRingDatastore.patch(key, id, secondPatch, 5, DAYS, ALLOW_FORWARDING);
-        verifyZeroInteractions(remoteCommandExecutor);
+        verifyNoMoreInteractions(remoteCommandExecutor);
         assertThat(patchedValue.getValue(), equalTo("1, 2, 3, 4, 5"));
     }
 }

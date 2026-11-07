@@ -20,18 +20,20 @@
 
 package org.openrepose.filters.uriuser
 
-import javax.servlet.{FilterChain, ServletResponse}
+import jakarta.servlet.{FilterChain, ServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.openrepose.commons.utils.http.PowerApiHeader
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.filters.uriuser.config.{IdentificationMapping, IdentificationMappingList, UriUserConfig}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 
 @RunWith(classOf[JUnitRunner])

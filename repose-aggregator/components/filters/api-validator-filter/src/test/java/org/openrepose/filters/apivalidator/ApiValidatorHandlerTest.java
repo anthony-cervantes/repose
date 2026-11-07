@@ -28,8 +28,8 @@ import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;

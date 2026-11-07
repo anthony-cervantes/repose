@@ -40,7 +40,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 import java.io.ByteArrayOutputStream;
 
 import static org.hamcrest.Matchers.*;

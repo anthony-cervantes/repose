@@ -19,12 +19,14 @@
  */
 package org.openrepose.filters.bodypatcher
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterChain, FilterConfig}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.{FilterChain, FilterConfig}
 
 import org.hamcrest.Matchers.{endsWith, hasProperty}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, argThat, eq => eql}
+import org.mockito.ArgumentMatchers.{any, anyString, argThat, eq => eql}
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -34,7 +36,7 @@ import org.openrepose.filters.bodypatcher.BodyPatcherFilter._
 import org.openrepose.filters.bodypatcher.config.{BodyPatcherConfig, ChangeDetails, Patch}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfter, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfter}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 import play.api.libs.json.{JsResultException, JsValue, Json => PJson}
 
@@ -61,8 +63,8 @@ class BodyPatcherFilterTest
     it("should have the correct default config and schema") {
       filter.init(mock[FilterConfig])
 
-      verify(configurationService).subscribeTo(anyString(), eql("body-patcher.cfg.xml"),
-        argThat(hasProperty("path", endsWith("/META-INF/schema/config/body-patcher.xsd"))),
+      verify(configurationService).subscribeTo(any[String](), eql("body-patcher.cfg.xml"),
+        org.mockito.hamcrest.MockitoHamcrest.argThat(hasProperty("path", endsWith("/META-INF/schema/config/body-patcher.xsd"))),
         any(classOf[UpdateListener[BodyPatcherConfig]]), any(classOf[Class[BodyPatcherConfig]]))
     }
   }

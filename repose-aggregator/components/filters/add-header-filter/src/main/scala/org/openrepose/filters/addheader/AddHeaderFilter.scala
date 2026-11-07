@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.addheader
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletResponse, HttpServletRequest}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener

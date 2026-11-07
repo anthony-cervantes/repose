@@ -19,7 +19,7 @@
  */
 package org.openrepose.nodeservice.test
 
-import javax.inject.Named
+import jakarta.inject.Named
 import org.openrepose.core.services.httplogging.{HttpLoggingContext, HttpLoggingService}
 
 @Named

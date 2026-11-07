@@ -20,18 +20,20 @@
 package org.openrepose.commons.utils.classloader
 
 import java.io.{File, FileOutputStream, FileWriter, IOException}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.file.attribute.BasicFileAttributes
 import java.nio.file.{FileVisitResult, Files, Path, SimpleFileVisitor}
 
 import com.typesafe.config.ConfigFactory
-import javax.servlet.Filter
+import jakarta.servlet.Filter
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.apache.logging.log4j.{Level, LogManager}
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import scala.util.Random
@@ -39,8 +41,8 @@ import scala.util.Random
 @RunWith(classOf[JUnitRunner])
 class EarClassProviderTest extends FunSpec with Matchers {
 
-  val logContext = LogManager.getContext(false).asInstanceOf[LoggerContext]
-  val appender = logContext.getConfiguration.getAppender("List0").asInstanceOf[ListAppender]
+  def logContext: LoggerContext = LogManager.getContext(false).asInstanceOf[LoggerContext]
+  def appender: ListAppender = logContext.getConfiguration.getAppender("List0").asInstanceOf[ListAppender]
   val testProps = ConfigFactory.load("test.properties")
   val version = testProps.getString("earFilesVersion")
   val earFile = getEarFile("core-test-filter-bundle")

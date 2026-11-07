@@ -19,18 +19,17 @@
  */
 package features.filters.translation
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.XmlParsing
 import spock.lang.Unroll
 
 /**
  * Created by jennyvo on 5/2/14.
  */
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class TranslationAllowLooseMatchTest extends ReposeValveTest {
 
     def static String xmlPayLoad = "<a><remove-me>test</remove-me>somebody</a>"

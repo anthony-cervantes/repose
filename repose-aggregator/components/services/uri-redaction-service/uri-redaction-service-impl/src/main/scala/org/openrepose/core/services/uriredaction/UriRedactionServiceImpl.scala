@@ -20,8 +20,8 @@
 package org.openrepose.core.services.uriredaction
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.annotation.{PostConstruct, PreDestroy}
-import javax.inject.{Inject, Named}
+import jakarta.annotation.{PostConstruct, PreDestroy}
+import jakarta.inject.{Inject, Named}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.uriredaction.config.UriRedactionConfig

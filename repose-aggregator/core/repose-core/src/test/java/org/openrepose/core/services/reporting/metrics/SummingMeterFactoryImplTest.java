@@ -23,16 +23,16 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 
 import static com.codahale.metrics.MetricRegistry.name;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.openrepose.core.services.reporting.metrics.SummingMeterFactory.ACROSS_ALL;
 import static org.openrepose.core.services.reporting.metrics.SummingMeterFactory.SummingMeterSupplier;
@@ -52,7 +52,7 @@ public class SummingMeterFactoryImplTest {
         meter = mock(Meter.class);
         metricRegistry = mock(MetricRegistry.class);
 
-        when(metricRegistry.meter(Matchers.endsWith(ACROSS_ALL)))
+        when(metricRegistry.meter(ArgumentMatchers.endsWith(ACROSS_ALL)))
             .thenReturn(acrossAllMeter);
         when(metricRegistry.meter(anyString(), any(MetricRegistry.MetricSupplier.class)))
             .thenReturn(meter);

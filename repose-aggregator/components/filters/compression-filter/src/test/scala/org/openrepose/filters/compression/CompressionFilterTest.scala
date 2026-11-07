@@ -21,19 +21,21 @@
 package org.openrepose.filters.compression
 
 import java.io.EOFException
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.zip.ZipException
-import javax.servlet._
+import jakarta.servlet._
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{doThrow, verify, when}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.external.pjlcompression.CompressingFilter
 import org.openrepose.filters.compression.config.{Compression, ContentCompressionConfig}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.collection.JavaConverters._

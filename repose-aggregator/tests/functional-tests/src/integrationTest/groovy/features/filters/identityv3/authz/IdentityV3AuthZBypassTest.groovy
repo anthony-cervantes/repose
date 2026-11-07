@@ -20,18 +20,17 @@
 package features.filters.identityv3.authz
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV3Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
  * Created by adrian on 8/16/16.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class IdentityV3AuthZBypassTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

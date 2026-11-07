@@ -36,14 +36,14 @@ class ComplexUseCaseSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getUsers)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Complex Use Case Test")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getUsers)
     }
 
@@ -55,7 +55,7 @@ class ComplexUseCaseSimulation extends AbstractReposeSimulation {
       .get("/functest1/users/")
       .queryParam("limit", "1000")
       .queryParam("includeLocked", "true")
-      .header("x-auth-token", "${authToken}")
+      .header("x-auth-token", "#{authToken}")
       .check(status.is(200))
   }
 }

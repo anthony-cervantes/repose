@@ -20,14 +20,16 @@
 package org.openrepose.filters.versioning
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.Optional
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.codahale.metrics.{Meter, MetricRegistry}
 import org.apache.http.HttpHeaders
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.commons.utils.http.media.MimeType
@@ -37,7 +39,7 @@ import org.openrepose.core.systemmodel.config._
 import org.openrepose.filters.versioning.config.{MediaType, MediaTypeList, ServiceVersionMapping, ServiceVersionMappingList}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])
@@ -80,8 +82,8 @@ class VersioningFilterTest extends FunSpec with Matchers with BeforeAndAfterEach
 
     val systemModelListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[SystemModel]])
     val versioningListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[ServiceVersionMappingList]])
-    doNothing().when(configurationService).subscribeTo(anyString(), anyString(), any[URL], versioningListenerCaptor.capture(), any[Class[ServiceVersionMappingList]])
-    doNothing().when(configurationService).subscribeTo(anyString(), systemModelListenerCaptor.capture(), any[Class[SystemModel]])
+    doNothing().when(configurationService).subscribeTo(any[String](), anyString(), any[URL], versioningListenerCaptor.capture(), any[Class[ServiceVersionMappingList]])
+    doNothing().when(configurationService).subscribeTo(any[String](), systemModelListenerCaptor.capture(), any[Class[SystemModel]])
 
     filter = new VersioningFilter(configurationService, metricsServiceOpt)
     filter.init(new MockFilterConfig())
@@ -98,8 +100,8 @@ class VersioningFilterTest extends FunSpec with Matchers with BeforeAndAfterEach
     it("should subscribe to the configuration service") {
       filter.init(new MockFilterConfig())
 
-      verify(configurationService).subscribeTo(anyString(), anyString(), any[URL], any[UpdateListener[ServiceVersionMappingList]], any[Class[ServiceVersionMappingList]])
-      verify(configurationService).subscribeTo(anyString(), any[UpdateListener[SystemModel]], any[Class[SystemModel]])
+      verify(configurationService).subscribeTo(any[String](), anyString(), any[URL], any[UpdateListener[ServiceVersionMappingList]], any[Class[ServiceVersionMappingList]])
+      verify(configurationService).subscribeTo(any[String](), any[UpdateListener[SystemModel]], any[Class[SystemModel]])
     }
   }
 
@@ -107,7 +109,7 @@ class VersioningFilterTest extends FunSpec with Matchers with BeforeAndAfterEach
     it("should unsubscribe from the configuration service") {
       filter.destroy()
 
-      verify(configurationService, times(2)).unsubscribeFrom(anyString(), any[UpdateListener[_]])
+      verify(configurationService, times(2)).unsubscribeFrom(any[String](), any[UpdateListener[_]])
     }
   }
 

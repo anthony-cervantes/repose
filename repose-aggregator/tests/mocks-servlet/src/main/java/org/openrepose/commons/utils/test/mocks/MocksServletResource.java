@@ -21,7 +21,7 @@ package org.openrepose.commons.utils.test.mocks;
 
 import org.openrepose.commons.utils.test.mocks.providers.MockServiceProvider;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

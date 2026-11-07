@@ -19,19 +19,18 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.XmlParsing
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
 /**
  * A test to verify that a user can validate authentication mechanisms via api-checker.
  */
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class AuthenticatedByTest extends ReposeValveTest {
 
     static def AUTH_BY_HEADER = 'X-Authenticated-By'

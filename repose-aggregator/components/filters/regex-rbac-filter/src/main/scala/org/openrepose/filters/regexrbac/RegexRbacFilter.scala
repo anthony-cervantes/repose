@@ -20,10 +20,10 @@
 package org.openrepose.filters.regexrbac
 
 import java.io.InputStream
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.rackspace.httpdelegation.HttpDelegationManager
 import com.typesafe.scalalogging.StrictLogging

@@ -20,12 +20,14 @@
 package org.openrepose.core.services.httpclient
 
 import org.apache.http.message.BasicHttpResponse
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.apache.http.protocol.HTTP.CONN_KEEP_ALIVE
 import org.apache.http.{HttpStatus, HttpVersion}
 import org.junit.runner.RunWith
 import org.openrepose.core.services.httpclient
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 import scala.concurrent.duration._
 

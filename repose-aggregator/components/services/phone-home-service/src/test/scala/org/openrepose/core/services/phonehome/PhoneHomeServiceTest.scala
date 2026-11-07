@@ -20,6 +20,8 @@
 package org.openrepose.core.services.phonehome
 
 import io.opentracing.Tracer.SpanBuilder
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import io.opentracing.{Scope, Span, Tracer}
 import org.apache.http.HttpVersion
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpEntityEnclosingRequestBase, HttpPost, HttpUriRequest}
@@ -28,11 +30,11 @@ import org.apache.http.message.BasicHttpResponse
 import org.apache.http.protocol.HttpContext
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{eq => mockitoEq, _}
-import org.mockito.Mockito.{never, verify, verifyZeroInteractions, when}
+import org.mockito.ArgumentMatchers.{eq => mockitoEq, _}
+import org.mockito.Mockito.{never, verify, verifyNoMoreInteractions, when}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.core.services.config.ConfigurationService
@@ -40,7 +42,7 @@ import org.openrepose.core.services.httpclient.{HttpClientService, HttpClientSer
 import org.openrepose.core.systemmodel.config._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import play.api.libs.json.{JsNull, Json}
 
 import scala.io.Source
@@ -74,8 +76,8 @@ class PhoneHomeServiceTest extends FunSpec with Matchers with MockitoSugar with 
     when(mockTracer.buildSpan(anyString())).thenReturn(mockSpanBuilder)
     when(mockSpanBuilder.withTag(anyString(), anyString())).thenReturn(mockSpanBuilder)
     when(mockSpanBuilder.ignoreActiveSpan()).thenReturn(mockSpanBuilder)
-    when(mockSpanBuilder.startActive(anyBoolean())).thenReturn(mockScope)
-    when(mockScope.span()).thenReturn(mockSpan)
+    when(mockSpanBuilder.start()).thenReturn(mockSpan)
+    when(mockTracer.activateSpan(mockSpan)).thenReturn(mockScope)
 
     when(mockHttpClientService.getDefaultClient).thenReturn(mockHttpClient)
   }
@@ -91,7 +93,7 @@ class PhoneHomeServiceTest extends FunSpec with Matchers with MockitoSugar with 
       phoneHomeService.init()
 
       verify(mockConfigurationService)
-        .subscribeTo(anyString(), any[UpdateListener[SystemModel]](), mockitoEq(classOf[SystemModel]))
+        .subscribeTo(any[String](), any[UpdateListener[SystemModel]](), mockitoEq(classOf[SystemModel]))
     }
 
     it("should use the factory to get an instance of the akka service client") {
@@ -190,7 +192,7 @@ class PhoneHomeServiceTest extends FunSpec with Matchers with MockitoSugar with 
       val updateMsg = msgLogEvents.get(0).getMessage.getFormattedMessage
       val lastFilterMsg = filterLogEvents.get(filterLogEvents.size() - 1).getMessage.getFormattedMessage
 
-      verifyZeroInteractions(mockHttpClient)
+      verifyNoMoreInteractions(mockHttpClient)
       msgLogEvents.size() should be > 0
       filterLogEvents.size() should be > 0
       updateMsg should include("1.0.0")
@@ -216,7 +218,7 @@ class PhoneHomeServiceTest extends FunSpec with Matchers with MockitoSugar with 
       val updateMsg = msgLogEvents.get(0).getMessage.getFormattedMessage
       val lastFilterMsg = filterLogEvents.get(filterLogEvents.size() - 1).getMessage.getFormattedMessage
 
-      verifyZeroInteractions(mockHttpClient)
+      verifyNoMoreInteractions(mockHttpClient)
       msgLogEvents.size() should be > 0
       filterLogEvents.size() should be > 0
       updateMsg should include("foo-service")
@@ -442,7 +444,7 @@ class PhoneHomeServiceTest extends FunSpec with Matchers with MockitoSugar with 
       phoneHomeService.SystemModelConfigurationListener.configurationUpdated(systemModel)
 
       verify(mockSpanBuilder).ignoreActiveSpan()
-      verify(mockSpanBuilder).startActive(true)
+      verify(mockSpanBuilder).start()
       verify(mockScope).close()
     }
   }

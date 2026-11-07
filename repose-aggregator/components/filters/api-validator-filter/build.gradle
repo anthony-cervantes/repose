@@ -1,25 +1,26 @@
 dependencies {
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:core:repose-core")
-    compile "xalan:xalan" // Forces the version used by api-checker.
-    compile "com.google.guava:guava" // Forces the version used by api-checker.
-    compile "io.spray:spray-json_2.12" // Forces the version used by api-checker.
-    compile "com.rackspace.papi.components.api-checker:checker-core"
-    compile "io.dropwizard.metrics:metrics-core"
-    compile "org.slf4j:slf4j-api"
-    compile "org.springframework:spring-beans"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:core:repose-core")
+    api "xalan:xalan" // Forces the version used by api-checker.
+    api "com.google.guava:guava" // Forces the version used by api-checker.
+    api "io.spray:spray-json_2.12" // Forces the version used by api-checker.
+    api "com.rackspace.papi.components.api-checker:checker-core"
+    api "io.dropwizard.metrics:metrics-core"
+    api "io.dropwizard.metrics:metrics-jmx"
+    api "org.slf4j:slf4j-api"
+    api "org.springframework:spring-beans"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
 
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.codehaus.groovy:groovy-all"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.springframework:spring-test"
-    testCompile "org.slf4j:jcl-over-slf4j"
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.slf4j:jcl-over-slf4j"
 }
 
 jacocoTestCoverageVerification {

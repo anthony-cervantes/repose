@@ -37,14 +37,20 @@ if [ $? -gt 0 ]; then
   exit 1
 fi
 
-# We've found a java on the path, now validate that the minor version is adequate.
+# We've found a java on the path, now validate that the feature version is adequate.
 # We're not guaranteed to have bash on Debian flavors, so we have to use sh stuff.
 VERSION=$($JAVA -version 2>&1 | grep ' version' | awk '{ print substr($3, 2, length($3)-2); }')
-JAVA_MINOR=$(echo $VERSION | tr "." " " | cut -d " " -f2)
+JAVA_MAJOR=$(printf '%s\n' "$VERSION" | awk -F '[.+-]' '{ print ($1 == "1" ? $2 : $1); }')
+case "$JAVA_MAJOR" in
+    ''|*[!0-9]*)
+        echo 'Unable to determine the Java feature version.'
+        exit 1
+        ;;
+esac
 
-if [ "$JAVA_MINOR" -lt "8" ]; then
-  echo 'Repose requires a Java version of at least 8 to function.'
-  echo 'Please install a JRE 1.8 or greater.'
+if [ "$JAVA_MAJOR" -lt "27" ]; then
+  echo 'Repose requires a Java version of at least 27 to function.'
+  echo 'Please install a JRE 27 or greater.'
   exit 1
 fi
 

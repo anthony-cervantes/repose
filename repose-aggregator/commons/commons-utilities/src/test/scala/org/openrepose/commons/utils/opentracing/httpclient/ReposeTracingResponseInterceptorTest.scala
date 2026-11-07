@@ -20,17 +20,19 @@
 package org.openrepose.commons.utils.opentracing.httpclient
 
 import io.opentracing.Span
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import io.opentracing.tag.Tags.HTTP_STATUS
-import javax.servlet.http.HttpServletResponse.SC_OK
+import jakarta.servlet.http.HttpServletResponse.SC_OK
 import org.apache.http.protocol.HttpContext
 import org.apache.http.{HttpResponse, StatusLine}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{anyInt, eq => isEq}
+import org.mockito.ArgumentMatchers.{anyInt, eq => isEq}
 import org.mockito.Mockito.{never, verify, when}
 import org.openrepose.commons.utils.opentracing.httpclient.ReposeTracingInterceptorConstants.OpenTracingSpan
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class ReposeTracingResponseInterceptorTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {
@@ -73,7 +75,7 @@ class ReposeTracingResponseInterceptorTest extends FunSpec with Matchers with Mo
     }
 
     it("span exception") {
-      when(httpContext.getAttribute(OpenTracingSpan)).thenThrow(classOf[Exception])
+      when(httpContext.getAttribute(OpenTracingSpan)).thenThrow(classOf[RuntimeException])
 
       val httpResponseInterceptor = new ReposeTracingResponseInterceptor()
 

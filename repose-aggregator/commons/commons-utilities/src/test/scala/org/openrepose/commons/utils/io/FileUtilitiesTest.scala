@@ -20,8 +20,10 @@
 package org.openrepose.commons.utils.io
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class FileUtilitiesTest extends FunSpec with Matchers {

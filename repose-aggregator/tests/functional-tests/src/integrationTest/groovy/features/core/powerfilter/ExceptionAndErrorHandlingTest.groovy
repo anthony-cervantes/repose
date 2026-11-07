@@ -19,16 +19,15 @@
  */
 package features.core.powerfilter
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_GATEWAY
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_GATEWAY
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class ExceptionAndErrorHandlingTest extends ReposeValveTest {
     def setupSpec() {
         deproxy = new Deproxy()

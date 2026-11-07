@@ -19,21 +19,20 @@
  */
 package features.filters.simplerbac
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.XmlParsing
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ID
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ROLES_MAP
 import static org.openrepose.commons.utils.http.PowerApiHeader.RELEVANT_ROLES
 import static org.openrepose.commons.utils.string.Base64Helper.base64EncodeUtf8
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class SimpleRBACMultitenantTest extends ReposeValveTest {
 
     def static random = new Random()

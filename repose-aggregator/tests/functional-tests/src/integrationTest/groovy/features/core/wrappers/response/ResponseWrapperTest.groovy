@@ -19,18 +19,17 @@
  */
 package features.core.wrappers.response
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.servlet.http.ResponseMode
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 import spock.lang.Unroll
 
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class ResponseWrapperTest extends ReposeValveTest {
     static final String FIRST_FILTER_TEST_HEADER_NAME = "X-First-Filter-Test-Case"
     static final String SECOND_FILTER_TEST_HEADER_NAME = "X-Second-Filter-Test-Case"
@@ -58,8 +57,8 @@ class ResponseWrapperTest extends ReposeValveTest {
     static final String SCRIPT_IMPORTS = """\
         |import org.openrepose.commons.utils.servlet.http.*
         |import java.io.ByteArrayOutputStream
-        |import javax.servlet.ServletOutputStream
-        |import javax.servlet.WriteListener
+        |import jakarta.servlet.ServletOutputStream
+        |import jakarta.servlet.WriteListener
         |import javax.ws.rs.core.MediaType
         |""".stripMargin()
 

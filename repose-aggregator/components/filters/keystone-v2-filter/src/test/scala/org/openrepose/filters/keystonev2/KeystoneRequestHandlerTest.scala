@@ -20,8 +20,10 @@
 package org.openrepose.filters.keystonev2
 
 import java.util.GregorianCalendar
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import javax.servlet.http.HttpServletResponse.SC_OK
+import jakarta.servlet.http.HttpServletResponse.SC_OK
 import javax.ws.rs.core.HttpHeaders.RETRY_AFTER
 import org.apache.http.HttpVersion
 import org.apache.http.message.BasicHttpResponse
@@ -29,7 +31,7 @@ import org.junit.runner.RunWith
 import org.openrepose.commons.utils.http.HttpDate
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class KeystoneRequestHandlerTest extends FunSpec with Matchers with MockitoSugar {

@@ -23,7 +23,7 @@ import java.util.{Calendar, GregorianCalendar}
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.HttpServletResponse._
 import javax.ws.rs.core.{HttpHeaders, MediaType}
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient

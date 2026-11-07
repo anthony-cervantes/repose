@@ -19,19 +19,18 @@
  */
 package features.services.datastore
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.*
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.spockframework.runtime.SpockAssertionError
-import scaffold.category.Intense
 import spock.lang.Specification
 
 import java.util.concurrent.TimeUnit
 
 import static org.openrepose.framework.test.ReposeLauncher.MAX_STARTUP_TIME
 
-@Category(Intense.class)
+@Tag("scaffold.category.Intense")
 class DistDatastoreServiceClientAuthFullTest extends Specification {
     static String reposeEndpoint1
     static String reposeEndpoint2

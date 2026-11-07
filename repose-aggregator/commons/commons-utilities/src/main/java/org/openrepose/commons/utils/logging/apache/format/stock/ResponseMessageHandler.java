@@ -24,8 +24,8 @@ import org.openrepose.commons.utils.logging.apache.HttpLogFormatterState;
 import org.openrepose.commons.utils.logging.apache.format.FormatterLogic;
 import org.openrepose.commons.utils.servlet.http.HttpServletResponseWrapper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ResponseMessageHandler implements FormatterLogic {
 

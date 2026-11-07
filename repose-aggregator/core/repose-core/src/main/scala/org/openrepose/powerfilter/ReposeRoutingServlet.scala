@@ -26,9 +26,9 @@ import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics.MetricRegistry
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpUriRequest}
 import org.apache.http.client.utils.URIBuilder

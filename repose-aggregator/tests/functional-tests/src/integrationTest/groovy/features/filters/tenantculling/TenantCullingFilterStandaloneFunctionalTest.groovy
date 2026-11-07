@@ -21,21 +21,20 @@ package features.filters.tenantculling
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.HeaderCollection
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ID
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.TENANT_ROLES_MAP
 import static org.openrepose.commons.utils.http.PowerApiHeader.RELEVANT_ROLES
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class TenantCullingFilterStandaloneFunctionalTest extends ReposeValveTest {
     static jsonSlurper = new JsonSlurper()
 

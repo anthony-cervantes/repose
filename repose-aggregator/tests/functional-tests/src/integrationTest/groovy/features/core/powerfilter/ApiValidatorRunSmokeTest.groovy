@@ -19,12 +19,11 @@
  */
 package features.core.powerfilter
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Smoke
 
-@Category(Smoke)
+@Tag("scaffold.category.Smoke")
 class ApiValidatorRunSmokeTest extends ReposeValveTest {
 
     def setupSpec() {

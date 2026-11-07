@@ -20,7 +20,7 @@
 package org.openrepose.commons.utils.http.normal;
 
 /**
- * A set of HTTP status codes which are not included in {@link javax.servlet.http.HttpServletResponse}.
+ * A set of HTTP status codes which are not included in {@link jakarta.servlet.http.HttpServletResponse}.
  */
 public class ExtendedStatusCodes {
     public static final int SC_TOO_MANY_REQUESTS = 429;

@@ -19,17 +19,16 @@
  */
 package features.filters.regexrbac
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 import static org.openrepose.commons.utils.http.OpenStackServiceHeader.ROLES
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class RegexRbacDelegatingTest extends ReposeValveTest {
 
     static String GET = "GET"

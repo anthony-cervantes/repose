@@ -32,7 +32,7 @@ import org.openrepose.performance.test.AbstractReposeSimulation
 class RegexRbacFilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(getFooBarRole1)
       exec(getFooBarRole2)
       exec(getFooBarBoth)
@@ -41,7 +41,7 @@ class RegexRbacFilterSimulation extends AbstractReposeSimulation {
 
   // set up the main scenario
   override val mainScenario = scenario("RegEx RBAC Filter Test")
-    .forever() {
+    .forever {
       exec(getFooBarRole1)
       exec(getFooBarRole2)
       exec(getFooBarBoth)

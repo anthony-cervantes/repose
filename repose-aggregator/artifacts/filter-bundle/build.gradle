@@ -1,5 +1,5 @@
 apply plugin: 'ear'
-apply plugin: 'nebula.ospackage'
+apply plugin: 'com.netflix.nebula.ospackage'
 
 configurations {
     deb
@@ -101,7 +101,7 @@ ospackage {
     from(ear.outputs.files) {
         user 'root'
         permissionGroup 'root'
-        fileMode 0555
+        filePermissions { unix('0555') }
     }
 
     //the configs
@@ -109,7 +109,7 @@ ospackage {
         into '/etc/repose/examples'
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0640
+        filePermissions { unix('0640') }
     }
 
     //the license info
@@ -117,21 +117,21 @@ ospackage {
         into '/usr/share/doc/repose-filter-bundle'
         user 'root'
         permissionGroup 'root'
-        fileMode 0444
+        filePermissions { unix('0444') }
     }
 
-    requires("repose", "$project.version")
+    requires("repose", "$project.version", EQUAL)
 
     replaces('repose-filters')
 }
 
 buildDeb {
-    requires('java8-runtime-headless')
+    requires('java27-runtime-headless')
 }
 
 buildRpm {
     release = 1
 
     addParentDirs false
-    requires('java', '1.8.0', GREATER | EQUAL)
+    requires('java', '27', GREATER | EQUAL)
 }

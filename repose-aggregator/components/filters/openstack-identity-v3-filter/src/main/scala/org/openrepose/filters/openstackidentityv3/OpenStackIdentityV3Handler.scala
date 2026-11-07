@@ -20,8 +20,8 @@
 package org.openrepose.filters.openstackidentityv3
 
 import java.util.{Calendar, GregorianCalendar}
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse._
 
 import com.rackspace.httpdelegation.HttpDelegationManager
 import com.typesafe.scalalogging.StrictLogging

@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper;
 import org.openrepose.filters.versioning.config.ServiceVersionMapping;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static org.openrepose.commons.utils.StringUriUtilities.indexOfUriFragment;
 

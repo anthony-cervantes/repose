@@ -1,5 +1,5 @@
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'nebula.ospackage'
+apply plugin: 'com.gradleup.shadow'
+apply plugin: 'com.netflix.nebula.ospackage'
 
 configurations {
     fatJar
@@ -8,13 +8,13 @@ configurations {
 }
 
 dependencies {
-    compile project(':repose-aggregator:commons:commons-utilities')
-    compile project(':repose-aggregator:components:services:datastore-service:datastore-service-api')
-    compile project(':repose-aggregator:core:repose-core-api')
-    compile "org.slf4j:slf4j-api"
+    api project(':repose-aggregator:commons:commons-utilities')
+    api project(':repose-aggregator:components:services:datastore-service:datastore-service-api')
+    api project(':repose-aggregator:core:repose-core-api')
+    api "org.slf4j:slf4j-api"
 
-    testCompile "junit:junit"
-    testCompile "org.hamcrest:hamcrest-library"
+    testImplementation "junit:junit"
+    testImplementation "org.hamcrest:hamcrest"
 }
 
 jar {
@@ -77,14 +77,14 @@ ospackage {
         rename('(.*).jar', 'repose-cli.jar')
         user 'root'
         permissionGroup 'root'
-        fileMode 0555
+        filePermissions { unix('0555') }
     }
 
     //the scripts
     from('src/config/scripts') {
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0640
+        filePermissions { unix('0640') }
     }
     link('/usr/bin/clean-repose-deploy', '/usr/share/repose/clean-repose-deploy')
     link('/usr/bin/dd-remove', '/usr/share/repose/dd-remove')
@@ -94,22 +94,22 @@ ospackage {
         into '/usr/share/doc/repose-cli-utils'
         user 'root'
         permissionGroup 'root'
-        fileMode 0444
+        filePermissions { unix('0444') }
     }
 
-    requires("repose", "$project.version")
+    requires("repose", "$project.version", EQUAL)
 
     replaces('cli-utils')
 }
 
 buildDeb {
-    requires('java8-runtime-headless')
+    requires('java27-runtime-headless')
 }
 
 buildRpm {
     release = 1
 
-    requires('java', '1.8.0', GREATER | EQUAL)
+    requires('java', '27', GREATER | EQUAL)
 }
 
 jacocoTestCoverageVerification {

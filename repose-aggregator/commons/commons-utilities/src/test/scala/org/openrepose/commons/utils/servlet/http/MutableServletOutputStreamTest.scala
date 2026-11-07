@@ -20,14 +20,16 @@
 package org.openrepose.commons.utils.servlet.http
 
 import java.io.ByteArrayInputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
-import javax.servlet.ServletOutputStream
+import jakarta.servlet.ServletOutputStream
 
 import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 import scala.io.Source
 
@@ -41,7 +43,7 @@ class MutableServletOutputStreamTest extends FunSpec with Matchers with MockitoS
 
       mutableOutputStream.write(10)
 
-      verifyZeroInteractions(mockOutputStream)
+      verifyNoMoreInteractions(mockOutputStream)
     }
 
     it("should not yet write through to the wrapped output stream - Array[Byte]") {
@@ -50,7 +52,7 @@ class MutableServletOutputStreamTest extends FunSpec with Matchers with MockitoS
 
       mutableOutputStream.write(Array[Byte](1, 2, 3))
 
-      verifyZeroInteractions(mockOutputStream)
+      verifyNoMoreInteractions(mockOutputStream)
     }
 
     it("should not yet write through to the wrapped output stream - Array[Byte], offset, length") {
@@ -59,7 +61,7 @@ class MutableServletOutputStreamTest extends FunSpec with Matchers with MockitoS
 
       mutableOutputStream.write(Array[Byte](1, 2, 3), 0, 2)
 
-      verifyZeroInteractions(mockOutputStream)
+      verifyNoMoreInteractions(mockOutputStream)
     }
   }
 

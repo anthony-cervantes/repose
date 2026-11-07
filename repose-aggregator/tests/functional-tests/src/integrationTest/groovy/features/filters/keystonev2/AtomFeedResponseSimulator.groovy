@@ -24,7 +24,7 @@ import org.joda.time.DateTime
 import org.rackspace.deproxy.Request
 import org.rackspace.deproxy.Response
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 
 /**
  * Simulates responses from an Identity Atom Feed

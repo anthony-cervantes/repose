@@ -22,7 +22,7 @@ package org.openrepose.commons.utils.opentracing
 import java.util
 
 import io.opentracing.propagation.TextMap
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import scala.Function.tupled
 import scala.collection.JavaConverters._

@@ -19,15 +19,14 @@
  */
 package features.filters.derp
 
-import org.junit.Ignore
-import org.junit.experimental.categories.Category
+import spock.lang.Ignore
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
 @Ignore
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class DerpResponseMessagingTest extends ReposeValveTest {
 
     def setupSpec() {

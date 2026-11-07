@@ -20,16 +20,17 @@
 package org.openrepose.filters.derp
 
 import java.util
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{FilterChain, ServletRequest, ServletResponse}
 
 import org.junit.runner.RunWith
-import org.mockito.Matchers
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
-import org.scalatest.FunSpec
+
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 
@@ -46,7 +47,7 @@ class DerpFilterTest extends FunSpec with MockitoSugar {
 
       derpFilter.doFilter(req, null, fc)
 
-      verify(fc).doFilter(same(req), any(classOf[ServletResponse]))
+      verify(fc).doFilter(same(req), isNull[ServletResponse]())
     }
 
     it("should send an error response populated with the data from the delegation header if present") {
@@ -88,7 +89,7 @@ class DerpFilterTest extends FunSpec with MockitoSugar {
       derpFilter.doFilter(req, resp, fc)
 
       verify(fc, never()).doFilter(any(classOf[ServletRequest]), any(classOf[ServletResponse]))
-      verify(resp).sendError(Matchers.eq(500), anyString())
+      verify(resp).sendError(ArgumentMatchers.eq(500), anyString())
     }
 
     it("should treat a delegation value without an explicit quality as having a quality of 1") {

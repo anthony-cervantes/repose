@@ -29,7 +29,7 @@ import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.httpclient._
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.Tracer
-import javax.inject.{Inject, Named}
+import jakarta.inject.{Inject, Named}
 import javax.net.ssl.SSLContext
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig

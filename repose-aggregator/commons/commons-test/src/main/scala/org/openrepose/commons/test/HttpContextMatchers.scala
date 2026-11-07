@@ -20,13 +20,12 @@
 package org.openrepose.commons.test
 
 import org.apache.http.protocol.HttpContext
-import org.hamcrest.{Description, Factory, Matcher, TypeSafeMatcher}
+import org.hamcrest.{Description, Matcher, TypeSafeMatcher}
 
 /**
   * A factory for [[HttpContext]] [[org.hamcrest.Matcher]]s.
   */
 object HttpContextMatchers {
-  @Factory
   def hasAttribute[V](key: String, valueMatcher: Matcher[_ >: V]): Matcher[HttpContext] = new Attribute(key, valueMatcher)
 
   private class Attribute[V](key: String, valueMatcher: Matcher[_ >: V]) extends TypeSafeMatcher[HttpContext] {

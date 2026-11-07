@@ -20,17 +20,19 @@
 package org.openrepose.filters.scripting
 
 import java.net.URL
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, same}
+import org.mockito.ArgumentMatchers.{any, anyString, same}
 import org.mockito.Mockito.verify
 import org.openrepose.commons.config.manager.UpdateFailedException
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.scripting.config.{ScriptingConfig, ScriptingLanguages}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])
@@ -54,7 +56,7 @@ class ScriptingFilterTest extends FunSpec with Matchers with MockitoSugar {
 
     filter.init(new MockFilterConfig())
 
-    verify(configurationService).subscribeTo(anyString(), anyString(), any[URL], same(filter), any[Class[ScriptingConfig]])
+    verify(configurationService).subscribeTo(any[String](), anyString(), any[URL], same(filter), any[Class[ScriptingConfig]])
   }
 
   it("should unregister from a configuration on destroy") {
@@ -63,7 +65,7 @@ class ScriptingFilterTest extends FunSpec with Matchers with MockitoSugar {
 
     filter.destroy()
 
-    verify(configurationService).unsubscribeFrom(anyString(), same(filter))
+    verify(configurationService).unsubscribeFrom(any[String](), same(filter))
   }
 
   it("can parse some javascript to add a request header with static value") {

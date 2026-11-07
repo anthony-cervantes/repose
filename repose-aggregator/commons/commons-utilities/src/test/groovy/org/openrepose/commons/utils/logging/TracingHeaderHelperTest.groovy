@@ -23,7 +23,6 @@ package org.openrepose.commons.utils.logging
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.apache.commons.codec.binary.Base64
-import org.junit.Before
 import org.slf4j.MDC
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -33,7 +32,6 @@ import spock.lang.Unroll
  */
 class TracingHeaderHelperTest extends Specification {
 
-    @Before
     def setup() {
         MDC.clear();
     }

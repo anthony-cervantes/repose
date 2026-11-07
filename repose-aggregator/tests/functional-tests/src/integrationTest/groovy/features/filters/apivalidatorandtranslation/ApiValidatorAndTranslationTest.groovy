@@ -19,17 +19,16 @@
  */
 package features.filters.apivalidatorandtranslation
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.XmlParsing
 
 /**
  * Testing that the Translation filter and API validator filter work in the same filter chain
  * given that they both rely on Saxon, but are in separate EAR artifacts.
  */
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class ApiValidatorAndTranslationTest extends ReposeValveTest {
 
     def setupSpec() {

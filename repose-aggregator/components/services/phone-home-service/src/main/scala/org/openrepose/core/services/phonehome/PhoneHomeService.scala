@@ -20,13 +20,15 @@
 package org.openrepose.core.services.phonehome
 
 import java.text.SimpleDateFormat
+import org.openrepose.commons.utils.opentracing.ScopeHelper
 import java.util.{Date, TimeZone, UUID}
 
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.tag.Tags
-import io.opentracing.{Scope, Tracer}
-import javax.annotation.PostConstruct
-import javax.inject.{Inject, Named}
+import io.opentracing.Tracer
+import org.openrepose.commons.utils.opentracing.ScopeHelper.SpanScope
+import jakarta.annotation.PostConstruct
+import jakarta.inject.{Inject, Named}
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.RequestBuilder
 import org.apache.http.entity.ContentType
@@ -82,7 +84,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
     )
   }
 
-  private def sendUpdate(scope: Scope): Unit = {
+  private def sendUpdate(scope: SpanScope): Unit = {
     logger.trace("sendUpdate method called")
 
     val staticSystemModel = systemModel // Pin the system model in case an update occurs while processing
@@ -210,7 +212,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
     private var initialized = false
 
     override def configurationUpdated(configurationObject: SystemModel): Unit = {
-      val scope = tracer.buildSpan(TracingOperationName).ignoreActiveSpan().startActive(true)
+      val scope = ScopeHelper.startActive(tracer, tracer.buildSpan(TracingOperationName).ignoreActiveSpan())
       scope.span().setTag(ReposeTags.ReposeVersion, reposeVer)
 
       try {

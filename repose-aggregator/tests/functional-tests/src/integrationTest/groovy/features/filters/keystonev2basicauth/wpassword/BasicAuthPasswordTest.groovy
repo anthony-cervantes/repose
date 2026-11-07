@@ -20,16 +20,15 @@
 package features.filters.keystonev2basicauth.wpassword
 
 import org.apache.commons.lang3.RandomStringUtils
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Identity
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION
 import static javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE
 
@@ -39,7 +38,7 @@ import static javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE
  * Update on 01/21/16
  *  - Replace client-auth-n with keystone-v2 filter
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class BasicAuthPasswordTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

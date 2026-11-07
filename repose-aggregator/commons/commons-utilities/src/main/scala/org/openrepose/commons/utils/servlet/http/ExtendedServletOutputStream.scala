@@ -20,7 +20,7 @@
 package org.openrepose.commons.utils.servlet.http
 
 import java.io.InputStream
-import javax.servlet.ServletOutputStream
+import jakarta.servlet.ServletOutputStream
 
 trait ExtendedServletOutputStream extends ServletOutputStream {
   /**

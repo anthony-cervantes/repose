@@ -19,18 +19,20 @@
  */
 package org.openrepose.filters.headertranslation
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterChain, ServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.{FilterChain, ServletResponse}
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, reset, verify}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.headertranslation.config.{Header, HeaderTranslationType}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 
 import scala.collection.JavaConversions._

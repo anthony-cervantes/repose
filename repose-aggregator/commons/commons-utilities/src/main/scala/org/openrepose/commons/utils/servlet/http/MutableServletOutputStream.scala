@@ -22,7 +22,7 @@ package org.openrepose.commons.utils.servlet.http
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.ServletOutputStream
+import jakarta.servlet.{ServletOutputStream, WriteListener}
 import org.apache.commons.io.IOUtils
 
 class MutableServletOutputStream(servletOutputStream: ServletOutputStream)
@@ -30,6 +30,10 @@ class MutableServletOutputStream(servletOutputStream: ServletOutputStream)
     with StrictLogging {
 
   private val byteArrayOutputStream = new ByteArrayOutputStream()
+
+  override def isReady: Boolean = servletOutputStream.isReady
+
+  override def setWriteListener(listener: WriteListener): Unit = servletOutputStream.setWriteListener(listener)
 
   override def write(b: Int): Unit = byteArrayOutputStream.write(b)
 

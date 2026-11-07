@@ -21,12 +21,11 @@
 package features.filters.keystonev2.userAttributeHeaders
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Identity
 
 /**
  B-50304
@@ -64,7 +63,7 @@ import scaffold.category.Identity
  service
  */
 
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class PassUserAttributesInHeaderTest extends ReposeValveTest {
 
     def originEndpoint

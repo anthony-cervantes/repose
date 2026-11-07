@@ -20,13 +20,12 @@
 package features.core.deployment
 
 import com.google.common.hash.Hashing
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
-import scaffold.category.Core
 
 import static com.google.common.io.Files.hash
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class ArtifactDeploymentTest extends ReposeValveTest {
 
     static final String ARTIFACT_DIR_NAME = 'artifacts'

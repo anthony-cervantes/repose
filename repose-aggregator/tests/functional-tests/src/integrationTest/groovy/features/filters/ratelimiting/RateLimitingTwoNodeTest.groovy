@@ -19,7 +19,7 @@
  */
 package features.filters.ratelimiting
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.PortFinder
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
@@ -27,7 +27,6 @@ import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
-import scaffold.category.Filters
 
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
@@ -36,7 +35,7 @@ import javax.xml.parsers.DocumentBuilderFactory
  * Rate limiting tests ported over from python and JMeter
  */
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class RateLimitingTwoNodeTest extends ReposeValveTest {
     final handler = { return new Response(200, "OK") }
 

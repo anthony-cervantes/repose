@@ -19,14 +19,13 @@
  */
 package features.services.httpconnectionpool
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Handlers
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Services
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class ConnectionPoolDecommissioningTest extends ReposeValveTest {
 
     def setupSpec() {

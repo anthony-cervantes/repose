@@ -19,12 +19,14 @@
  */
 package org.openrepose.core.spring
 
-import javax.servlet.Filter
+import jakarta.servlet.Filter
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.junit.runner.RunWith
 import org.openrepose.core.spring.test.foo.FooBean
 import org.openrepose.core.spring.test.{DerpBean, HerpBean}
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.context.ApplicationContext
 import com.anycompany.spring.test.foo.TestFooBean
 import com.anycompany.spring.test.TestBean

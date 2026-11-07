@@ -22,14 +22,15 @@ package org.openrepose.valve.jetty
 import java.util
 
 import com.typesafe.config.ConfigFactory
-import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
-import javax.servlet.{DispatcherType, Filter}
+import jakarta.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{DispatcherType, Filter}
 import org.eclipse.jetty.http.HttpCompliance.RFC7230_LEGACY
 import org.eclipse.jetty.http.HttpHeader
 import org.eclipse.jetty.server._
 import org.eclipse.jetty.server.handler.ErrorHandler
-import org.eclipse.jetty.servlet.{FilterHolder, ServletContextHandler, ServletHolder}
+import org.eclipse.jetty.ee11.servlet.{FilterHolder, ServletContextHandler, ServletHolder}
 import org.eclipse.jetty.util.ssl.SslContextFactory
+import org.eclipse.jetty.util.Callback
 import org.openrepose.commons.utils.io.FileUtilities
 import org.openrepose.core.container.config.SslConfiguration
 import org.openrepose.core.spring.{CoreSpringProvider, ReposeSpringProperties}
@@ -56,7 +57,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
                         val httpsPort: Option[Int],
                         sslConfig: Option[SslConfiguration],
                         idleTimeout: Option[Long],
-                        httpChannelListener: HttpChannel.Listener,
+                        httpChannelListener: HttpLoggingServiceChannelListener,
                         requestLog: RequestLog,
                         testMode: Boolean = false) {
 
@@ -95,7 +96,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
       ///////////////////////////////////////////////////////////////
       // TODO: Remove this legacy support in v10.0.0.0. (REP-7598) //
       conn.getConnectionFactory(classOf[HttpConnectionFactory])    //
-        .setHttpCompliance(RFC7230_LEGACY)                         //
+        .getHttpConfiguration.setHttpCompliance(RFC7230_LEGACY)                         //
       ///////////////////////////////////////////////////////////////
 
       if (testMode) {
@@ -107,7 +108,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
     }
 
     val httpsConnector: Option[ServerConnector] = httpsPort.map { port =>
-      val cf = new SslContextFactory()
+      val cf = new SslContextFactory.Server()
 
       //TODO: do we make this a URL for realsies?
       //Get the configuration root from the core spring context, because we haven't fired up the app Context yet.
@@ -129,7 +130,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
         ////////////////////////////////////////////////////////////////////
         // TODO: Remove this legacy support in v10.0.0.0. (REP-7598)      //
         sslConnector.getConnectionFactory(classOf[HttpConnectionFactory]) //
-          .setHttpCompliance(RFC7230_LEGACY)                              //
+          .getHttpConfiguration.setHttpCompliance(RFC7230_LEGACY)                              //
         ////////////////////////////////////////////////////////////////////
 
         if (testMode) {
@@ -170,8 +171,6 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
       connectors foreach { connector =>
         idleTimeout foreach connector.setIdleTimeout
 
-        // Wire in the bridge to the HTTP Logging Service (to open contexts)
-        connector.addBean(httpChannelListener)
       }
     }
 
@@ -181,6 +180,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
 
     val contextHandler = new ServletContextHandler()
     contextHandler.setContextPath("/")
+    contextHandler.addEventListener(httpChannelListener)
     contextHandler.addServlet(new ServletHolder(appContext.getBean("reposeRoutingServlet").asInstanceOf[HttpServlet]), "/*")
 
     val filterHolder = new FilterHolder()
@@ -196,9 +196,9 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
     // Prevents Jetty from writing HTML error pages when sendError is called on the response.
     // This is for backwards compatibility, but should eventually be removed.
     s.setErrorHandler(new ErrorHandler() {
-      override def doError(target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse): Unit = {
-        if (getCacheControl != null) response.setHeader(HttpHeader.CACHE_CONTROL.asString, getCacheControl)
-        baseRequest.setHandled(true)
+      override protected def generateResponse(request: Request, response: Response, code: Int,
+                                              message: String, cause: Throwable, callback: Callback): Unit = {
+        callback.succeeded()
       }
     })
 

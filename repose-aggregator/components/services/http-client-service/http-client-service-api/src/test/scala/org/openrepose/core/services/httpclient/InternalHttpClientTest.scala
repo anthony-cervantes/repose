@@ -20,10 +20,12 @@
 package org.openrepose.core.services.httpclient
 
 import org.apache.http.impl.client.CloseableHttpClient
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class InternalHttpClientTest extends FunSpec with MockitoSugar with Matchers {

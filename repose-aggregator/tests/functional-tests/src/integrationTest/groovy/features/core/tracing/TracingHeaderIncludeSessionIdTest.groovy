@@ -23,13 +23,12 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.apache.commons.codec.binary.Base64
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 
 import java.nio.charset.Charset
 import java.util.regex.Pattern
@@ -37,7 +36,7 @@ import java.util.regex.Pattern
 /**
  * Created by jennyvo on 8/10/15.  Updated by Mario on 8/12/15.
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class TracingHeaderIncludeSessionIdTest extends ReposeValveTest {
 
     def static final Pattern UUID_PATTERN = ~/\p{XDigit}{8}-\p{XDigit}{4}-\p{XDigit}{4}-\p{XDigit}{4}-\p{XDigit}{12}/

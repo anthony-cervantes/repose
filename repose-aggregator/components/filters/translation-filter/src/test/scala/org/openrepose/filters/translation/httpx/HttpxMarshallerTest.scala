@@ -20,11 +20,13 @@
 package org.openrepose.filters.translation.httpx
 
 import java.io.{ByteArrayInputStream, InputStream}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.openrepose.docs.repose.httpx.v1._
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class HttpxMarshallerTest extends FunSpec with Matchers {

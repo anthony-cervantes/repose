@@ -19,11 +19,10 @@
  */
 package features.services.datastore
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.PortFinder
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Services
 import spock.lang.Unroll
 
 import static org.openrepose.framework.test.TestUtils.timedSearch
@@ -31,7 +30,7 @@ import static org.openrepose.framework.test.TestUtils.timedSearch
 /**
  * Created by jennyvo on 4/9/14.
  */
-@Category(Services)
+@Tag("scaffold.category.Services")
 class DistDataStoreMisConfigTest extends ReposeValveTest {
     static def datastoreEndpoint
 

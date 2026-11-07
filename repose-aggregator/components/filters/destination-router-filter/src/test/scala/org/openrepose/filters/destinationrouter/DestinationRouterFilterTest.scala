@@ -20,11 +20,13 @@
 package org.openrepose.filters.destinationrouter
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.Optional
 
 import com.codahale.metrics.Meter
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, same}
+import org.mockito.ArgumentMatchers.{any, anyString, same}
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.commons.utils.http.CommonRequestAttributes
 import org.openrepose.commons.utils.servlet.http.RouteDestination
@@ -33,7 +35,7 @@ import org.openrepose.core.services.reporting.metrics.{MetricsService, Aggregate
 import org.openrepose.filters.routing.servlet.config.{DestinationRouterConfiguration, Target}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])
@@ -63,7 +65,7 @@ class DestinationRouterFilterTest extends FunSpec with Matchers with BeforeAndAf
 
       filter.init(new MockFilterConfig())
 
-      verify(configurationService).subscribeTo(anyString(), anyString(), any[URL], same(filter), any[Class[DestinationRouterConfiguration]])
+      verify(configurationService).subscribeTo(any[String](), anyString(), any[URL], same(filter), any[Class[DestinationRouterConfiguration]])
     }
   }
 
@@ -73,7 +75,7 @@ class DestinationRouterFilterTest extends FunSpec with Matchers with BeforeAndAf
 
       filter.destroy()
 
-      verify(configurationService).unsubscribeFrom(anyString(), same(filter))
+      verify(configurationService).unsubscribeFrom(any[String](), same(filter))
     }
   }
 

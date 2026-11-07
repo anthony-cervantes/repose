@@ -1,17 +1,19 @@
 dependencies {
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile("org.apache.jena:jena-iri") {
+    api "org.scala-lang:scala-library"
+    api "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api("org.apache.jena:jena-iri") {
         exclude group: 'log4j', module: 'log4j'
     }
-    compile "org.apache.logging.log4j:log4j-api"
-    compile "org.apache.logging.log4j:log4j-core"
-    compile "org.apache.logging.log4j:log4j-1.2-api"
+    api "org.apache.logging.log4j:log4j-api"
+    api "org.apache.logging.log4j:log4j-core"
+    api "org.apache.logging.log4j:log4j-1.2-api"
 
-    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
 }

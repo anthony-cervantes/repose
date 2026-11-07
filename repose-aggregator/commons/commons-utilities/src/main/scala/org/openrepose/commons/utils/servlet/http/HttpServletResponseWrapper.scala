@@ -25,8 +25,8 @@ import java.util
 import java.util.Date
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.{ServletOutputStream, ServletResponse}
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.{ServletOutputStream, ServletResponse}
 import javax.ws.rs.core.HttpHeaders
 import org.apache.http.client.utils.DateUtils
 import org.slf4j.LoggerFactory
@@ -79,7 +79,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
                                  headerMode: ResponseMode,
                                  bodyMode: ResponseMode,
                                  desiredOutputStream: ServletOutputStream)
-  extends javax.servlet.http.HttpServletResponseWrapper(originalResponse)
+  extends jakarta.servlet.http.HttpServletResponseWrapper(originalResponse)
     with HeaderInteractor
     with StrictLogging {
 
@@ -120,9 +120,9 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
     doSetStatus(i)(originalResponse.setStatus(i))
   }
 
-  override def setStatus(i: Int, s: String): Unit = {
+  def setStatus(i: Int, s: String): Unit = {
     logger.trace("setStatus called with status code: {}, message: {}", Integer.valueOf(i), s)
-    doSetStatus(i, s)(originalResponse.setStatus(i, s))
+    doSetStatus(i, s)(originalResponse.setStatus(i))
   }
 
   private def doSetStatus(i: Int, s: String = null)(setStatusFunc: => Unit): Unit = {
@@ -635,7 +635,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
       reason match {
         case Some(msg) =>
           logger.debug("Setting the status on the underlying response to status code: {}, message: {}", Integer.valueOf(statusCode), msg)
-          originalResponse.setStatus(statusCode, msg)
+          originalResponse.setStatus(statusCode)
         case None =>
           logger.debug("Setting the status on the underlying response to status code: {}", Integer.valueOf(statusCode))
           originalResponse.setStatus(statusCode)

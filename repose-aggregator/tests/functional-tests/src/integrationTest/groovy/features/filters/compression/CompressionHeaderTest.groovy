@@ -19,18 +19,17 @@
  */
 package features.filters.compression
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 import java.util.zip.Deflater
 import java.util.zip.GZIPOutputStream
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class CompressionHeaderTest extends ReposeValveTest {
     def static String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium non mi ac " +
             "malesuada. Integer nec est turpis duis."

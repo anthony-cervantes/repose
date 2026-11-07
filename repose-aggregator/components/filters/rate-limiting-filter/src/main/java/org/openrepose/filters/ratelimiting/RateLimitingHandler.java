@@ -37,7 +37,7 @@ import org.openrepose.filters.ratelimiting.log.LimitLogger;
 import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -49,7 +49,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 import static org.openrepose.filters.ratelimiting.write.LimitsResponseMimeTypeWriter.SUPPORTED_MEDIA_TYPES;
 
 /* Responsible for handling requests and responses to rate limiting, also tracks and provides limits */
@@ -125,6 +125,32 @@ public class RateLimitingHandler {
         return parsedType;
     }
 
+    // Spring 7 removed these comparators. Preserve specificity-first negotiation,
+    // including the quality tie-breaker for otherwise identical media types.
+    private static int compareSpecificity(MediaType left, MediaType right) {
+        int wildcardType = Boolean.compare(left.isWildcardType(), right.isWildcardType());
+        if (wildcardType != 0) {
+            return wildcardType;
+        }
+        if (!left.getType().equals(right.getType())) {
+            return 0;
+        }
+        int wildcardSubtype = Boolean.compare(left.isWildcardSubtype(), right.isWildcardSubtype());
+        if (wildcardSubtype != 0) {
+            return wildcardSubtype;
+        }
+        if (!left.getSubtype().equals(right.getSubtype())) {
+            return 0;
+        }
+        int quality = Double.compare(right.getQualityValue(), left.getQualityValue());
+        return quality != 0 ? quality : Integer.compare(right.getParameters().size(), left.getParameters().size());
+    }
+
+    private static int compareQuality(MediaType left, MediaType right) {
+        int quality = Double.compare(right.getQualityValue(), left.getQualityValue());
+        return quality != 0 ? quality : compareSpecificity(left, right);
+    }
+
     private Optional<MediaType> getPreferredMediaType(List<String> acceptValues) {
         Optional<MediaType> preferredMediaType = Optional.of(DEFAULT_MEDIA_TYPE);
         if (!acceptValues.isEmpty()) {
@@ -137,7 +163,7 @@ public class RateLimitingHandler {
                     .map(RateLimitingHandler::parseMediaType)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .sorted(MediaType.SPECIFICITY_COMPARATOR)
+                    .sorted(RateLimitingHandler::compareSpecificity)
                     .collect(Collectors.toList());
 
             /*
@@ -157,7 +183,7 @@ public class RateLimitingHandler {
                             .map(acceptMediaType -> (Map.Entry<MediaType, MediaType>) new AbstractMap.SimpleEntry(supportedMediaType, acceptMediaType)))
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .sorted(Map.Entry.comparingByValue(MediaType.QUALITY_VALUE_COMPARATOR))
+                    .sorted(Map.Entry.comparingByValue(RateLimitingHandler::compareQuality))
                     .map(Map.Entry::getKey)
                     .findFirst();
         }

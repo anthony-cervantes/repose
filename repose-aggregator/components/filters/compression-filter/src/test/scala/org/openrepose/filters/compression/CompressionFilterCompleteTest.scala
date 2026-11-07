@@ -21,12 +21,14 @@
 package org.openrepose.filters.compression
 
 import java.io.ByteArrayOutputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.zip.{Deflater, GZIPOutputStream}
-import javax.servlet._
+import jakarta.servlet._
 
 import org.apache.http.HttpHeaders
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -35,7 +37,7 @@ import org.openrepose.external.pjlcompression.CompressingFilter
 import org.openrepose.filters.compression.config.{Compression, ContentCompressionConfig}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.collection.JavaConverters._

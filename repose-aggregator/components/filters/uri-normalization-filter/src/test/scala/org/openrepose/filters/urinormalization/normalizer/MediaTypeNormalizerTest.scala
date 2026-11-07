@@ -20,12 +20,14 @@
 package org.openrepose.filters.urinormalization.normalizer
 
 import javax.ws.rs.core.HttpHeaders
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.filters.urinormalization.config.MediaType
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 
 @RunWith(classOf[JUnitRunner])

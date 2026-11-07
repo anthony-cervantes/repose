@@ -21,7 +21,7 @@ package org.openrepose.filters.core.filterone
 
 import java.util
 
-import javax.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
 import org.apache.commons.lang3.StringUtils
 import org.openrepose.others.SimplicityDivine
 

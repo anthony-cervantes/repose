@@ -1,17 +1,20 @@
 # Use Ubuntu as a base, since it works and is familiar.
 # The version should be the latest tested, LTS version.
-FROM ubuntu:18.04
+FROM ubuntu:24.04
 
 MAINTAINER The Repose Team <reposecore@rackspace.com>
 
 # Install Java from an APT package repository.
-RUN apt-get update -qq && apt-get install -qq -y apt-transport-https ca-certificates wget openjdk-8-jre-headless
+RUN apt-get update -qq && apt-get install -qq -y ca-certificates wget \
+    && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
+    && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
+    && apt-get update -qq && apt-get install -qq -y temurin-27-jre
 
 # This build-arg is used to pass the Repose version number which will be set up in this image.
 ARG REPOSE_VERSION
 
 # Install Repose from an APT package repository.
-RUN wget --quiet -O - https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose | apt-key add - && echo 'deb https://nexus.openrepose.org/repository/debian stable main' > /etc/apt/sources.list.d/openrepose.list
+RUN wget --quiet -O /usr/share/keyrings/openrepose.asc https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose && echo 'deb [signed-by=/usr/share/keyrings/openrepose.asc] https://nexus.openrepose.org/repository/debian stable main' > /etc/apt/sources.list.d/openrepose.list
 RUN apt-get update -qq && apt-get install -y repose=$REPOSE_VERSION repose-filter-bundle=$REPOSE_VERSION repose-extensions-filter-bundle=$REPOSE_VERSION repose-experimental-filter-bundle=$REPOSE_VERSION
 
 ENV APP_ROOT=/etc/repose

@@ -23,14 +23,13 @@ import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Request
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class ReliabilityTest extends ReposeValveTest {
 
     //Start repose once for this particular translation test

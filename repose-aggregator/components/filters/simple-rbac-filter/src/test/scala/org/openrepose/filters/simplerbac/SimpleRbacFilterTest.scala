@@ -20,14 +20,16 @@
 package org.openrepose.filters.simplerbac
 
 import java.io.File
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.net.URL
-import javax.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_NOT_FOUND, SC_OK}
+import jakarta.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_NOT_FOUND, SC_OK}
 
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
-import org.mockito.{ArgumentCaptor, Matchers, Mockito}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers => MockitoMatchers, Mockito}
 import org.openrepose.commons.config.resource.{ConfigurationResource, ConfigurationResourceResolver}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.simplerbac.config.{DelegatingType, ResourcesType, SimpleRbacConfig}
@@ -39,7 +41,7 @@ import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttp
 import scala.collection.JavaConversions._
 
 @RunWith(classOf[JUnitRunner])
-class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhenThen with org.scalatest.Matchers with MockitoSugar {
+class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhenThen with org.scalatest.matchers.should.Matchers with MockitoSugar {
   var filter: SimpleRbacFilter = _
   var config: SimpleRbacConfig = _
   var servletRequest: MockHttpServletRequest = _
@@ -162,11 +164,11 @@ class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhe
 
       Then("the filter should register with the ConfigurationService")
       Mockito.verify(mockConfigService).subscribeTo(
-        Matchers.eq("SimpleRbacFilter"),
-        Matchers.eq("simple-rbac.cfg.xml"),
+        MockitoMatchers.eq("SimpleRbacFilter"),
+        MockitoMatchers.eq("simple-rbac.cfg.xml"),
         resourceCaptor.capture,
-        Matchers.eq(filter),
-        Matchers.eq(classOf[SimpleRbacConfig]))
+        MockitoMatchers.eq(filter),
+        MockitoMatchers.eq(classOf[SimpleRbacConfig]))
 
       resourceCaptor.getValue.toString.endsWith("/META-INF/schema/config/simple-rbac.xsd")
     }
@@ -181,11 +183,11 @@ class SimpleRbacFilterTest extends FunSpec with BeforeAndAfterEach with GivenWhe
 
       Then("the filter should register with the ConfigurationService")
       Mockito.verify(mockConfigService).subscribeTo(
-        Matchers.anyString,
-        Matchers.eq("another-name.cfg.xml"),
-        Matchers.any(classOf[URL]),
-        Matchers.any(classOf[SimpleRbacFilter]),
-        Matchers.eq(classOf[SimpleRbacConfig]))
+        MockitoMatchers.anyString,
+        MockitoMatchers.eq("another-name.cfg.xml"),
+        MockitoMatchers.any(classOf[URL]),
+        MockitoMatchers.any(classOf[SimpleRbacFilter]),
+        MockitoMatchers.eq(classOf[SimpleRbacConfig]))
     }
   }
 

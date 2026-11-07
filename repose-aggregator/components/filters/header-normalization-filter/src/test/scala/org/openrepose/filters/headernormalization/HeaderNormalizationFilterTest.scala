@@ -21,13 +21,15 @@
 package org.openrepose.filters.headernormalization
 
 import java.util.Optional
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.{FilterChain, FilterConfig, ServletRequest, ServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.{FilterChain, FilterConfig, ServletRequest, ServletResponse}
 
 import com.codahale.metrics.Meter
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -37,7 +39,7 @@ import org.openrepose.core.services.reporting.metrics.{MetricsService, Aggregate
 import org.openrepose.filters.headernormalization.config._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.collection.JavaConverters._

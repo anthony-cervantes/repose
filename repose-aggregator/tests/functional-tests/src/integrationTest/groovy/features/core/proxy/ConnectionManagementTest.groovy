@@ -19,14 +19,13 @@
  */
 package features.core.proxy
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 import spock.lang.Unroll
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class ConnectionManagementTest extends ReposeValveTest {
 
     String charset = (('A'..'Z') + ('0'..'9')).join()

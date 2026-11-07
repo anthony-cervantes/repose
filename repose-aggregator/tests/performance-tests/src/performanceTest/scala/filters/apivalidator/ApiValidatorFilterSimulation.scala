@@ -72,7 +72,7 @@ class ApiValidatorFilterSimulation extends AbstractReposeSimulation {
     .feed(feederPut.circular)
     .feed(feederPost.circular)
     .feed(feederDelete.circular)
-    .forever() {
+    .forever {
       exec(requestGet)
       exec(requestPut)
       exec(requestPost)
@@ -85,7 +85,7 @@ class ApiValidatorFilterSimulation extends AbstractReposeSimulation {
     .feed(feederPut.circular)
     .feed(feederPost.circular)
     .feed(feederDelete.circular)
-    .forever() {
+    .forever {
       exec(requestGet)
       exec(requestPut)
       exec(requestPost)
@@ -97,37 +97,37 @@ class ApiValidatorFilterSimulation extends AbstractReposeSimulation {
 
   def requestGet: HttpRequestBuilder = {
     http(session => session.scenario)
-      .get("${getPath}")
+      .get("#{getPath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderXRoles, "${getRoles}")
-      .header(HeaderMockRespStatus, "${getRespCode}")
+      .header(HeaderXRoles, "#{getRoles}")
+      .header(HeaderMockRespStatus, "#{getRespCode}")
       .check(status.is(session => session("getRespCode").as[Int]))
   }
 
   def requestPut: HttpRequestBuilder = {
     http(session => session.scenario)
-      .put("${putPath}")
+      .put("#{putPath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderXRoles, "${putRoles}")
-      .header(HeaderMockRespStatus, "${putRespCode}")
+      .header(HeaderXRoles, "#{putRoles}")
+      .header(HeaderMockRespStatus, "#{putRespCode}")
       .check(status.is(session => session("putRespCode").as[Int]))
   }
 
   def requestPost: HttpRequestBuilder = {
     http(session => session.scenario)
-      .post("${postPath}")
+      .post("#{postPath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderXRoles, "${postRoles}")
-      .header(HeaderMockRespStatus, "${postRespCode}")
+      .header(HeaderXRoles, "#{postRoles}")
+      .header(HeaderMockRespStatus, "#{postRespCode}")
       .check(status.is(session => session("postRespCode").as[Int]))
   }
 
   def requestDelete: HttpRequestBuilder = {
     http(session => session.scenario)
-      .delete("${deletePath}")
+      .delete("#{deletePath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderXRoles, "${deleteRoles}")
-      .header(HeaderMockRespStatus, "${deleteRespCode}")
+      .header(HeaderXRoles, "#{deleteRoles}")
+      .header(HeaderMockRespStatus, "#{deleteRespCode}")
       .check(status.is(session => session("deleteRespCode").as[Int]))
   }
 }

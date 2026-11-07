@@ -25,9 +25,9 @@ import java.util.{Calendar, GregorianCalendar}
 
 import com.rackspace.httpdelegation.HttpDelegationManager
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.ws.rs.core.HttpHeaders
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.entity.EntityBuilder

@@ -20,7 +20,9 @@
 package org.openrepose.filters.ipuser
 
 import org.junit.runner.RunWith
-import org.scalatest.{FunSpec, Matchers}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+
 import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])

@@ -19,16 +19,18 @@
  */
 package org.openrepose.filters.contenttypestripper
 
-import javax.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
-import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.{FilterChain, ServletRequest, ServletResponse}
 
 import org.apache.commons.io.IOUtils
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.{ArgumentCaptor, Mockito}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.MockHttpServletRequest
 
 import scala.collection.JavaConversions._

@@ -21,7 +21,7 @@ package org.openrepose.nodeservice.test
 
 import java.lang.Long
 import java.util.Optional
-import javax.inject.Named
+import jakarta.inject.Named
 
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.container.config.{ArtifactDirectory, DeploymentConfiguration, DeploymentDirectory}

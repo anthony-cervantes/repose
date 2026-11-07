@@ -19,16 +19,15 @@
  */
 package features.filters.slf4jlogging
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeLogSearch
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
 /**
  * Created by jennyvo on 8/7/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class Slf4jHttpLoggingInvalidDateFormatTest extends ReposeValveTest {
     def setupSpec() {
         //remove old log

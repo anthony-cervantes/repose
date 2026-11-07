@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.openrepose.commons.utils.http.CommonHttpHeader;
 import org.openrepose.filters.ratelimiting.log.LimitLogger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;

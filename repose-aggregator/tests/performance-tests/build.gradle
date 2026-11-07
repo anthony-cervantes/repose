@@ -4,14 +4,26 @@ testSets {
     performanceTest
 }
 
+sourceSets.performanceTest.resources.exclude '**/node_modules/**', '**/__pycache__/**', '**/*.pyc'
+
+configurations {
+    gatlingRuntime {
+        canBeConsumed = false
+    }
+}
+
 dependencies {
     //todo: not certain why this was neccessary, but it lets things compile
-    testCompileOnly 'org.scala-lang:scala-library'
+    testCompileOnly 'org.scala-lang:scala-library:2.13.18'
 
-    performanceTestCompile project(':repose-aggregator:tests:performance-test-framework')
-    performanceTestCompileOnly 'org.scala-lang:scala-library'
+    performanceTestImplementation project(':repose-aggregator:tests:performance-test-framework')
+    performanceTestCompileOnly 'org.scala-lang:scala-library:2.13.18'
     performanceTestCompileOnly 'io.gatling:gatling-core'
     performanceTestCompileOnly 'io.gatling:gatling-http'
+
+    gatlingRuntime 'io.gatling:gatling-app'
+    gatlingRuntime 'io.gatling.highcharts:gatling-charts-highcharts'
+    gatlingRuntime project(path: ':repose-aggregator:tests:performance-test-framework', configuration: 'runtimeElements')
 }
 
 license {
@@ -28,17 +40,24 @@ processPerformanceTestResources {
     filter(ReplaceTokens, tokens: [gatlingVersion: versionProperties.get('gatlingVersion')])
 }
 
-task buildAnsibleDirectory(type: Copy, dependsOn: ["processPerformanceTestResources", ":repose-aggregator:tests:performance-test-framework:assemble"]) {
+tasks.named('performanceTestJar', Jar) {
+    archiveClassifier = 'performance-tests'
+}
+
+task buildAnsibleDirectory(type: Copy, dependsOn: ["processPerformanceTestResources", "performanceTestJar"]) {
     into "$buildDir/ansible_root"
 
     from(processPerformanceTestResources.outputs)
 
-    from(sourceSets.performanceTest.scala.srcDirs) {
-        into "/roles/gatling/files/simulations"
+    from(configurations.gatlingRuntime) {
+        into "/roles/gatling/files/libs"
+    }
+    from(performanceTestJar) {
+        into "/roles/gatling/files/libs"
     }
 
-    from(configurations.performanceTestCompile.files) {
-        into "/roles/gatling/files/libs"
+    from(rootProject.file('repose-aggregator/tests/release-verification/src/scripts/node_install.sh')) {
+        into '/roles/repose/files'
     }
 }
 

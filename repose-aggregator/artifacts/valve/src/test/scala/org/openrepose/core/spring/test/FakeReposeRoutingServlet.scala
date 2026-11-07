@@ -19,8 +19,8 @@
  */
 package org.openrepose.core.spring.test
 
-import javax.inject.Named
-import javax.servlet.http.HttpServlet
+import jakarta.inject.Named
+import jakarta.servlet.http.HttpServlet
 
 @Named("reposeRoutingServlet")
 class FakeReposeRoutingServlet extends HttpServlet {

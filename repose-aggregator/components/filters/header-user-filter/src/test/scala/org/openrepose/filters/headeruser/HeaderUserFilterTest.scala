@@ -20,7 +20,9 @@
 
 package org.openrepose.filters.headeruser
 
-import javax.servlet.ServletResponse
+import jakarta.servlet.ServletResponse
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.http.PowerApiHeader
@@ -28,7 +30,7 @@ import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.filters.headeruser.config.{HeaderUserConfig, HttpHeader, HttpHeaderList}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest}
 
 import scala.collection.JavaConversions._

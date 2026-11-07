@@ -1,30 +1,32 @@
 dependencies {
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:commons:commons-configuration")
-    compile "org.slf4j:slf4j-api"
-    compile "org.slf4j:jcl-over-slf4j"
-    compile "org.springframework:spring-beans"
-    compile "org.springframework:spring-web"
-    compile "net.sf.saxon:Saxon-EE"
-    compile "com.fasterxml.jackson.core:jackson-core"
-    compile "commons-pool:commons-pool"
-    compile "xalan:xalan"
-    compile "xerces:xerces-xsd11"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:commons:commons-configuration")
+    api "org.slf4j:slf4j-api"
+    api "org.slf4j:jcl-over-slf4j"
+    api "org.springframework:spring-beans"
+    api "org.springframework:spring-web"
+    api "net.sf.saxon:Saxon-EE"
+    api "com.fasterxml.jackson.core:jackson-core"
+    api "commons-pool:commons-pool"
+    api "xalan:xalan"
+    api "xerces:xerces-xsd11"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
 
-    testCompile "junit:junit"
-    testCompile "org.scala-lang:scala-library"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.codehaus.groovy:groovy-all"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.springframework:spring-test"
-    testCompile "commons-io:commons-io"
-    testCompile "org.xmlunit:xmlunit-matchers"
-    testCompile "org.spockframework:spock-core"
+    testImplementation "junit:junit"
+    testImplementation "org.scala-lang:scala-library"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "commons-io:commons-io"
+    testImplementation "org.xmlunit:xmlunit-matchers"
+    testImplementation "org.spockframework:spock-core"
 }
 
 license {

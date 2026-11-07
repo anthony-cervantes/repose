@@ -21,7 +21,7 @@ package org.openrepose.valve.jmx
 
 import java.util.concurrent.ConcurrentHashMap
 
-import javax.inject.Named
+import jakarta.inject.Named
 import org.openrepose.valve.jetty.ReposeJettyServer
 import org.springframework.jmx.export.annotation.{ManagedAttribute, ManagedResource}
 

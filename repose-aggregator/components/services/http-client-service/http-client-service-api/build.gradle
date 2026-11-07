@@ -1,12 +1,15 @@
 dependencies {
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.slf4j:jcl-over-slf4j"
+    api "org.apache.httpcomponents:httpclient"
+    api "org.slf4j:jcl-over-slf4j"
 
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
 }
 
 jacocoTestCoverageVerification {

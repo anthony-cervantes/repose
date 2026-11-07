@@ -20,13 +20,14 @@
 package org.openrepose.filters.keystonev2
 
 import java.io.{ByteArrayInputStream, IOException, InputStream}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
 import com.rackspace.httpdelegation.{HttpDelegationHeaderNames, HttpDelegationManager}
-import javax.servlet.http.HttpServletResponse.{SC_UNAUTHORIZED, _}
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterConfig, Servlet, ServletRequest, ServletResponse}
+import jakarta.servlet.http.HttpServletResponse.{SC_UNAUTHORIZED, _}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{FilterConfig, Servlet, ServletRequest, ServletResponse}
 import javax.ws.rs.core.HttpHeaders._
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet, HttpPost, HttpUriRequest}
@@ -40,8 +41,9 @@ import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{eq => mockitoEq, _}
+import org.mockito.ArgumentMatchers.{eq => mockitoEq, _}
 import org.mockito.Mockito._
+import org.mockito.hamcrest.MockitoHamcrest.{argThat, intThat}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.openrepose.commons.test.HttpContextMatchers._
@@ -61,7 +63,7 @@ import org.openrepose.filters.keystonev2.config.{KeystoneV2AuthenticationConfig,
 import org.openrepose.nodeservice.atomfeed.AtomFeedService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 import play.api.libs.json.Json
 
@@ -71,7 +73,7 @@ import scala.util.Success
 
 @RunWith(classOf[JUnitRunner])
 class KeystoneV2FilterTest extends FunSpec
-with org.scalatest.Matchers
+with org.scalatest.matchers.should.Matchers
 with BeforeAndAfterEach
 with MockitoSugar
 with IdentityResponses
@@ -113,14 +115,14 @@ with HttpDelegationManager {
       filter.init(mockFilterConfig)
 
       verify(mockConfigurationService).subscribeTo(
-        anyString(),
+        any[String](),
         anyString(),
         any[URL],
         any(),
         any[Class[KeystoneV2AuthenticationConfig]]
       )
       verify(mockConfigurationService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         any(),
         any[Class[SystemModel]]
@@ -131,7 +133,7 @@ with HttpDelegationManager {
       filter.destroy()
 
       verify(mockConfigurationService, times(2)).unsubscribeFrom(
-        anyString(),
+        any[String](),
         any()
       )
     }

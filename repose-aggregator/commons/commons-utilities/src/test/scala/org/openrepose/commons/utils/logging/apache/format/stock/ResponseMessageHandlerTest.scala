@@ -20,7 +20,9 @@
 
 package org.openrepose.commons.utils.logging.apache.format.stock
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.logging.apache.HttpLogFormatterState

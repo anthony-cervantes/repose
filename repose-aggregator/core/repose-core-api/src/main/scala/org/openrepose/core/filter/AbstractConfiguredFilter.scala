@@ -21,10 +21,10 @@ package org.openrepose.core.filter
 
 import java.net.URL
 
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE
+import jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
 

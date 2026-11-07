@@ -19,7 +19,7 @@
  */
 package org.openrepose.filters.keystonev2
 
-import javax.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_UNAUTHORIZED}
+import jakarta.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_UNAUTHORIZED}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper

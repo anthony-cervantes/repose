@@ -20,11 +20,13 @@
 
 package org.openrepose.filters.addheader
 
-import javax.servlet.{FilterChain, ServletResponse}
+import jakarta.servlet.{FilterChain, ServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -32,7 +34,7 @@ import org.openrepose.commons.utils.servlet.http.{HttpServletRequestWrapper, Htt
 import org.openrepose.filters.addheader.config.{AddHeadersConfig, Header, HttpMessage}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])

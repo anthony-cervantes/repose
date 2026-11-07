@@ -31,13 +31,13 @@ import org.openrepose.performance.test.AbstractReposeSimulation
 class HttpLoggingServiceSimulation extends AbstractReposeSimulation {
   // Set up the warm up scenario
   override val warmupScenario: ScenarioBuilder = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
   // Set up the main scenario
   override val mainScenario: ScenarioBuilder = scenario("Http Logging Service Test")
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 

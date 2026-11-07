@@ -19,7 +19,7 @@
  */
 package org.openrepose.commons.utils.logging.apache.constraint;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;

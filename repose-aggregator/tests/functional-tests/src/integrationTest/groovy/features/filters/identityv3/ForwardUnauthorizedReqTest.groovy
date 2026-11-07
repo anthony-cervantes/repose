@@ -20,13 +20,12 @@
 package features.filters.identityv3
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV3Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
@@ -35,7 +34,7 @@ import spock.lang.Unroll
  * Acceptance Criteria
  * - When a request is unverified set X-Identity-Status: Indeterminate
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class ForwardUnauthorizedReqTest extends ReposeValveTest {
 
     def static originEndpoint

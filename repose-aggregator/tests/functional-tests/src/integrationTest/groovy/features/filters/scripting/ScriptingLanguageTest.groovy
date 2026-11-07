@@ -19,18 +19,17 @@
  */
 package features.filters.scripting
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
  * Created by jennyvo on 4/1/16.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class ScriptingLanguageTest extends ReposeValveTest {
 
     def setupSpec() {

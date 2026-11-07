@@ -21,7 +21,8 @@ package org.openrepose.commons.utils.io;
 
 import org.openrepose.commons.utils.io.buffer.ByteBuffer;
 
-import javax.servlet.ServletOutputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 import java.io.IOException;
 
 public class ByteBufferServletOutputStream extends ServletOutputStream {
@@ -41,6 +42,16 @@ public class ByteBufferServletOutputStream extends ServletOutputStream {
 
     public boolean isClosed() {
         return closed;
+    }
+
+    @Override
+    public boolean isReady() {
+        return !closed;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener listener) {
+        throw new IllegalStateException("Byte buffer output streams support blocking I/O only");
     }
 
     @Override

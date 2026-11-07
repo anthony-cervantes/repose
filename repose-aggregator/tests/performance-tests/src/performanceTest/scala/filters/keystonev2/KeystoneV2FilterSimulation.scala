@@ -36,14 +36,14 @@ class KeystoneV2FilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Keystone v2 Filter Test")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
@@ -53,7 +53,7 @@ class KeystoneV2FilterSimulation extends AbstractReposeSimulation {
   def getRequest: HttpRequestBuilder = {
     http(session => session.scenario)
       .get("/")
-      .header("x-auth-token", "${authToken}")
+      .header("x-auth-token", "#{authToken}")
       .check(status.is(200))
   }
 }

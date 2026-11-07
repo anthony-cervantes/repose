@@ -19,8 +19,8 @@
  */
 package org.openrepose.filters.forwardedproto
 
-import javax.servlet._
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletRequest
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper

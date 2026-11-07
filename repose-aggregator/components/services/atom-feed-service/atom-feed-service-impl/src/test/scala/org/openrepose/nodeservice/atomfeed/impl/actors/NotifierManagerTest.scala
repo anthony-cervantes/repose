@@ -20,11 +20,13 @@
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
 import akka.actor.{ActorRef, ActorSystem}
+import org.scalatest.funsuite.{AnyFunSuiteLike => FunSuiteLike}
+import org.scalatest.matchers.should.Matchers
 import akka.testkit.{TestActorRef, TestKit, TestProbe}
 import akka.util.Timeout
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.mockito.Mockito.{never, reset, verify}
 import org.openrepose.nodeservice.atomfeed.impl.actors.FeedReader.{CancelScheduledReading, ScheduleReading}
@@ -34,7 +36,7 @@ import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, LifecycleEvents}
 import org.scalatest.concurrent.Eventually
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSuiteLike, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
@@ -136,7 +138,7 @@ class NotifierManagerTest
     actorRef ! BindFeedReader(probe.ref)
     actorRef ! ServiceEnabled
 
-    probe.expectNoMsg()
+    probe.expectNoMessage()
   }
 
   test("should cancel feed reader schedules when the service is disabled") {

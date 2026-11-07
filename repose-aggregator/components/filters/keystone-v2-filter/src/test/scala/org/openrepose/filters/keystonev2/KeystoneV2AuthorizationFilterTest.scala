@@ -19,7 +19,9 @@
  */
 package org.openrepose.filters.keystonev2
 
-import javax.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_INTERNAL_SERVER_ERROR, SC_UNAUTHORIZED}
+import jakarta.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_INTERNAL_SERVER_ERROR, SC_UNAUTHORIZED}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.{ROLES, TENANT_ID, TENANT_ROLES_MAP}
 import org.openrepose.commons.utils.http.PowerApiHeader.X_CATALOG
@@ -35,7 +37,7 @@ import org.openrepose.filters.keystonev2.config.{KeystoneV2Config, TenantHandlin
 import org.scalatest.TryValues._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json.{JsPath, Json, Writes}

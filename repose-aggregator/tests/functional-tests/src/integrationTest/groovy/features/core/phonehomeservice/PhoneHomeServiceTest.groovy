@@ -20,12 +20,11 @@
 package features.core.phonehomeservice
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Core
 
 /**
  * Created by jennyvo on 8/25/15.
@@ -38,7 +37,7 @@ import scaffold.category.Core
  *  What is the Repose Version #
  *  What is the Repose System Model (filter chain)
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class PhoneHomeServiceTest extends ReposeValveTest {
     def static phonehomeEndpoint
 

@@ -37,13 +37,13 @@ class IdentityTransferEncodingSimulation extends AbstractReposeSimulation {
 
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(postRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Identity Transfer Encoding Test")
-    .forever() {
+    .forever {
       exec(postRequest)
     }
 

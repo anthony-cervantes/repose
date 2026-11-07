@@ -20,15 +20,17 @@
 package org.openrepose.commons.utils.servlet.http
 
 import java.io.{BufferedReader, ByteArrayInputStream, IOException}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets.UTF_8
 import java.util
 
-import javax.servlet.ServletInputStream
+import jakarta.servlet.ServletInputStream
 import javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.io.stream.ServletInputStreamWrapper
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 
 import scala.collection.JavaConverters._
@@ -162,6 +164,15 @@ class HttpServletRequestWrapperTest extends FunSpec with BeforeAndAfterEach with
     it("should return the same list when Foo is added") {
       wrappedRequest.addHeader("Foo", "foo")
       wrappedRequest.getHeaderNames.asScala.toList should contain theSameElementsAs headerMap.keys
+    }
+
+    it("should use the new casing after a header is removed and re-added") {
+      wrappedRequest.removeHeader("foo")
+      wrappedRequest.addHeader("Foo", "replacement")
+
+      val names = wrappedRequest.getHeaderNames.asScala.toList
+      names should contain("Foo")
+      names should not contain "foo"
     }
 
     it("should return empty enumeration") {

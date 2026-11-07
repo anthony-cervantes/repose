@@ -36,9 +36,9 @@
 
 package org.openrepose.external.pjlcompression;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

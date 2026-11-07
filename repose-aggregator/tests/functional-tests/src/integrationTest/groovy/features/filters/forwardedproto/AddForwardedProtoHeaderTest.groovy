@@ -19,15 +19,14 @@
  */
 package features.filters.forwardedproto
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
 /**
  * Created by jcombs on 1/7/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class AddForwardedProtoHeaderTest extends ReposeValveTest {
 
     def setupSpec() {

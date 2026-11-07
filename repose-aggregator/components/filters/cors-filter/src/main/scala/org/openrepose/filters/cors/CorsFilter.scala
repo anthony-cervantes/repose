@@ -21,9 +21,9 @@ package org.openrepose.filters.cors
 
 import java.net.{URI, URL}
 import java.util.regex.Pattern
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.ws.rs.HttpMethod
 import javax.ws.rs.core.{HttpHeaders, MediaType}
 

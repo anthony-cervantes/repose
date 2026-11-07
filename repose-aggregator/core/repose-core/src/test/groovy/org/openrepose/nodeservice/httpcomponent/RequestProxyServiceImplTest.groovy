@@ -38,8 +38,8 @@ import org.openrepose.core.systemmodel.config.SystemModel
 import org.openrepose.core.systemmodel.config.TracingHeaderConfig
 import spock.lang.Specification
 
-import static org.mockito.Matchers.any
-import static org.mockito.Matchers.anyString
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.nullable
 import static org.mockito.Mockito.*
 
 class RequestProxyServiceImplTest extends Specification {
@@ -51,7 +51,7 @@ class RequestProxyServiceImplTest extends Specification {
         httpClient = mock(HttpClientServiceClient)
         httpClientService = mock(HttpClientService)
         when(httpClientService.getDefaultClient()).thenReturn(httpClient)
-        when(httpClientService.getClient(anyString())).thenReturn(httpClient)
+        when(httpClientService.getClient(nullable(String))).thenReturn(httpClient)
         requestProxyService = new RequestProxyServiceImpl(httpClientService)
     }
 

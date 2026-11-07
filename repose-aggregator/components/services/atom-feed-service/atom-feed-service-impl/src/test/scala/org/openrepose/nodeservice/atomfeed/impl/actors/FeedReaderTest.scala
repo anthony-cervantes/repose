@@ -20,6 +20,7 @@
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
 import java.io.StringWriter
+import org.scalatest.funsuite.{AnyFunSuiteLike => FunSuiteLike}
 import java.util.Date
 
 import akka.actor.ActorSystem
@@ -33,7 +34,7 @@ import org.apache.http.client.methods.{CloseableHttpResponse, HttpUriRequest}
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.junit.runner.RunWith
 import org.mockito.AdditionalAnswers
-import org.mockito.Matchers.{any, anyBoolean, anyString}
+import org.mockito.ArgumentMatchers.{any, anyBoolean, anyString}
 import org.mockito.Mockito.{reset, verify, when}
 import org.openrepose.commons.utils.logging.TracingKey
 import org.openrepose.core.services.httpclient.{HttpClientService, HttpClientServiceClient}
@@ -45,7 +46,7 @@ import org.openrepose.nodeservice.atomfeed.impl.actors.NotifierManager.{BindFeed
 import org.openrepose.nodeservice.atomfeed.{AuthenticatedRequestFactory, AuthenticationRequestContext, FeedReadRequest}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSuiteLike}
+import org.scalatest.{BeforeAndAfterEach}
 import org.slf4j.MDC
 
 import scala.concurrent.duration._
@@ -81,8 +82,8 @@ class FeedReaderTest(_system: ActorSystem)
     when(mockTracer.buildSpan(anyString())).thenReturn(mockSpanBuilder)
     when(mockSpanBuilder.withTag(anyString(), anyString())).thenReturn(mockSpanBuilder)
     when(mockSpanBuilder.ignoreActiveSpan()).thenReturn(mockSpanBuilder)
-    when(mockSpanBuilder.startActive(anyBoolean())).thenReturn(mockScope)
-    when(mockScope.span()).thenReturn(mockSpan)
+    when(mockSpanBuilder.start()).thenReturn(mockSpan)
+    when(mockTracer.activateSpan(mockSpan)).thenReturn(mockScope)
 
     reset(mockAuthRequestFactory)
     when(mockAuthRequestFactory.authenticateRequest(any[FeedReadRequest], any[AuthenticationRequestContext]))
@@ -207,7 +208,7 @@ class FeedReaderTest(_system: ActorSystem)
     actorRef ! ReadFeed
 
     verify(mockSpanBuilder).ignoreActiveSpan()
-    verify(mockSpanBuilder).startActive(true)
+    verify(mockSpanBuilder).start()
     verify(mockScope).close()
     notifierProbe.receiveWhile(500 milliseconds) {
       case _ => true
@@ -233,7 +234,7 @@ class FeedReaderTest(_system: ActorSystem)
 
     actorRef ! ReadFeed
 
-    notifierProbe.expectNoMsg()
+    notifierProbe.expectNoMessage()
   }
 
   test("the notifier actor should receive a message when a new atom entry is found after initial empty feed") {
@@ -264,7 +265,7 @@ class FeedReaderTest(_system: ActorSystem)
     actorRef ! ReadFeed
 
     notifierProbe.expectMsgClass(classOf[Notify])
-    notifierProbe.expectNoMsg()
+    notifierProbe.expectNoMessage()
   }
 
   test("the notifier actor should receive a message when a new atom entry is found after initial populated feed") {
@@ -304,7 +305,7 @@ class FeedReaderTest(_system: ActorSystem)
     actorRef ! ReadFeed
 
     notifierProbe.expectMsgClass(classOf[Notify])
-    notifierProbe.expectNoMsg()
+    notifierProbe.expectNoMessage()
   }
 
   test("the newest atom entries should come first in the list") {
@@ -352,7 +353,7 @@ class FeedReaderTest(_system: ActorSystem)
     actorRef ! ReadFeed
 
     val messages = notifierProbe.expectMsgAllClassOf(classOf[Notify], classOf[Notify]).toArray
-    notifierProbe.expectNoMsg()
+    notifierProbe.expectNoMessage()
     assert(messages(0).atomEntry.hashCode == newEntryHash)
     assert(messages(1).atomEntry.hashCode == oldEntryHash)
   }
@@ -415,7 +416,7 @@ class FeedReaderTest(_system: ActorSystem)
     actorRef ! ReadFeed
 
     val messages = notifierProbe.expectMsgAllClassOf(classOf[Notify], classOf[Notify]).toArray
-    notifierProbe.expectNoMsg()
+    notifierProbe.expectNoMessage()
     assert(messages(0).atomEntry.hashCode == oldEntryHash)
     assert(messages(1).atomEntry.hashCode == newEntryHash)
   }
