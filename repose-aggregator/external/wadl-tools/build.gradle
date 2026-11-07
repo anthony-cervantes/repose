@@ -1,0 +1,16 @@
+dependencies {
+    api "org.scala-lang:scala-library"
+    api "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "net.sf.saxon:Saxon-EE"
+    api "xerces:xerces-xsd11"
+    api "xalan:xalan"
+}
+
+// Imported sources retain their original upstream license notices.
+license { exclude '**/*' }
+
+tasks.named('processResources') {
+    from('LICENSE.txt') { into 'META-INF' }
+    from('README.adoc') { into 'META-INF'; rename { 'UPSTREAM.adoc' } }
+}

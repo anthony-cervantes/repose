@@ -19,15 +19,16 @@
  */
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
-import akka.actor.ActorSystem
-import akka.testkit.{TestActorRef, TestKit}
+import org.apache.pekko.actor.ActorSystem
+import org.scalatest.funsuite.{AnyFunSuiteLike => FunSuiteLike}
+import org.apache.pekko.testkit.{TestActorRef, TestKit}
 import org.junit.runner.RunWith
 import org.mockito.Mockito.{reset, verify}
 import org.openrepose.nodeservice.atomfeed.impl.actors.Notifier._
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, LifecycleEvents}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSuiteLike}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class NotifierTest extends TestKit(ActorSystem("TestNotifier")) with FunSuiteLike with MockitoSugar with BeforeAndAfterEach {

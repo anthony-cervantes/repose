@@ -20,12 +20,14 @@
 package org.openrepose.core.opentracing
 
 import io.opentracing.mock.MockTracer
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import io.opentracing.noop.NoopTracer
 import io.opentracing.util.GlobalTracer
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class ReposeTracerTest extends FunSpec with Matchers with MockitoSugar {

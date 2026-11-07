@@ -45,7 +45,7 @@ abstract class AbstractReposeSimulation extends Simulation {
   // this value is provided through a Java property on the command line when Gatling is run
   val baseUrl: String = conf.getString("test.base_url")
 
-  val httpConf: HttpProtocolBuilder = http.baseURL(s"http://$baseUrl")
+  val httpConf: HttpProtocolBuilder = http.baseUrl(s"http://$baseUrl")
 
   val warmupScenario: ScenarioBuilder
   val mainScenario: ScenarioBuilder

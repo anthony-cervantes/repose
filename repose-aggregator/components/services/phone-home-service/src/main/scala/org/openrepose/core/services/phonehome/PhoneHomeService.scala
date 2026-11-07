@@ -20,13 +20,15 @@
 package org.openrepose.core.services.phonehome
 
 import java.text.SimpleDateFormat
+import org.openrepose.commons.utils.opentracing.ScopeHelper
 import java.util.{Date, TimeZone, UUID}
 
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.tag.Tags
-import io.opentracing.{Scope, Tracer}
-import javax.annotation.PostConstruct
-import javax.inject.{Inject, Named}
+import io.opentracing.Tracer
+import org.openrepose.commons.utils.opentracing.ScopeHelper.SpanScope
+import jakarta.annotation.PostConstruct
+import jakarta.inject.{Inject, Named}
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.RequestBuilder
 import org.apache.http.entity.ContentType
@@ -44,7 +46,7 @@ import play.api.libs.json.Json.JsValueWrapper
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 
 import scala.Function.tupled
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * A service which sends Repose usage data to a data collection point. This data may be used to determine common usage
@@ -82,7 +84,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
     )
   }
 
-  private def sendUpdate(scope: Scope): Unit = {
+  private def sendUpdate(scope: SpanScope): Unit = {
     logger.trace("sendUpdate method called")
 
     val staticSystemModel = systemModel // Pin the system model in case an update occurs while processing
@@ -121,7 +123,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
     def buildUpdateMessage(originServiceId: JsValueWrapper = JsNull, contactEmail: JsValueWrapper = JsNull): String = {
       logger.trace("buildUpdateMessage method called")
 
-      implicit val filtersWrites = new Writes[FilterList] {
+      implicit val filtersWrites: Writes[FilterList] = new Writes[FilterList] {
         override def writes(filterList: FilterList): JsValue = {
           Option(filterList) map { fltrList =>
             Json.toJson(fltrList.getFilter.asScala.map(filter => filter.getName))
@@ -129,7 +131,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
         }
       }
 
-      implicit val servicesWrites = new Writes[ServicesList] {
+      implicit val servicesWrites: Writes[ServicesList] = new Writes[ServicesList] {
         override def writes(servicesList: ServicesList): JsValue = {
           Option(servicesList) map { svcList =>
             Json.toJson(svcList.getService.asScala.map(service => service.getName))
@@ -178,7 +180,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
           .build()
         val requestBuilder = RequestBuilder.post(collectionUri)
           .setEntity(requestBody)
-        updateHeaders.asScala.foreach(tupled(requestBuilder.addHeader))
+        updateHeaders.asScala.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
         val request = requestBuilder.build()
 
         val cachingContext = CachingHttpClientContext.create()
@@ -210,7 +212,7 @@ class PhoneHomeService @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_VERSI
     private var initialized = false
 
     override def configurationUpdated(configurationObject: SystemModel): Unit = {
-      val scope = tracer.buildSpan(TracingOperationName).ignoreActiveSpan().startActive(true)
+      val scope = ScopeHelper.startActive(tracer, tracer.buildSpan(TracingOperationName).ignoreActiveSpan())
       scope.span().setTag(ReposeTags.ReposeVersion, reposeVer)
 
       try {

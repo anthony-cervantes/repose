@@ -21,7 +21,8 @@ package org.openrepose.filters.translation.xslt.xmlfilterchain;
 
 import net.sf.saxon.Controller;
 import net.sf.saxon.lib.OutputURIResolver;
-import net.sf.saxon.om.DocumentInfo;
+import net.sf.saxon.om.TreeInfo;
+import net.sf.saxon.jaxp.TransformerImpl;
 import net.sf.saxon.om.DocumentPool;
 import org.apache.xalan.transformer.TrAXFilter;
 import org.openrepose.docs.repose.httpx.v1.Headers;
@@ -35,8 +36,8 @@ import org.slf4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -78,8 +79,8 @@ public class XmlFilterChainExecutor {
     }
 
     protected OutputStreamUriParameterResolver getOutputUriResolver(Transformer transformer) {
-        if (transformer instanceof Controller) {
-            Controller controller = (Controller) transformer;
+        if (transformer instanceof TransformerImpl) {
+            Controller controller = ((TransformerImpl) transformer).getUnderlyingController();
             OutputURIResolver resolver = controller.getOutputURIResolver();
             if (!(resolver instanceof OutputStreamUriParameterResolver)) {
                 resolver = new OutputStreamUriParameterResolver(controller.getOutputURIResolver());
@@ -149,8 +150,8 @@ public class XmlFilterChainExecutor {
                 // pass the input stream to all transforms as a param inputstream
 
                 Transformer transformer;
-                if (filter.getReader() instanceof net.sf.saxon.Filter) {
-                    net.sf.saxon.Filter saxonFilter = (net.sf.saxon.Filter) filter.getReader();
+                if (filter.getReader() instanceof net.sf.saxon.jaxp.FilterImpl) {
+                    net.sf.saxon.jaxp.FilterImpl saxonFilter = (net.sf.saxon.jaxp.FilterImpl) filter.getReader();
                     transformer = saxonFilter.getTransformer();
                 } else if (filter.getReader() instanceof TrAXFilter) {
                     TrAXFilter traxFilter = (TrAXFilter) filter.getReader();
@@ -173,10 +174,10 @@ public class XmlFilterChainExecutor {
 
             //remove documents from cache
             for (XmlFilterReference filter : chain.getFilters()) {
-                if (filter.getReader() instanceof net.sf.saxon.Filter) {
-                    net.sf.saxon.Filter saxonFilter = (net.sf.saxon.Filter) filter.getReader();
+                if (filter.getReader() instanceof net.sf.saxon.jaxp.FilterImpl) {
+                    net.sf.saxon.jaxp.FilterImpl saxonFilter = (net.sf.saxon.jaxp.FilterImpl) filter.getReader();
                     Transformer filterTransformer = saxonFilter.getTransformer();
-                    Controller controller = (Controller) filterTransformer;
+                    Controller controller = ((TransformerImpl) filterTransformer).getUnderlyingController();
 
                     removeInputUrisFromPool(controller.getDocumentPool(), uris);
                 }
@@ -204,7 +205,7 @@ public class XmlFilterChainExecutor {
 
     private void removeInputUrisFromPool(DocumentPool documentPool, List<String> uris) {
         for (String uri : uris) {
-            DocumentInfo documentInfo = documentPool.find(uri);
+            TreeInfo documentInfo = documentPool.find(uri);
             if (documentInfo != null) {
                 LOG.trace("Removing document {}", uri);
                 documentPool.discard(documentInfo);

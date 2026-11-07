@@ -22,9 +22,9 @@ package org.openrepose.commons.utils.transform.xslt;
 import org.apache.commons.pool.ObjectPool;
 import org.openrepose.commons.utils.transform.StreamTransform;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.util.JAXBSource;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.util.JAXBSource;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;

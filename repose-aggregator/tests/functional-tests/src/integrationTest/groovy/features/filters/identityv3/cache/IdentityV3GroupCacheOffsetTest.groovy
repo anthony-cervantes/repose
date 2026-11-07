@@ -20,14 +20,13 @@
 package features.filters.identityv3.cache
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV3Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class IdentityV3GroupCacheOffsetTest extends ReposeValveTest {
     // configured times
     private static final int GROUPS_TIMEOUT = 5_000

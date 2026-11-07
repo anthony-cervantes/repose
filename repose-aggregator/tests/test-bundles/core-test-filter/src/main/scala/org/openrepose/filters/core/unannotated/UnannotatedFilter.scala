@@ -19,7 +19,7 @@
  */
 package org.openrepose.filters.core.unannotated
 
-import javax.servlet._
+import jakarta.servlet._
 
 class UnannotatedFilter extends Filter {
   override def init(p1: FilterConfig): Unit = {

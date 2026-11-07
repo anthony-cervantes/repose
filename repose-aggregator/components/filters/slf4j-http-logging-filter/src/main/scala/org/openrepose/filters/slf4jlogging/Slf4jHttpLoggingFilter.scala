@@ -20,9 +20,9 @@
 package org.openrepose.filters.slf4jlogging
 
 import java.net.URL
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener
@@ -32,7 +32,7 @@ import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.slf4jlogging.config.Slf4JHttpLoggingConfig
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
 @Named
@@ -83,7 +83,7 @@ class Slf4jHttpLoggingFilter @Inject()(configurationService: ConfigurationServic
     synchronized {
       val newLoggerWrappers = mutable.ListBuffer.empty[Slf4jLoggerWrapper]
 
-      configurationObject.getSlf4JHttpLog foreach { logConfig =>
+      configurationObject.getSlf4JHttpLog.asScala foreach { logConfig =>
         val loggerName = logConfig.getId
         val formatString = (Option(logConfig.getFormat), Option(logConfig.getFormatElement)) match {
           case (Some(format), _) =>
@@ -101,7 +101,7 @@ class Slf4jHttpLoggingFilter @Inject()(configurationService: ConfigurationServic
         newLoggerWrappers += new Slf4jLoggerWrapper(LoggerFactory.getLogger(loggerName), formatString)
       }
 
-      loggerWrappers = newLoggerWrappers
+      loggerWrappers = newLoggerWrappers.toList
       initialized = true
     }
   }

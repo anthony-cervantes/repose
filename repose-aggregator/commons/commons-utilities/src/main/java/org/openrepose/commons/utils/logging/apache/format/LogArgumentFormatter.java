@@ -21,8 +21,8 @@ package org.openrepose.commons.utils.logging.apache.format;
 
 import org.openrepose.commons.utils.logging.apache.constraint.StatusCodeConstraint;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class LogArgumentFormatter implements FormatArgumentHandler {
 

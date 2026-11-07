@@ -20,18 +20,17 @@
 package features.filters.keystonev2
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Identity
 
 /**
  * Created by jennyvo on 8/28/15.
  *  Verify auth filter will add headers not replace headers.
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class KeystoneV2FilterAddHeadersTest extends ReposeValveTest {
 
     def static originEndpoint

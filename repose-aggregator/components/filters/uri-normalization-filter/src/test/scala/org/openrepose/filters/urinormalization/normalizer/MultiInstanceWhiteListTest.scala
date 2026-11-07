@@ -20,9 +20,11 @@
 package org.openrepose.filters.urinormalization.normalizer
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.openrepose.filters.urinormalization.config.{HttpUriParameterList, UriParameter}
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class MultiInstanceWhiteListTest extends FunSpec with BeforeAndAfterEach with Matchers {

@@ -22,11 +22,11 @@ package org.openrepose.core.services.httplogging
 import java.time.Duration
 import java.util
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.commons.utils.http.{CommonHttpHeader, OpenStackServiceHeader}
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 import scala.util.Try
 
@@ -78,7 +78,7 @@ object HttpLoggingContextMap {
     Generators
       .mapValues(generator => Try(generator(httpLoggingContext)))
       .mapValues(tryValue => tryValue.map(Option.apply).getOrElse(None))
-      .collect({ case (key, Some(value: AnyRef)) => key -> value })
+      .collect({ case (key, Some(value: AnyRef)) => key -> value }).toMap
   }
 
   private def headerMap(request: HttpServletRequest): util.Map[String, _ <: util.List[String]] = {

@@ -1,9 +1,9 @@
 dependencies {
-    compileOnly 'javax.servlet:javax.servlet-api'
-    compileOnly 'javax.inject:javax.inject'
-    compile 'org.apache.commons:commons-lang3'
-    compile project(':repose-aggregator:tests:test-bundles:classloader-dependency-one')
-    compile "org.scala-lang:scala-library"
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+    compileOnly 'jakarta.inject:jakarta.inject-api'
+    api 'org.apache.commons:commons-lang3'
+    api project(':repose-aggregator:tests:test-bundles:classloader-dependency-one')
+    api "org.scala-lang:scala-library"
 }
 
 dependencyCheck {

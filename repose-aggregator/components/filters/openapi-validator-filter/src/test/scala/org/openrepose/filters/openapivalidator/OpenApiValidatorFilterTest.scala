@@ -20,15 +20,17 @@
 package org.openrepose.filters.openapivalidator
 
 import java.io.{ByteArrayInputStream, File, InputStream}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator
 import com.atlassian.oai.validator.OpenApiInteractionValidator.ApiLoadException
 import com.atlassian.oai.validator.model.Request
 import com.atlassian.oai.validator.report.{ValidationReport, ValidationReportScala}
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{spy, verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -39,7 +41,7 @@ import org.openrepose.filters.openapivalidator.OpenApiValidatorFilterTest._
 import org.openrepose.filters.openapivalidator.config.OpenApiValidatorConfig
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 
 import scala.io.Source
@@ -85,14 +87,15 @@ class OpenApiValidatorFilterTest
 
     it("should wrap the request input stream if mark is not supported") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
         })
 
-      val testInputStream = spy(new ServletInputStreamWrapper(new ByteArrayInputStream("test data".getBytes(StandardCharsets.ISO_8859_1))))
-      servletRequest = spy(new MockHttpServletRequest())
+      val testInputStream = org.openrepose.commons.test.MockitoSpy.spyInstance(new ServletInputStreamWrapper(new ByteArrayInputStream("test data".getBytes(StandardCharsets.ISO_8859_1))))
+      servletRequest = org.openrepose.commons.test.MockitoSpy.spyInstance(new MockHttpServletRequest())
 
       when(testInputStream.markSupported).thenReturn(false)
       when(servletRequest.getInputStream).thenReturn(testInputStream)
@@ -106,14 +109,15 @@ class OpenApiValidatorFilterTest
 
     it("should not wrap the request input stream if mark is supported") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
         })
 
-      val testInputStream = spy(new ServletInputStreamWrapper(new ByteArrayInputStream("test data".getBytes(StandardCharsets.ISO_8859_1))))
-      servletRequest = spy(new MockHttpServletRequest())
+      val testInputStream = org.openrepose.commons.test.MockitoSpy.spyInstance(new ServletInputStreamWrapper(new ByteArrayInputStream("test data".getBytes(StandardCharsets.ISO_8859_1))))
+      servletRequest = org.openrepose.commons.test.MockitoSpy.spyInstance(new MockHttpServletRequest())
 
       when(testInputStream.markSupported).thenReturn(true)
       when(servletRequest.getInputStream).thenReturn(testInputStream)
@@ -127,7 +131,8 @@ class OpenApiValidatorFilterTest
 
     it("should allow downstream components to call getInputStream to read the request body") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
@@ -142,7 +147,8 @@ class OpenApiValidatorFilterTest
 
     it("should not allow downstream components to call getReader to read the request body") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty
@@ -157,7 +163,8 @@ class OpenApiValidatorFilterTest
 
     it("should not destructively read the request body") {
       when(validator.validateRequest(any[Request]))
-        .thenAnswer((request: Request) => {
+        .thenAnswer((invocation: org.mockito.invocation.InvocationOnMock) => {
+          val request = invocation.getArgument[Request](0)
           // Simulate validating the body
           request.getBody
           ValidationReportScala.empty

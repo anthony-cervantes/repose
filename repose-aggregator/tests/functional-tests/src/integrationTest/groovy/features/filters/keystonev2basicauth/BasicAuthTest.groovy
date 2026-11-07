@@ -21,20 +21,19 @@ package features.filters.keystonev2basicauth
 
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.lang3.RandomStringUtils
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Identity
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION
-import static javax.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE
+import static jakarta.servlet.http.HttpServletResponse.*
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION
+import static jakarta.ws.rs.core.HttpHeaders.WWW_AUTHENTICATE
 
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class BasicAuthTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

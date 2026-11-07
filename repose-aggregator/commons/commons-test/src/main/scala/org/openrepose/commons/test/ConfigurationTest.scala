@@ -20,9 +20,11 @@
 package org.openrepose.commons.test
 
 import java.net.URL
-import javax.xml.bind.JAXBContext
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.xml.bind.JAXBContext
 
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 
 import scala.language.implicitConversions
 

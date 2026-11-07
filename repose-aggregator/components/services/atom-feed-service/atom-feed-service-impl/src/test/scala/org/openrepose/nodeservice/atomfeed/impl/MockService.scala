@@ -19,47 +19,43 @@
  */
 package org.openrepose.nodeservice.atomfeed.impl
 
-import java.net.URL
+import com.sun.net.httpserver.{HttpExchange, HttpServer}
+import java.net.InetSocketAddress
+import java.nio.charset.StandardCharsets.UTF_8
+import java.util.concurrent.Executors
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpMethods._
-import akka.http.scaladsl.model._
-import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.Sink
+object MockService {
+  case class Response(status: Int = 200, body: Array[Byte] = Array.emptyByteArray,
+                      contentType: String = "text/plain;charset=UTF-8")
+}
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.language.postfixOps
+class MockService extends AutoCloseable {
+  import MockService.Response
 
-class MockService {
+  private val server = HttpServer.create(new InetSocketAddress("localhost", 0), 0)
+  private val executor = Executors.newVirtualThreadPerTaskExecutor()
+  server.setExecutor(executor)
 
-  private implicit val system = ActorSystem("mock-service")
-  private implicit val materializer = ActorMaterializer()
-
-  private val serverSource = Http().bind(interface = "localhost", port = 0)
-
-  private var bindingFuture: Future[Http.ServerBinding] = _
-
-  // Defines a default handler, but can be changed
-  var requestHandler: HttpRequest => HttpResponse = {
-    case HttpRequest(GET, _, _, _, _) =>
-      HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`text/html`), "<html><body>Hello world!</body></html>".getBytes))
-
-    case _: HttpRequest =>
-      HttpResponse(404, entity = "Unknown resource!")
+  @volatile var requestHandler: HttpExchange => Response = request => {
+    if (request.getRequestMethod == "GET")
+      Response(body = "<html><body>Hello world!</body></html>".getBytes(UTF_8), contentType = "text/html;charset=UTF-8")
+    else Response(404, "Unknown resource!".getBytes(UTF_8))
   }
 
-  def start(): Unit = {
-    bindingFuture = serverSource.to(Sink.foreach { connection =>
-      // Shenanigans! The anonymous function here seems redundant, but it forces the current value of requestHandler to
-      // be used (enabling hot swapping for the handler).
-      connection handleWithSyncHandler (request => requestHandler(request))
-    }).run()
-  }
+  server.createContext("/", exchange => {
+    try {
+      val response = requestHandler(exchange)
+      exchange.getResponseHeaders.set("Content-Type", response.contentType)
+      exchange.sendResponseHeaders(response.status, if (response.body.isEmpty) -1L else response.body.length.toLong)
+      if (response.body.nonEmpty) exchange.getResponseBody.write(response.body)
+    } finally exchange.close()
+  })
 
-  def getUrl: String = {
-    val localAddress = Await.result(bindingFuture, 5 seconds).localAddress
-    new URL("http", localAddress.getHostName, localAddress.getPort, "").toString
+  def start(): Unit = server.start()
+  def getUrl: String = s"http://localhost:${server.getAddress.getPort}"
+
+  override def close(): Unit = {
+    server.stop(0)
+    executor.close()
   }
 }

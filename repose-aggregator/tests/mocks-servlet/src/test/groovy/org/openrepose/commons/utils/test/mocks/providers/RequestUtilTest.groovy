@@ -19,9 +19,11 @@
  */
 package org.openrepose.commons.utils.test.mocks.providers
 
+import groovy.xml.XmlSlurper
+
 import org.junit.Test
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import static org.hamcrest.Matchers.equalTo
 import static org.junit.Assert.assertThat

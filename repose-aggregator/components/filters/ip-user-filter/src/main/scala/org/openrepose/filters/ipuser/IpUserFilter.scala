@@ -22,9 +22,9 @@ package org.openrepose.filters.ipuser
 import java.net.{URL, UnknownHostException}
 import java.util.concurrent.atomic.AtomicReference
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.typesafe.scalalogging.StrictLogging
 import edazdarevic.commons.net.CIDRUtils
 import org.openrepose.commons.config.manager.UpdateListener
@@ -108,8 +108,8 @@ class IpUserFilter @Inject()(configurationService: ConfigurationService) extends
     //Update all the CIDRs
     //Create a new list to replace the old one
 
-    import scala.collection.JavaConversions._
-    val groups = classificationConfig.getGroup.toList
+    import scala.jdk.CollectionConverters._
+    val groups = classificationConfig.getGroup.asScala.toList
 
     /**
       * This guy builds a List[List[LabeledCIDR]] I flat map it to remove that extra list, so it's just a
@@ -118,7 +118,7 @@ class IpUserFilter @Inject()(configurationService: ConfigurationService) extends
       */
     val replacementCidrList: List[LabeledCIDR] = groups.flatMap { group =>
       val label = group.getName
-      group.getCidrIp.map { cidr =>
+      group.getCidrIp.asScala.map { cidr =>
         LabeledCIDR(label, new CIDRUtils(cidr))
       }
     }

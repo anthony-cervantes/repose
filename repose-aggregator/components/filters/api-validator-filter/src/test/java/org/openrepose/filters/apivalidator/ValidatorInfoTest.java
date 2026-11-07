@@ -44,7 +44,7 @@ public class ValidatorInfoTest {
     private DispatchResultHandler getHandlers() {
         List<ResultHandler> handlers = new ArrayList<>();
         handlers.add(new ServletResultHandler());
-        return new DispatchResultHandler(scala.collection.JavaConversions.asScalaBuffer(handlers).toList());
+        return new DispatchResultHandler(scala.jdk.javaapi.CollectionConverters.asScala(handlers).toList());
     }
 
     @Before

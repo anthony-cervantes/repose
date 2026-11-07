@@ -20,10 +20,12 @@
 package org.openrepose.commons.utils.string
 
 import java.util.regex.Matcher
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class RegexStringOperatorsTest extends FunSpec with Matchers {
@@ -63,11 +65,11 @@ class RegexStringOperatorsTest extends FunSpec with Matchers {
 
   describe("RegexStringOperators") {
     it("should implicitly convert a String to a RegexString") {
-      val anonymousTrait = new RegexStringOperators {
+      class TestOperators extends RegexStringOperators {
         def convert(regex: String): RegexString = regex
       }
 
-      anonymousTrait.convert("/foo/\\d+") shouldBe a[RegexString]
+      new TestOperators().convert("/foo/\\d+") shouldBe a[RegexString]
     }
   }
 }

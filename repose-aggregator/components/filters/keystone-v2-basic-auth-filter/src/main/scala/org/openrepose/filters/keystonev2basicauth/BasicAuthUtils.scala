@@ -21,7 +21,7 @@ package org.openrepose.filters.keystonev2basicauth
 
 import org.apache.commons.codec.binary.Base64
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 trait BasicAuthUtils {

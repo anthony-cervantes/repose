@@ -20,6 +20,8 @@
 package org.openrepose.valve.jetty
 
 import java.io.{File, IOException}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 
@@ -33,7 +35,7 @@ import org.openrepose.core.container.config.{SslCipherConfiguration, SslConfigur
 import org.openrepose.core.spring.CoreSpringProvider
 import org.openrepose.valve.SpringContextResetter
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterAll, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll}
 
 @RunWith(classOf[JUnitRunner])
 class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
@@ -121,13 +123,13 @@ class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
     s.setKeystorePassword("password")
 
     implicit val listToSslCipherConfig: List[String] => SslCipherConfiguration = { list =>
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters._
       val cfg = new SslCipherConfiguration()
       cfg.getCipher.addAll(list.asJava)
       cfg
     }
     implicit val listToSslProtocolConfig: List[String] => SslProtocolConfiguration = { list =>
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters._
       val cfg = new SslProtocolConfiguration()
       cfg.getProtocol.addAll(list.asJava)
       cfg
@@ -193,7 +195,7 @@ class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
       "node",
       None,
       httpsPort,
-      sslConfig(includedProtocols = List("TLSv1.1", "TLSv1.2")),
+      sslConfig(includedProtocols = List("TLSv1.2", "TLSv1.3")),
       None,
       null,
       null
@@ -203,7 +205,7 @@ class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
       intercept[SSLHandshakeException] {
         selectiveRequest(Array("TLSv1"))
       }
-      selectiveRequest(Array("TLSv1.1"))
+      selectiveRequest(Array("TLSv1.3"))
       selectiveRequest(Array("TLSv1.2"))
     } finally {
       repose.shutdown()
@@ -252,23 +254,44 @@ class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
     }
   }
 
+  private def withTls12Socket(test: javax.net.ssl.SSLSocket => Unit): Unit = {
+    val sslContext = SSLContexts.custom().loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE).build()
+    val socket = sslContext.getSocketFactory.createSocket("localhost", httpsPort.get).asInstanceOf[javax.net.ssl.SSLSocket]
+    socket.setEnabledProtocols(Array("TLSv1.2"))
+    socket.setSoTimeout(5000)
+    try {
+      socket.startHandshake()
+      test(socket)
+    } finally socket.close()
+  }
+
+  private def requestAfterRenegotiation(socket: javax.net.ssl.SSLSocket): Int = {
+    try {
+      socket.startHandshake()
+      socket.getOutputStream.write("GET / HTTP/1.0\r\nHost: localhost\r\n\r\n".getBytes(java.nio.charset.StandardCharsets.US_ASCII))
+      socket.getOutputStream.flush()
+      socket.getInputStream.read()
+    } catch {
+      case timeout: java.net.SocketTimeoutException => throw timeout
+      case _: IOException => -1
+    }
+  }
+
   it("creates a jetty server that does not allow TLS renegotiation") {
     val repose = new ReposeJettyServer(
       nodeContext,
       "node",
       None,
       httpsPort,
-      sslConfig(includedProtocols = List("TLSv1"), tlsRenegotiation = false),
+      sslConfig(includedProtocols = List("TLSv1.2"), tlsRenegotiation = false),
       None,
       null,
       null
     )
     repose.start()
 
-    //TODO: I can test this with openssl s_client commands, but not otherwise
-    import scala.sys.process._
     try {
-      ("echo R" #| s"openssl s_client -connect localhost:${httpsPort.get}" !) shouldBe 1
+      withTls12Socket { socket => requestAfterRenegotiation(socket) shouldBe -1 }
     } finally {
       repose.shutdown()
     }
@@ -280,17 +303,15 @@ class ReposeJettySSLTest extends FunSpec with Matchers with BeforeAndAfterAll {
       "node",
       None,
       httpsPort,
-      sslConfig(includedProtocols = List("TLSv1"), tlsRenegotiation = true),
+      sslConfig(includedProtocols = List("TLSv1.2"), tlsRenegotiation = true),
       None,
       null,
       null
     )
     repose.start()
 
-    //TODO: I can test this with openssl s_client commands, but not otherwise
-    import scala.sys.process._
     try {
-      ("echo R" #| s"openssl s_client -connect localhost:${httpsPort.get}" !) shouldBe 0
+      withTls12Socket { socket => requestAfterRenegotiation(socket) shouldBe 'H'.toInt }
     } finally {
       repose.shutdown()
     }

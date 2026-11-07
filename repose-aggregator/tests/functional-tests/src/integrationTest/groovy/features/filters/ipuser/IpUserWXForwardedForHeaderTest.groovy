@@ -19,19 +19,18 @@
  */
 package features.filters.ipuser
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST
 
 /**
  * Created by jennyvo on 4/26/16.
  *  REP-3838 fix using x-forward-for as x-pp-user
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class IpUserWXForwardedForHeaderTest extends ReposeValveTest {
 
     def setupSpec() {

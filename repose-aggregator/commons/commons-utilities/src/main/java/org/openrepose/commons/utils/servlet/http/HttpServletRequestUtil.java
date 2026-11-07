@@ -21,7 +21,7 @@ package org.openrepose.commons.utils.servlet.http;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class HttpServletRequestUtil {
     private HttpServletRequestUtil() {

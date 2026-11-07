@@ -19,19 +19,21 @@
  */
 package org.openrepose.filters.forwardedproto
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.{FilterChain, ServletResponse}
+import jakarta.servlet.http.HttpServletRequest
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.{FilterChain, ServletResponse}
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ForwardedProtoFilterTest extends FunSpec with Matchers with MockitoSugar {
@@ -50,7 +52,7 @@ class ForwardedProtoFilterTest extends FunSpec with Matchers with MockitoSugar {
 
       // then:
       val servletRequestCaptor = ArgumentCaptor.forClass(classOf[HttpServletRequest])
-      verify(mockFilterChain).doFilter(servletRequestCaptor.capture(), any(classOf[ServletResponse]))
+      verify(mockFilterChain).doFilter(servletRequestCaptor.capture(), any[ServletResponse]())
 
       val capturedServletRequest = servletRequestCaptor.getValue
       capturedServletRequest.getHeaders("X-Forwarded-Proto").asScala.size shouldEqual 1
@@ -68,7 +70,7 @@ class ForwardedProtoFilterTest extends FunSpec with Matchers with MockitoSugar {
 
       // then:
       val servletRequestCaptor = ArgumentCaptor.forClass(classOf[HttpServletRequest])
-      verify(mockFilterChain).doFilter(servletRequestCaptor.capture(), any(classOf[ServletResponse]))
+      verify(mockFilterChain).doFilter(servletRequestCaptor.capture(), any[ServletResponse]())
 
       val capturedServletRequest = servletRequestCaptor.getValue
       capturedServletRequest.getHeaders("X-Forwarded-Proto").asScala.size shouldEqual 1

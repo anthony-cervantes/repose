@@ -19,7 +19,7 @@
  */
 package features.core.tracing
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.io.ObjectSerializer
 import org.openrepose.core.services.datastore.types.StringValue
 import org.openrepose.framework.test.PortFinder
@@ -27,12 +27,11 @@ import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityService
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 
 /**
  * Specific tests for admin token
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class TracingDistDatastoreTest extends ReposeValveTest {
 
     final ObjectSerializer objectSerializer = new ObjectSerializer(this.getClass().getClassLoader())

@@ -1,7 +1,7 @@
 dependencies {
-    compile "org.slf4j:slf4j-api"
+    api "org.slf4j:slf4j-api"
 
-    compileOnly "org.glassfish:javax.servlet"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 }
 
 jacocoTestCoverageVerification {

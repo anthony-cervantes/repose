@@ -1,0 +1,8 @@
+= URI Stripper JSONPath parser
+
+Parser, AST, and comparison definitions imported from
+io.gatling:jsonpath_2.12:0.7.0:sources (Apache 2.0).
+Original copyright and license headers are retained. The package is local to
+URI Stripper; the source is compiled with the application's Scala toolchain.
+This preserves existing configured JSONPath parsing without a Scala 2.12 binary.
+Source archive SHA-256: 746e9d12c04762435e2ce053ab144443fda9bb4ee55cad707b65022fca885626

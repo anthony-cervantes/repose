@@ -19,7 +19,7 @@
  */
 package org.openrepose.nodeservice.distributed.servlet;
 
-import io.opentracing.Scope;
+import org.openrepose.commons.utils.opentracing.ScopeHelper.SpanScope;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
 import org.openrepose.commons.utils.http.CommonHttpHeader;
@@ -38,11 +38,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -51,7 +51,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static jakarta.servlet.http.HttpServletResponse.*;
 import static org.openrepose.commons.utils.opentracing.ScopeHelper.closeSpan;
 import static org.openrepose.commons.utils.opentracing.ScopeHelper.startSpan;
 import static org.openrepose.core.services.datastore.impl.distributed.MalformedCacheRequestError.*;
@@ -123,7 +123,7 @@ public class DistributedDatastoreServlet extends HttpServlet {
         Optional.ofNullable(req.getHeader(PowerApiHeader.TRACE_REQUEST))
             .ifPresent(__ -> MDC.put(PowerApiHeader.TRACE_REQUEST, "true"));
 
-        final Scope scope = startSpan(req, tracer, LOG, Tags.SPAN_KIND_SERVER, reposeVersion, uriRedactionService);
+        final SpanScope scope = startSpan(req, tracer, LOG, Tags.SPAN_KIND_SERVER, reposeVersion, uriRedactionService);
         try {
             if (isRequestValid(req, resp)) {
                 String traceGUID = TracingHeaderHelper.getTraceGuid(req.getHeader(CommonHttpHeader.TRACE_GUID));
@@ -217,7 +217,8 @@ public class DistributedDatastoreServlet extends HttpServlet {
         }
     }
 
-    private void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    @Override
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             final CacheRequest cachePatch = CacheRequest.marshallCacheRequestWithPayload(req);
             Serializable value = localDatastore.patch(cachePatch.getCacheKey(), (Patch) objectSerializer.readObject(cachePatch.getPayload()), cachePatch.getTtlInSeconds(), TimeUnit.SECONDS);

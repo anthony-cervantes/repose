@@ -20,9 +20,11 @@
 package org.openrepose.core.services.httplogging.jtwig
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.openrepose.core.services.httplogging.config.Format
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class HttpLoggingEnvironmentConfigurationTest extends FunSpec with Matchers {

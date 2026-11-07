@@ -20,6 +20,8 @@
 package org.openrepose.core.services.logging
 
 import java.io.File
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 
@@ -27,14 +29,14 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.ConfigurationFactory
 import org.apache.logging.log4j.status.StatusLogger
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.openrepose.core.services.config.ConfigurationService
 import org.scalatest.concurrent.Eventually
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{FunSpec, Matchers}
+
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.io.Source
@@ -42,7 +44,7 @@ import scala.io.Source
 @RunWith(classOf[JUnitRunner])
 class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar with Eventually {
 
-  import scala.collection.JavaConversions._
+  import scala.jdk.CollectionConverters._
 
   val mockConfigService = mock[ConfigurationService]
   val validExtensions = List("xml", "json", "yaml")
@@ -96,7 +98,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
             LOG.debug("DEBUG LEVEL LOG STATEMENT 1")
             LOG.trace("TRACE LEVEL LOG STATEMENT 1")
 
-            val events1 = app1.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events1 = app1.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
 
             events1 should contain("ERROR LEVEL LOG STATEMENT 1")
             events1 should contain("WARN  LEVEL LOG STATEMENT 1")
@@ -133,7 +135,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
             LOG.debug("DEBUG LEVEL LOG STATEMENT 1")
             LOG.trace("TRACE LEVEL LOG STATEMENT 1")
 
-            val events = app1.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events = app1.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
 
             events should contain("ERROR LEVEL LOG STATEMENT 1")
             events should contain("WARN  LEVEL LOG STATEMENT 1")
@@ -156,7 +158,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
         val appDefault = config1.getAppender("ListDefault").asInstanceOf[ListAppender]
         appDefault should not be null
 
-        val events = appDefault.getEvents.toList.map(_.getMessage.getFormattedMessage)
+        val events = appDefault.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
         events.find(_.contains("ERROR FALLING BACK TO THE DEFAULT LOGGING CONFIGURATION!!!")) should not be None
 
         cleanupLoggerContext(context)
@@ -201,7 +203,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
             LOG.debug("DEBUG LEVEL LOG STATEMENT 2")
             LOG.trace("TRACE LEVEL LOG STATEMENT 2")
 
-            val events1 = app1.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events1 = app1.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
             events1 should contain("ERROR LEVEL LOG STATEMENT 1")
             events1 should contain("WARN  LEVEL LOG STATEMENT 1")
             events1 should not contain "INFO  LEVEL LOG STATEMENT 1"
@@ -216,7 +218,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
             val config2 = context.getConfiguration
             val app2 = config2.getAppender("List2").asInstanceOf[ListAppender]
             app2 should not be null
-            val events2 = app2.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events2 = app2.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
             events2 should not contain "ERROR LEVEL LOG STATEMENT 1"
             events2 should not contain "WARN  LEVEL LOG STATEMENT 1"
             events2 should not contain "INFO  LEVEL LOG STATEMENT 1"
@@ -253,7 +255,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
 
             loggingService.updateLoggingConfiguration(null)
 
-            val events2 = app2.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events2 = app2.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
             events2 should contain("Requested to reload a NULL configuration.")
           }
         } finally {
@@ -281,7 +283,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
 
             loggingService.updateLoggingConfiguration(file2.getAbsolutePath)
 
-            val events2 = app2.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events2 = app2.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
 
             events2 should contain("Requested to reload the same configuration: " + file2.getAbsolutePath)
           }
@@ -317,7 +319,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
 
               loggingService.updateLoggingConfiguration(url)
 
-              val events1 = app1.getEvents.toList.map(_.getMessage.getFormattedMessage)
+              val events1 = app1.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
 
               events1 should contain(s"An attempt was made to switch to an invalid Logging Configuration file: $url")
             }
@@ -354,7 +356,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
             LOG.trace("TRACE LEVEL LOG STATEMENT 1")
 
             //Assert existing config works.
-            val events1 = app1.getEvents.toList.map(_.getMessage.getFormattedMessage)
+            val events1 = app1.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
             events1 should contain("ERROR LEVEL LOG STATEMENT 1")
             events1 should contain("WARN  LEVEL LOG STATEMENT 1")
             events1 should not contain "INFO  LEVEL LOG STATEMENT 1"
@@ -393,7 +395,7 @@ class LoggingServiceImplTest extends FunSpec with Matchers with MockitoSugar wit
               val config2 = context.getConfiguration
               val app2 = config2.getAppender("List2").asInstanceOf[ListAppender]
               app2 should not be null
-              val events2 = app2.getEvents.toList.map(_.getMessage.getFormattedMessage)
+              val events2 = app2.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
               events2 should not contain "ERROR LEVEL LOG STATEMENT 1"
               events2 should not contain "WARN  LEVEL LOG STATEMENT 1"
               events2 should not contain "INFO  LEVEL LOG STATEMENT 1"

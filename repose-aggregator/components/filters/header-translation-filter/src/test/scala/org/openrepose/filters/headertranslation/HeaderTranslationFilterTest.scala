@@ -19,21 +19,23 @@
  */
 package org.openrepose.filters.headertranslation
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterChain, ServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.{FilterChain, ServletResponse}
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{never, reset, verify}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.headertranslation.config.{Header, HeaderTranslationType}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {
@@ -147,7 +149,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(request, null, mockFilterChain)
 
-      getCapturedRequest.getHeaderNames.toSeq should contain theSameElementsAs request.getHeaderNames.toSeq
+      getCapturedRequest.getHeaderNames.asScala.toSeq should contain theSameElementsAs request.getHeaderNames.asScala.toSeq
     }
 
     it("should remove the original header") {
@@ -159,24 +161,24 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
     it("should add a new header with a single value") {
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-One-One").toSeq should contain ("valueOne")
+      getCapturedRequest.getHeaders("X-New-One-One").asScala.toSeq should contain ("valueOne")
     }
 
     it("should add new headers with multiple values") {
       filter.doFilter(mockRequest, null, mockFilterChain)
 
       val capturedRequest = getCapturedRequest
-      capturedRequest.getHeaders("X-New-Two-One").toSeq should contain theSameElementsAs Seq("valueOne", "valueTwo")
-      capturedRequest.getHeaders("X-New-Two-Two").toSeq should contain theSameElementsAs Seq("valueOne", "valueTwo")
+      capturedRequest.getHeaders("X-New-Two-One").asScala.toSeq should contain theSameElementsAs Seq("valueOne", "valueTwo")
+      capturedRequest.getHeaders("X-New-Two-Two").asScala.toSeq should contain theSameElementsAs Seq("valueOne", "valueTwo")
     }
 
     it("should preserve header value order") {
       filter.doFilter(mockRequest, null, mockFilterChain)
 
       val capturedRequest = getCapturedRequest
-      capturedRequest.getHeaders("X-New-One-One").toSeq should contain ("valueOne")
-      capturedRequest.getHeaders("X-New-Two-One").toSeq should contain inOrderOnly ("valueOne", "valueTwo")
-      capturedRequest.getHeaders("X-New-Two-Two").toSeq should contain inOrderOnly ("valueOne", "valueTwo")
+      capturedRequest.getHeaders("X-New-One-One").asScala.toSeq should contain ("valueOne")
+      capturedRequest.getHeaders("X-New-Two-One").asScala.toSeq should contain inOrderOnly ("valueOne", "valueTwo")
+      capturedRequest.getHeaders("X-New-Two-Two").asScala.toSeq should contain inOrderOnly ("valueOne", "valueTwo")
     }
   }
 
@@ -194,15 +196,15 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(request, null, mockFilterChain)
 
-      getCapturedRequest.getHeaderNames.toSeq should contain theSameElementsAs request.getHeaderNames.toSeq
+      getCapturedRequest.getHeaderNames.asScala.toSeq should contain theSameElementsAs request.getHeaderNames.asScala.toSeq
     }
 
     it("should not remove the original headers") {
       filter.doFilter(mockRequest, null, mockFilterChain)
 
       val capturedRequest = getCapturedRequest
-      capturedRequest.getHeaders("X-Three").toSeq should contain ("valueOne")
-      capturedRequest.getHeaders("X-Four").toSeq should contain theSameElementsAs Seq("valueOne", "valueTwo")
+      capturedRequest.getHeaders("X-Three").asScala.toSeq should contain ("valueOne")
+      capturedRequest.getHeaders("X-Four").asScala.toSeq should contain theSameElementsAs Seq("valueOne", "valueTwo")
     }
   }
 
@@ -213,7 +215,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Six-One").toSeq should contain theSameElementsAs Seq("mustard,ketchup,mayo;q=0.9,pickles;q=0.1")
+      getCapturedRequest.getHeaders("X-New-Six-One").asScala.toSeq should contain theSameElementsAs Seq("mustard,ketchup,mayo;q=0.9,pickles;q=0.1")
     }
 
     it("should split the headers when configured") {
@@ -222,7 +224,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Five-One").toSeq should contain inOrderOnly ("mustard", "ketchup", "mayo;q=0.9", "pickles;q=0.1")
+      getCapturedRequest.getHeaders("X-New-Five-One").asScala.toSeq should contain inOrderOnly ("mustard", "ketchup", "mayo;q=0.9", "pickles;q=0.1")
     }
 
     it("should correctly handle multiple splittable headers") {
@@ -232,7 +234,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Five-One").toSeq should contain inOrderOnly ("mustard", "ketchup", "mayo;q=0.9", "pickles;q=0.1", "bacon;q=1.0", "cheese;q=0.8")
+      getCapturedRequest.getHeaders("X-New-Five-One").asScala.toSeq should contain inOrderOnly ("mustard", "ketchup", "mayo;q=0.9", "pickles;q=0.1", "bacon;q=1.0", "cheese;q=0.8")
     }
   }
 
@@ -243,7 +245,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Eight-One").toSeq should contain ("mustard;q=0.82")
+      getCapturedRequest.getHeaders("X-New-Eight-One").asScala.toSeq should contain ("mustard;q=0.82")
     }
 
     it("removes the original quality before adding the new header") {
@@ -252,7 +254,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Eight-One").toSeq should contain ("mayo;q=0.82")
+      getCapturedRequest.getHeaders("X-New-Eight-One").asScala.toSeq should contain ("mayo;q=0.82")
     }
 
     it("correctly handles non-splittable headers") {
@@ -261,7 +263,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Eight-One").toSeq should contain ("mustard,mayo,cheese;q=0.82")
+      getCapturedRequest.getHeaders("X-New-Eight-One").asScala.toSeq should contain ("mustard,mayo,cheese;q=0.82")
     }
 
     it("correctly handles splittable headers") {
@@ -270,7 +272,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Seven-One").toSeq should contain theSameElementsAs Seq("mustard;q=0.71", "mayo;q=0.71", "cheese;q=0.71")
+      getCapturedRequest.getHeaders("X-New-Seven-One").asScala.toSeq should contain theSameElementsAs Seq("mustard;q=0.71", "mayo;q=0.71", "cheese;q=0.71")
     }
 
     it("removes the original quality on splittable headers before adding the new header") {
@@ -279,7 +281,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Seven-One").toSeq should contain theSameElementsAs Seq("mustard;q=0.71", "mayo;q=0.71", "cheese;q=0.71")
+      getCapturedRequest.getHeaders("X-New-Seven-One").asScala.toSeq should contain theSameElementsAs Seq("mustard;q=0.71", "mayo;q=0.71", "cheese;q=0.71")
     }
   }
 
@@ -291,7 +293,7 @@ class HeaderTranslationFilterTest extends FunSpec with BeforeAndAfterEach with M
 
       filter.doFilter(mockRequest, null, mockFilterChain)
 
-      getCapturedRequest.getHeaders("X-New-Nine").toSeq should contain theSameElementsAs Seq("banana")
+      getCapturedRequest.getHeaders("X-New-Nine").asScala.toSeq should contain theSameElementsAs Seq("banana")
     }
   }
 

@@ -20,12 +20,13 @@
 package org.openrepose.filters.keystonev2
 
 import java.io.{ByteArrayInputStream, InputStream}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import java.net.URI
 
 import com.rackspace.httpdelegation.HttpDelegationManager
-import javax.servlet.FilterConfig
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.FilterConfig
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet, HttpUriRequest}
 import org.apache.http.message.BasicHttpResponse
@@ -34,8 +35,9 @@ import org.apache.http.{HttpEntity, HttpVersion}
 import org.hamcrest.{Matchers => HC}
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import org.mockito.hamcrest.MockitoHamcrest.argThat
 import org.openrepose.commons.test.HttpUriRequestMatchers.{hasHeader, hasMethod, hasUri}
 import org.openrepose.commons.utils.http._
 import org.openrepose.core.services.config.ConfigurationService
@@ -46,15 +48,15 @@ import org.openrepose.filters.keystonev2.KeystoneRequestHandler._
 import org.openrepose.nodeservice.atomfeed.AtomFeedService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
 @RunWith(classOf[JUnitRunner])
 class KeystoneV2FilterRcnTest extends FunSpec
-  with org.scalatest.Matchers
+  with org.scalatest.matchers.should.Matchers
   with BeforeAndAfterEach
   with MockitoSugar
   with IdentityResponses

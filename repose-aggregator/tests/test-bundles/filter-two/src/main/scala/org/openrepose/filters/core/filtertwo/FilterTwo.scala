@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.core.filtertwo
 
-import javax.inject.Named
-import javax.servlet._
-import javax.servlet.http.HttpServletRequest
+import jakarta.inject.Named
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletRequest
 
 
 /**

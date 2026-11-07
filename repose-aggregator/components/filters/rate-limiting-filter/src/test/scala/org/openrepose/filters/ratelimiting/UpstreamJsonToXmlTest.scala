@@ -20,11 +20,13 @@
 package org.openrepose.filters.ratelimiting
 
 import java.io.ByteArrayInputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
 
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 import scala.xml.{Elem, XML}
 

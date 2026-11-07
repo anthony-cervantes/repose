@@ -20,14 +20,13 @@
 package features.filters.valkyrie
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.openrepose.framework.test.mocks.MockValkyrie
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
@@ -35,7 +34,7 @@ import spock.lang.Unroll
  * if pre-authorized-roles if present repose will bypass valkyrie authorization
  * note: using keystone-v2 auth filter
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class CullingBypassValkyrieAuthorizationTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

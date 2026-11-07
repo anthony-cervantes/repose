@@ -20,16 +20,18 @@
 package org.openrepose.filters.regexrbac
 
 import java.net.URL
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse._
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse._
 
 import com.rackspace.httpdelegation.{HttpDelegationHeaderNames, HttpDelegationManager}
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.hamcrest.Matchers.{endsWith, hasProperty}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, argThat, same, eq => eql}
+import org.mockito.ArgumentMatchers.{any, anyString, argThat, same, eq => eql}
 import org.mockito.Mockito
 import org.mockito.Mockito.{when => whenMock, _}
 import org.openrepose.commons.config.manager.UpdateFailedException
@@ -41,7 +43,7 @@ import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 import scala.util.Success
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.ROLES
@@ -99,7 +101,7 @@ class RegexRbacFilterTest
       verify(mockConfigService).subscribeTo(
         eql("RegexRbacFilter"),
         eql("regex-rbac.cfg.xml"),
-        argThat(hasProperty("path", endsWith("/META-INF/schema/config/regex-rbac.xsd"))),
+        org.mockito.hamcrest.MockitoHamcrest.argThat(hasProperty("path", endsWith("/META-INF/schema/config/regex-rbac.xsd"))),
         same(filter),
         any(classOf[Class[RegexRbacConfig]]))
       !filter.isInitialized
@@ -205,7 +207,7 @@ class RegexRbacFilterTest
       Then("the filter's configuration should be modified")
       !filter.isInitialized
       exception.getLocalizedMessage should include("Malformed RBAC Resource")
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: /path/to/bad")) shouldBe 1
     }
     it("should log if the resources list has a bad line with to many elements") {
@@ -231,7 +233,7 @@ class RegexRbacFilterTest
       Then("the filter's configuration should be modified")
       !filter.isInitialized
       exception.getLocalizedMessage should include("Malformed RBAC Resource")
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: /path/to/bad")) shouldBe 1
       events.count(_.contains("use a non-breaking space")) shouldBe 1
     }
@@ -258,7 +260,7 @@ class RegexRbacFilterTest
       Then("the filter's configuration should be modified")
       !filter.isInitialized
       exception.getLocalizedMessage should include("Malformed RBAC Resource")
-      val events = listAppender.getEvents.toList.map(_.getMessage.getFormattedMessage)
+      val events = listAppender.getEvents.asScala.toList.map(_.getMessage.getFormattedMessage)
       events.count(_.contains("Malformed RBAC Resource: ")) shouldBe 1
     }
   }

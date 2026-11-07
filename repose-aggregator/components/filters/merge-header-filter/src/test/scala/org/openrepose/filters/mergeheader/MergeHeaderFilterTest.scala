@@ -19,18 +19,20 @@
  */
 package org.openrepose.filters.mergeheader
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.verify
 import org.openrepose.core.services.config.ConfigurationService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {
@@ -55,7 +57,7 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
     it("should register a configuration listener") {
       filter.init(new MockFilterConfig("MergeHeaderFilter"))
 
-      verify(configurationService).subscribeTo(anyString(), anyString(), any(), any(), any[Class[MergeHeaderConfig]])
+      verify(configurationService).subscribeTo(any[String](), anyString(), any(), any(), any[Class[MergeHeaderConfig]])
     }
   }
 
@@ -63,7 +65,7 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
     it("should unregister a configuration listener") {
       filter.destroy()
 
-      verify(configurationService).unsubscribeFrom(anyString(), any())
+      verify(configurationService).unsubscribeFrom(any[String](), any())
     }
   }
 
@@ -107,8 +109,8 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
 
       filter.doFilter(servletRequest, servletResponse, filterChain)
 
-      servletRequest.getHeaderNames.toSet should contain only "Foo"
-      servletRequest.getHeaders("Foo").toSeq should (contain("bar") and contain("baz"))
+      servletRequest.getHeaderNames.asScala.toSet should contain only "Foo"
+      servletRequest.getHeaders("Foo").asScala.toSeq should (contain("bar") and contain("baz"))
     }
 
     it("should not modify response headers if the configured header is not present") {
@@ -119,8 +121,8 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
 
       filter.doFilter(servletRequest, servletResponse, filterChain)
 
-      servletResponse.getHeaderNames.toSet should contain only "Foo"
-      servletResponse.getHeaders("Foo").toSeq should (contain("bar") and contain("baz"))
+      servletResponse.getHeaderNames.asScala.toSet should contain only "Foo"
+      servletResponse.getHeaders("Foo").asScala.toSeq should (contain("bar") and contain("baz"))
     }
   }
 
@@ -128,10 +130,10 @@ class MergeHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
     val config = new MergeHeaderConfig
 
     val requestHeaderList = new HeaderList
-    requestHeaderList.getHeader.addAll(requestHeaders)
+    requestHeaderList.getHeader.addAll(requestHeaders.toList.asJava)
 
     val responseHeaderList = new HeaderList
-    responseHeaderList.getHeader.addAll(responseHeaders)
+    responseHeaderList.getHeader.addAll(responseHeaders.toList.asJava)
 
     config.setRequest(requestHeaderList)
     config.setResponse(responseHeaderList)

@@ -19,21 +19,20 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.XmlParsing
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
 /*
  * Api validator tests ported over from and JMeter
  */
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class ApiValidatorTest extends ReposeValveTest {
 
     private final String baseGroupPath = "/wadl/group1"
@@ -109,8 +108,6 @@ class ApiValidatorTest extends ReposeValveTest {
 
         then: "should return not found"
         messageChain.receivedResponse.code as Integer == SC_NOT_FOUND
-        // @TODO: Bring this back in when the RMS replacement is in use.
-        //messageChain.receivedResponse.body.contains("XML Not Authorized... Syntax highlighting is magical.")
 
         when: "When using invalid method with x-roles"
         messageChain = deproxy.makeRequest(
@@ -121,8 +118,6 @@ class ApiValidatorTest extends ReposeValveTest {
 
         then: "should return not found"
         messageChain.receivedResponse.code as Integer == SC_METHOD_NOT_ALLOWED
-        // @TODO: Bring this back in when the RMS replacement is in use.
-        //messageChain.receivedResponse.body.contains("XML Not Authorized... Syntax highlighting is magical.")
 
         when: "When using valid media type with x-roles"
         messageChain = deproxy.makeRequest(
@@ -198,10 +193,8 @@ class ApiValidatorTest extends ReposeValveTest {
 
         then: "should return resource"
         messageChain.receivedResponse.code as Integer == SC_BAD_REQUEST
-        // @TODO: Bring this back in when the RMS replacement is in use.
-        //messageChain.receivedResponse.body.contains("One of '{\"http://test.openrespose/test/v1.1\":node}' is expected")
-        // Until then, the info is in the Message.
-        messageChain.receivedResponse.message.contains("One of '{\"http://test.openrespose/test/v1.1\":node}' is expected")
+        messageChain.receivedResponse.headers.getFirstValue("content-type").startsWith("text/plain")
+        messageChain.receivedResponse.body.contains("One of '{\"http://test.openrespose/test/v1.1\":node}' is expected")
 
         when: "When Requesting with non well-formed content"
         messageChain = deproxy.makeRequest(
@@ -213,10 +206,8 @@ class ApiValidatorTest extends ReposeValveTest {
 
         then: "should return resource"
         messageChain.receivedResponse.code as Integer == SC_BAD_REQUEST
-        // @TODO: Bring this back in when the RMS replacement is in use.
-        //messageChain.receivedResponse.body.contains("The element type \"nodeList\" must be terminated by the matching end-tag")
-        // Until then, the info is in the Message.
-        messageChain.receivedResponse.message.contains("The element type \"nodeList\" must be terminated by the matching end-tag")
+        messageChain.receivedResponse.headers.getFirstValue("content-type").startsWith("text/plain")
+        messageChain.receivedResponse.body.contains("The element type \"nodeList\" must be terminated by the matching end-tag")
     }
 
     def "Happy path: When Passing to resource with required header"() {
@@ -248,10 +239,8 @@ class ApiValidatorTest extends ReposeValveTest {
 
         then: "should return resource"
         messageChain.receivedResponse.code as Integer == SC_BAD_REQUEST
-        // @TODO: Bring this back in when the RMS replacement is in use.
-        //messageChain.receivedResponse.body.contains("Expecting an HTTP header x-required-header")
-        // Until then, the info is in the Message.
-        messageChain.receivedResponse.message.contains("Expecting an HTTP header x-required-header")
+        messageChain.receivedResponse.headers.getFirstValue("content-type").startsWith("text/plain")
+        messageChain.receivedResponse.body.contains("Expecting an HTTP header x-required-header")
     }
 
     def "Should not split response headers according to rfc"() {

@@ -18,9 +18,9 @@
 #=_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_=_
 #
 
-- name: Install pip
+- name: Install Requests for Python 3
   apt:
-    pkg: python-pip
+    pkg: python3-requests
     state: latest
     update_cache: yes
     cache_valid_time: 86400
@@ -43,21 +43,13 @@
     cache_valid_time: 86400
   become: yes
 
-- name: Install Java 8
-  apt:
-    pkg: openjdk-8-jdk
-    state: latest
-    update_cache: yes
-    cache_valid_time: 86400
-  become: yes
+- name: Install the Java runtime
+  import_tasks: "{{ playbook_dir }}/tasks/install_java.yml"
 
 - name: Install Git
   apt: pkg=git state=latest
   become: yes
 
-- name: Install Requests
-  pip: name=requests
-  become: yes
 
 - name: Determine if Repose packages exist locally
   local_action:

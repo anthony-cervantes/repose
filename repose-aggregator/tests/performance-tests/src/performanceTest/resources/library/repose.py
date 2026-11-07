@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #
 #_=_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_=
 #Repose
@@ -17,8 +18,6 @@
 #limitations under the License.
 #=_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_=_
 #
-
-#!/usr/bin/python
 
 __author__ = "Dimitry Ushakov"
 
@@ -122,7 +121,8 @@ EXAMPLES = '''
 import shutil
 import glob
 import os
-import commands
+import subprocess
+import time
 import requests
 
 
@@ -136,13 +136,13 @@ def check_if_repose_is_listening(listen_port, steps):
         else:
             steps.append('response: %s' % (r.status_code))
             return False
-    except Exception, e:
+    except Exception as e:
         steps.append('response: %s' % (e))
         return False
 
 
 def started_repose_id():
-    output = commands.getoutput('ps aux | grep repose').split('\n')
+    output = subprocess.getoutput('ps aux | grep repose').split('\n')
     for i in output:
         if not 'grep repose' in i:
             return i.split()[1]
@@ -399,11 +399,11 @@ def validate_repose(module, changed, untouched, listen_port, steps):
 
     steps.append('check if repose is started')
     steps.append('OUTPUT OF LSOF -I: ')
-    steps.append(commands.getoutput('lsof -i | grep repose'))
-    steps.append(len(commands.getoutput('lsof -i | grep repose').split('\n')))
+    steps.append(subprocess.getoutput('lsof -i | grep repose'))
+    steps.append(len(subprocess.getoutput('lsof -i | grep repose').split('\n')))
     steps.append('OUTPUT OF PS AUX: ')
-    steps.append(commands.getoutput('ps aux | grep repose'))
-    steps.append(len(commands.getoutput('ps aux | grep repose').split('\n')))
+    steps.append(subprocess.getoutput('ps aux | grep repose'))
+    steps.append(len(subprocess.getoutput('ps aux | grep repose').split('\n')))
     if check_if_repose_is_listening(listen_port, steps):
         steps.append('repose is started on %s' % started_repose_id())
         success = dict(
@@ -443,8 +443,8 @@ def delete(module, wait, wait_timeout):
 
     try:
         stop_repose_id(module, pid)
-    except Exception, e:
-        module.fail_json(msg=e.message)
+    except Exception as e:
+        module.fail_json(msg=str(e))
     else:
         changed = True
 
@@ -502,7 +502,7 @@ def repose(module, state, release, git_build, git_repo, git_branch, build_tool,
             # build release
             # first get the operating system to either build via deb or rpm
             steps.append('we are in release build')
-            (package, _, _) = platform.linux_distribution()
+            package = distro.name()
             steps.append('building on %s' % package)
             if release:
                 steps.append('release build here')
@@ -527,7 +527,7 @@ def repose(module, state, release, git_build, git_repo, git_branch, build_tool,
             # build release
             # first get the operating system to either build via deb or rpm
             steps.append('we are in release build')
-            (package, _, _) = platform.linux_distribution()
+            package = distro.name()
             steps.append('building on %s' % package)
             if release:
                 steps.append('release build here')
@@ -559,8 +559,8 @@ def main():
                                                    'restarted', 'stopped',
                                                    'present', 'absent']),
             wait = dict(default=False, type='bool'),
-            wait_timeout = dict(default=300),
-            listen_port = dict(default=7070)
+            wait_timeout = dict(default=300, type='int'),
+            listen_port = dict(default=7070, type='int')
         )
     )
 
@@ -585,7 +585,8 @@ def main():
 
 
 # import module snippets
-from ansible.module_utils.basic import *
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import distro
 
 ### invoke the module
 if __name__ == '__main__':

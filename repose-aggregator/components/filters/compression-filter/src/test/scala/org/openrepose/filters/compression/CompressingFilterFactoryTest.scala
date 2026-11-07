@@ -20,12 +20,14 @@
 
 package org.openrepose.filters.compression
 
-import javax.servlet.{ServletContext, FilterConfig}
+import jakarta.servlet.{ServletContext, FilterConfig}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{Matchers, FunSpec}
+
 import org.scalatestplus.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])

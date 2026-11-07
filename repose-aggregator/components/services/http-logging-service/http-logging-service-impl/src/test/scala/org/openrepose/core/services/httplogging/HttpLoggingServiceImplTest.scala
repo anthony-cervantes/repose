@@ -20,18 +20,20 @@
 package org.openrepose.core.services.httplogging
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.jtwig.JtwigTemplate
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, same, eq => isEq}
+import org.mockito.ArgumentMatchers.{any, same, eq => isEq}
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.httplogging.HttpLoggingServiceImplTest._
 import org.openrepose.core.services.httplogging.config.HttpLoggingConfig
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.slf4j.Logger
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 

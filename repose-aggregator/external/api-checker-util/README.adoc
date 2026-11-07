@@ -1,0 +1,6 @@
+= Maintained API Checker util
+
+Imported from rackerlabs/api-checker tag api-checker-2.9.0, commit
+2bba4cc01599260354413db2e268ffbc4573ab2e. Upstream Apache 2.0 notices are retained.
+This module is built and published with Repose; servlet, metrics, and response
+contract changes are maintained here instead of rewriting downloaded binaries.

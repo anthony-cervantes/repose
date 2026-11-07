@@ -19,8 +19,8 @@
  */
 package org.openrepose.core.spring.test
 
-import javax.inject.Named
-import javax.servlet._
+import jakarta.inject.Named
+import jakarta.servlet._
 
 @Named("reposeFilter")
 class FakeReposeFilter extends Filter {

@@ -26,9 +26,9 @@ import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics.MetricRegistry
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpUriRequest}
 import org.apache.http.client.utils.URIBuilder
@@ -50,7 +50,7 @@ import org.openrepose.nodeservice.response.LocationHeaderBuilder
 import org.openrepose.powerfilter.ReposeRoutingServlet._
 import org.springframework.beans.factory.annotation.Value
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 @Named("reposeRoutingServlet")
@@ -185,7 +185,7 @@ class ReposeRoutingServlet @Inject()(@Value(ReposeSpringProperties.CORE.REPOSE_V
     val attributeRoutes = Option(servletRequest.getAttribute(CommonRequestAttributes.DESTINATIONS)) match {
       case None => Seq.empty
       case Some(destinations: java.util.List[RouteDestination]) => destinations.asScala
-      case Some(destinations: Seq[RouteDestination]) => destinations
+      case Some(destinations: scala.collection.Seq[RouteDestination]) => destinations.toSeq
       case _ => throw new Exception("Route could not be determined from the servlet request -- the destinations attribute was not a supported type")
     }
     val defaultRoute = new RouteDestination(defaultDestination.getId, servletRequest.getRequestURI, -1)

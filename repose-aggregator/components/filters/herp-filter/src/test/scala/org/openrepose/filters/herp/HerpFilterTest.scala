@@ -20,15 +20,17 @@
 package org.openrepose.filters.herp
 
 import java.util.{TimeZone, UUID}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import javax.servlet.FilterChain
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -41,7 +43,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.springframework.http.HttpStatus._
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class HerpFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {

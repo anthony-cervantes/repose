@@ -22,11 +22,11 @@ package org.openrepose.filters.keystonev2
 import java.io.InterruptedIOException
 import java.util.concurrent.TimeUnit
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.ws.rs.core.HttpHeaders
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.ws.rs.core.HttpHeaders
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.HttpClient
 import org.apache.http.client.utils.DateUtils
@@ -50,7 +50,7 @@ import org.openrepose.filters.keystonev2.config._
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, AtomFeedService, LifecycleEvents}
 
 import scala.Function.tupled
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 import scala.util.{Failure, Random, Success, Try}
 import scala.xml.XML
@@ -104,7 +104,7 @@ class KeystoneV2Filter @Inject()(configurationService: ConfigurationService,
     response.commitToResponse()
   }
 
-  override def doAuth(request: HttpServletRequestWrapper): Try[Unit.type] = {
+  override def doAuth(request: HttpServletRequestWrapper): Try[Unit] = {
     /**
       * DECLARE COMMON VALUES
       */
@@ -348,27 +348,27 @@ class KeystoneV2Filter @Inject()(configurationService: ConfigurationService,
       }
     }
 
-    def addCatalogHeader(maybeEndpoints: => Try[EndpointsData]): Try[Unit.type] = {
+    def addCatalogHeader(maybeEndpoints: => Try[EndpointsData]): Try[Unit] = {
       if (configuration.getIdentityService.isSetCatalogInHeader) {
         maybeEndpoints map { endpoints =>
           request.addHeader(PowerApiHeader.X_CATALOG, Base64Helper.base64EncodeUtf8(endpoints.json))
-          Unit
+          ()
         }
       } else {
-        Success(Unit)
+        Success(())
       }
     }
 
-    def addGroupsHeader(maybeGroups: => Try[Vector[String]]): Try[Unit.type] = {
+    def addGroupsHeader(maybeGroups: => Try[Vector[String]]): Try[Unit] = {
       if (configuration.getIdentityService.isSetGroupsInHeader) {
         maybeGroups map { groups =>
           if (groups.nonEmpty) {
             request.addHeader(PowerApiHeader.GROUPS, groups.mkString(","))
           }
-          Unit
+          ()
         }
       } else {
-        Success(Unit)
+        Success(())
       }
     }
 
@@ -405,7 +405,7 @@ class KeystoneV2Filter @Inject()(configurationService: ConfigurationService,
     }
   }
 
-  override val handleFailures: PartialFunction[Try[Unit.type], KeystoneV2Result] = {
+  override val handleFailures: PartialFunction[Try[Unit], KeystoneV2Result] = {
     KeystoneV2Authorization.handleFailures orElse {
       case Failure(e: MissingAuthTokenException) => Reject(SC_UNAUTHORIZED, Some(e.getMessage))
       case Failure(e: NotFoundException) => Reject(SC_UNAUTHORIZED, Some(e.getMessage))
@@ -529,7 +529,7 @@ class KeystoneV2Filter @Inject()(configurationService: ConfigurationService,
 
     httpClient = httpClientService.getClient(config.getIdentityService.getConnectionPoolId)
 
-    ignoredRoles = config.getIgnoredRoles.split(' ').to[Set]
+    ignoredRoles = config.getIgnoredRoles.split(' ').toSet
 
     isSelfValidating = Option(config.getIdentityService.getUsername).isEmpty ||
       Option(config.getIdentityService.getPassword).isEmpty

@@ -48,13 +48,13 @@ class KeystoneV2AuthorizationFilterSimulation extends AbstractReposeSimulation {
 
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Keystone v2 Filter Test")
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 

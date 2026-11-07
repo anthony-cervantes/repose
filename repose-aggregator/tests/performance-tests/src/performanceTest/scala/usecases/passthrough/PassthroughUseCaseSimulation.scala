@@ -30,14 +30,14 @@ import org.openrepose.performance.test.AbstractReposeSimulation
 class PassthroughUseCaseSimulation extends AbstractReposeSimulation {
   // Set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(getRequest)
       exec(postRequest)
     }
 
   // Set up the main scenario
   override val mainScenario = scenario("Simple Use Case Test")
-    .forever() {
+    .forever {
       exec(getRequest)
       exec(postRequest)
     }
@@ -56,7 +56,7 @@ class PassthroughUseCaseSimulation extends AbstractReposeSimulation {
     http(session => session.scenario)
       .post("/use-case/passthrough")
       .body(StringBody("""<root attr="attr-value"/>"""))
-      .asXML
+      .asXml
       .header(HttpHeaderNames.Host, "localhost")
       .check(status.is(201))
   }

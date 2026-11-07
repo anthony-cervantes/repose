@@ -1,16 +1,18 @@
 dependencies {
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile "org.scala-lang:scala-library"
-    compile "org.apache.commons:commons-lang3"
-    compile "org.apache.httpcomponents:httpcore"
+    api project(":repose-aggregator:commons:commons-utilities")
+    api "org.scala-lang:scala-library"
+    api "org.apache.commons:commons-lang3"
+    api "org.apache.httpcomponents:httpcore"
 
-    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.springframework:spring-test"
-    testCompile "org.springframework:spring-web"
-    testCompile "commons-io:commons-io"
-    testCompile "org.slf4j:jcl-over-slf4j"
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-web"
+    testImplementation "commons-io:commons-io"
+    testImplementation "org.slf4j:jcl-over-slf4j"
 }

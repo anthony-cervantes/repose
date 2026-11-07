@@ -21,19 +21,18 @@ package features.core.tracing
 
 import groovy.json.JsonOutput
 import org.apache.commons.codec.binary.Base64
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 
 import java.nio.charset.Charset
 
 /**
  * Created by adrian on 8/18/16.
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class TracingHeaderPlainTextTest extends ReposeValveTest {
 
     def static originEndpoint

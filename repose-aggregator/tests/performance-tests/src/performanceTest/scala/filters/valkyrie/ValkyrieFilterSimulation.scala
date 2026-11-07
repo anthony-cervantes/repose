@@ -43,14 +43,14 @@ class ValkyrieFilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getResourceWithDeviceId)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Valkyrie Filter Test")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getResourceWithDeviceId)
     }
 
@@ -63,10 +63,10 @@ class ValkyrieFilterSimulation extends AbstractReposeSimulation {
     http(session => session.scenario)
       .get(_ => s"/resource/$deviceId")
       .header(HttpHeaderNames.Accept, HttpHeaderValues.ApplicationJson)
-      .header("x-tenant-id", "${tenantId}")
-      .header("x-auth-token", "${authToken}")
-      .header("x-auth-user", "${authUser}")
-      .header("x-contact-id", "${contactId}")
+      .header("x-tenant-id", "#{tenantId}")
+      .header("x-auth-token", "#{authToken}")
+      .header("x-auth-user", "#{authUser}")
+      .header("x-contact-id", "#{contactId}")
       .check(status.is(200))
   }
 }

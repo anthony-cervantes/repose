@@ -32,7 +32,7 @@ import org.openrepose.core.services.ratelimit.exception.OverLimitException
 import static org.hamcrest.Matchers.containsString
 import static org.hamcrest.Matchers.equalTo
 import static org.junit.Assert.*
-import static org.mockito.Matchers.*
+import static org.mockito.ArgumentMatchers.*
 import static org.mockito.Mockito.*
 
 class RateLimitingServiceImplTest extends RateLimitServiceTestContext {

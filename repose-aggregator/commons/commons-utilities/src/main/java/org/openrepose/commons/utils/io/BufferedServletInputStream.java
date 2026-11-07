@@ -19,13 +19,15 @@
  */
 package org.openrepose.commons.utils.io;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class BufferedServletInputStream extends ServletInputStream {
     private final BufferedInputStream inputStream;
+    private boolean finished;
 
     public BufferedServletInputStream(InputStream inputStream) {
         this.inputStream = new BufferedInputStream(inputStream);
@@ -39,16 +41,20 @@ public class BufferedServletInputStream extends ServletInputStream {
     @Override
     public void close() throws IOException {
         inputStream.close();
+        finished = true;
     }
 
     @Override
     public void reset() throws IOException {
         inputStream.reset();
+        finished = false;
     }
 
     @Override
     public int read() throws IOException {
-        return inputStream.read();
+        int result = inputStream.read();
+        finished = result == -1;
+        return result;
     }
 
     @Override
@@ -59,6 +65,21 @@ public class BufferedServletInputStream extends ServletInputStream {
     @Override
     public boolean markSupported() {
         return inputStream.markSupported();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finished;
+    }
+
+    @Override
+    public boolean isReady() {
+        return true;
+    }
+
+    @Override
+    public void setReadListener(ReadListener listener) {
+        throw new IllegalStateException("Buffered input streams support blocking I/O only");
     }
 
 }

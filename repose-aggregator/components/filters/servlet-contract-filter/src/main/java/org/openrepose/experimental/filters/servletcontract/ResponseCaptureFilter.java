@@ -22,10 +22,10 @@ package org.openrepose.experimental.filters.servletcontract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -93,6 +93,16 @@ public class ResponseCaptureFilter implements Filter {
     }
 
     private class FilterServletOutputStream extends ServletOutputStream {
+
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setWriteListener(jakarta.servlet.WriteListener listener) {
+            throw new IllegalStateException("Response capture supports blocking I/O only");
+        }
 
         private ByteArrayOutputStream stream;
 

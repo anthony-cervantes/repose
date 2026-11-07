@@ -20,9 +20,9 @@
 package org.openrepose.filters.bodyextractortoheader
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.jayway.jsonpath.{DocumentContext, JsonPath, Configuration => JsonConfiguration, Option => JsonOption}
 import org.openrepose.commons.utils.io.{BufferedServletInputStream, RawInputStreamReader}
@@ -31,7 +31,7 @@ import org.openrepose.core.filter.AbstractConfiguredFilter
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.bodyextractortoheader.config.BodyExtractorToHeaderConfig
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 

@@ -22,8 +22,8 @@ package org.openrepose.filters.translation.httpx.marshaller;
 import org.openrepose.core.httpx.MessageEnvelope;
 import org.openrepose.filters.translation.httpx.ObjectFactoryUser;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -41,8 +41,8 @@ public class MessageEnvelopeMarshaller extends ObjectFactoryUser implements org.
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance("org.openrepose.core.httpx", this.getClass().getClassLoader());
 
-            javax.xml.bind.Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_SCHEMA_LOCATION, HTTPX_SCHEMA_LOCATION);
+            jakarta.xml.bind.Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(jakarta.xml.bind.Marshaller.JAXB_SCHEMA_LOCATION, HTTPX_SCHEMA_LOCATION);
 
             marshaller.marshal(getObjectFactory().createHttpx(messageEnvelope), outputStream);
         } catch (JAXBException e) {

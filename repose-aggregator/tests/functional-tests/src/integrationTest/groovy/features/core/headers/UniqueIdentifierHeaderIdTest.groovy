@@ -19,14 +19,13 @@
  */
 package features.core.headers
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeConfigurationProvider
 import org.openrepose.framework.test.ReposeValveLauncher
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Core
 import spock.lang.Unroll
 
 /**
@@ -37,7 +36,7 @@ import spock.lang.Unroll
  *  b) include that ID in the user access event for that request, and
  *  c) pass the ID to the logging filter
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class UniqueIdentifierHeaderIdTest extends ReposeValveTest {
     String charset = (('A'..'Z') + ('0'..'9')).join()
     static int originServicePort

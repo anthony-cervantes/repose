@@ -20,6 +20,8 @@
 package org.openrepose.core.services.httpclient
 
 import java.io.{ByteArrayInputStream, IOException}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import io.opentracing.Span
 import io.opentracing.mock.MockTracer
@@ -34,12 +36,12 @@ import org.apache.http.message.BasicHttpResponse
 import org.apache.http.protocol.HttpContext
 import org.apache.http.util.EntityUtils
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{times, verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.openrepose.core.services.httpclient
 import org.openrepose.core.services.httpclient.CachingHttpClientTest._
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
 import org.slf4j.MDC
@@ -338,7 +340,7 @@ class CachingHttpClientTest extends FunSpec with BeforeAndAfterEach with Mockito
       val mockResponse = mock[CloseableHttpResponse]
 
       val localSpan = tracer.buildSpan("testSpan").start()
-      tracer.scopeManager.activate(localSpan, true)
+      val scope = tracer.scopeManager.activate(localSpan)
 
       var realSpan: Span = NoopSpan.INSTANCE
       when(httpClient.execute(any[HttpHost], any[HttpRequest], any[HttpContext]))
@@ -349,9 +351,14 @@ class CachingHttpClientTest extends FunSpec with BeforeAndAfterEach with Mockito
 
       val request = RequestBuilder.get("localhost").build()
 
-      cachingHttpClient.execute(request)
+      try {
+        cachingHttpClient.execute(request)
 
-      realSpan shouldBe localSpan
+        realSpan shouldBe localSpan
+      } finally {
+        scope.close()
+        localSpan.finish()
+      }
     }
 
     it("should carry over the MDC when making a request") {

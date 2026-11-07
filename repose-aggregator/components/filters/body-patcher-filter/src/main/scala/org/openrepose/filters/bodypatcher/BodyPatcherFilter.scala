@@ -22,14 +22,17 @@ package org.openrepose.filters.bodypatcher
 import java.io.ByteArrayInputStream
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.typesafe.scalalogging.StrictLogging
-import gnieh.diffson.playJson._
+import cats.instances.try_._
+import diffson.jsonpatch.JsonPatch
+import diffson.playJson._
+import diffson.playJson.DiffsonProtocol._
 import org.openrepose.commons.utils.io.stream.ServletInputStreamWrapper
 import org.openrepose.commons.utils.servlet.http.ResponseMode.{MUTABLE, PASSTHROUGH}
 import org.openrepose.commons.utils.servlet.http.{HttpServletRequestWrapper, HttpServletResponseWrapper}
@@ -39,7 +42,7 @@ import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.bodypatcher.config.{BodyPatcherConfig, ChangeDetails, Patch}
 import play.api.libs.json.{JsValue, Json => PJson}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 import scala.util.{Failure, Success, Try}
 
@@ -148,8 +151,8 @@ class BodyPatcherFilter @Inject()(configurationService: ConfigurationService)
 
   def applyJsonPatches(body: JsValue, patches: List[String]): JsValue = {
     patches.foldLeft(body)((content: JsValue, patch: String) => {
-      val jsPatch: JsonPatch = JsonPatch.parse(patch)
-      jsPatch(content)
+      val jsPatch = PJson.parse(patch).as[JsonPatch[JsValue]]
+      jsPatch[Try](content).get
     })
   }
 }

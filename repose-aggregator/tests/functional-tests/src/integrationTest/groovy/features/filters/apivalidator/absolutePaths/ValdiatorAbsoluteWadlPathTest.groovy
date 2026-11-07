@@ -20,16 +20,15 @@
 package features.filters.apivalidator.absolutePaths
 
 import org.apache.commons.io.FileUtils
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeLogSearch
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.XmlParsing
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 import java.nio.file.Files
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class ValdiatorAbsoluteWadlPathTest extends ReposeValveTest {
 
     def setupSpec() {

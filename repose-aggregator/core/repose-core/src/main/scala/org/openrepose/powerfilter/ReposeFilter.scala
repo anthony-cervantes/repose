@@ -27,10 +27,10 @@ import com.codahale.metrics.MetricRegistry
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.Tracer
 import io.opentracing.tag.Tags
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.methods._
 import org.openrepose.commons.utils.http.CommonHttpHeader.{REQUEST_ID, TRACE_GUID, VIA}

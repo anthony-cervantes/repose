@@ -19,19 +19,21 @@
  */
 package org.openrepose.filters.contenttypestripper
 
-import javax.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
-import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletRequestWrapper}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.{FilterChain, ServletRequest, ServletResponse}
 
 import org.apache.commons.io.IOUtils
 import org.junit.runner.RunWith
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.{ArgumentCaptor, Mockito}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ContentTypeStripperFilterTest extends FunSpec with Matchers with MockitoSugar {
@@ -54,7 +56,7 @@ class ContentTypeStripperFilterTest extends FunSpec with Matchers with MockitoSu
         Mockito.verify(filterChain).doFilter(servletRequest.capture(), any())
         val chainRequest = servletRequest.getValue
         val wrapper: HttpServletRequestWrapper = new HttpServletRequestWrapper(chainRequest.asInstanceOf[HttpServletRequest])
-        wrapper.getHeaderNames exists (_.equalsIgnoreCase("content-type")) shouldBe true
+        wrapper.getHeaderNames.asScala exists (_.equalsIgnoreCase("content-type")) shouldBe true
         wrapper.getHeader("content-type") shouldBe "application/json"
         IOUtils.toString(chainRequest.getInputStream) shouldBe bodyContent
       }
@@ -77,7 +79,7 @@ class ContentTypeStripperFilterTest extends FunSpec with Matchers with MockitoSu
         Mockito.verify(filterChain).doFilter(servletRequest.capture(), any())
         val chainRequest = servletRequest.getValue
         val wrapper: HttpServletRequestWrapper = new HttpServletRequestWrapper(chainRequest.asInstanceOf[HttpServletRequest])
-        wrapper.getHeaderNames exists (_.equalsIgnoreCase("content-type")) shouldBe false
+        wrapper.getHeaderNames.asScala exists (_.equalsIgnoreCase("content-type")) shouldBe false
         wrapper.getHeader("content-type") shouldBe null
         IOUtils.toString(chainRequest.getInputStream) shouldBe bodyContent
       }

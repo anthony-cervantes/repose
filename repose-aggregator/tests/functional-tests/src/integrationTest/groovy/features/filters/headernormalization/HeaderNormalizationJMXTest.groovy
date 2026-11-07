@@ -19,13 +19,12 @@
  */
 package features.filters.headernormalization
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 import spock.lang.Unroll
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class HeaderNormalizationJMXTest extends ReposeValveTest {
 
     private static final String KEY_PROPERTIES_PREFIX =

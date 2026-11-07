@@ -20,15 +20,17 @@
 package org.openrepose.powerfilter.intrafilterlogging
 
 import java.io.ByteArrayInputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.servlet.http.HttpServletResponseWrapper
 import org.openrepose.core.systemmodel.config.Filter
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ResponseLogTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {

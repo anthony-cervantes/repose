@@ -1,0 +1,125 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.eclipse.transformer:org.eclipse.transformer.cli:1.0.0'
+        classpath 'org.ow2.asm:asm:9.11.1'
+    }
+}
+
+import org.eclipse.transformer.cli.TransformerCLI
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Type
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
+import org.gradle.api.artifacts.transform.CacheableTransform
+import org.gradle.api.artifacts.transform.InputArtifact
+import org.gradle.api.artifacts.transform.TransformAction
+import org.gradle.api.artifacts.transform.TransformOutputs
+import org.gradle.api.artifacts.transform.TransformParameters
+
+// Deproxy is a test-only legacy connector. Application dependencies are rebuilt
+// from source; only the test connector still needs this compatibility transform.
+interface ServletTransformParameters extends TransformParameters {
+    @InputFile
+    @PathSensitive(PathSensitivity.NONE)
+    RegularFileProperty getRules()
+}
+
+@CacheableTransform
+abstract class JakartaServletTransform implements TransformAction<ServletTransformParameters> {
+    @InputArtifact
+    @PathSensitive(PathSensitivity.NAME_ONLY)
+    abstract Provider<FileSystemLocation> getInputArtifact()
+
+    @Override
+    void transform(TransformOutputs outputs) {
+        def input = inputArtifact.get().asFile
+        if (!(input.name ==~ /(?:deproxy-).*\.jar/)) {
+            outputs.file(input)
+            return
+        }
+        def output = outputs.file(input.name)
+        def namespaced = new File(output.parentFile, "namespaced-${input.name}")
+        def cli = new TransformerCLI(System.out, System.err, input.absolutePath,
+            namespaced.absolutePath, '-tr', parameters.rules.get().asFile.absolutePath, '-q')
+        if (TransformerCLI.runWith(cli).ordinal() != 0) {
+            throw new GradleException("Could not migrate servlet references in ${input.name}")
+        }
+        new ZipInputStream(new FileInputStream(namespaced)).withCloseable { source ->
+            new ZipOutputStream(new FileOutputStream(output)).withCloseable { target ->
+                ZipEntry entry
+                while ((entry = source.nextEntry) != null) {
+                    def bytes = source.readAllBytes()
+                    if (entry.name.endsWith('.class')) {
+                        def writer = new ClassWriter(0)
+                        def reader = new ClassReader(bytes)
+                        reader.accept(new LegacyGroovySuperVisitor(writer, reader.className), 0)
+                        bytes = writer.toByteArray()
+                    }
+                    def copied = new ZipEntry(entry.name)
+                    copied.time = entry.time
+                    target.putNextEntry(copied)
+                    target.write(bytes)
+                    target.closeEntry()
+                }
+            }
+        }
+        namespaced.delete()
+    }
+}
+
+// Deproxy 0.21 was compiled with Groovy 2's superclass-based super-call
+// convention. Groovy 5 expects the class containing that call as its sender.
+class LegacyGroovySuperVisitor extends ClassVisitor {
+    private final String className
+
+    LegacyGroovySuperVisitor(ClassVisitor delegate, String className) {
+        super(Opcodes.ASM9, delegate)
+        this.className = className
+    }
+
+    @Override
+    MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+        def visitor = super.visitMethod(access, name, descriptor, signature, exceptions)
+        if (className != 'org/rackspace/deproxy/DefaultClientConnector' || name != 'sendRequest') return visitor
+        return new MethodVisitor(Opcodes.ASM9, visitor) {
+            @Override
+            void visitLdcInsn(Object value) {
+                if (value instanceof Type && value.internalName == 'org/rackspace/deproxy/BareClientConnector') {
+                    value = Type.getObjectType('org/rackspace/deproxy/DefaultClientConnector')
+                }
+                super.visitLdcInsn(value)
+            }
+        }
+    }
+}
+
+def servletNamespace = Attribute.of('org.openrepose.servlet-namespace', String)
+dependencies {
+    attributesSchema.attribute(servletNamespace)
+    registerTransform(JakartaServletTransform) {
+        from.attribute(servletNamespace, 'javax')
+        to.attribute(servletNamespace, 'jakarta')
+        parameters.rules = rootProject.layout.projectDirectory.file('gradle/jakarta-servlet.properties')
+    }
+}
+
+plugins.withId('java') {
+    dependencies.artifactTypes.getByName('jar').attributes.attribute(servletNamespace, 'javax')
+}
+
+configurations.configureEach {
+    if (name.endsWith('Classpath') || name in ['jaxb', 'xjc', 'earlib', 'deploy']) {
+        attributes.attribute(servletNamespace, 'jakarta')
+    }
+    exclude group: 'javax.servlet', module: 'javax.servlet-api'
+    exclude group: 'javax.servlet', module: 'servlet-api'
+    exclude group: 'org.glassfish', module: 'javax.servlet'
+}

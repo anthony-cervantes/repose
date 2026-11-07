@@ -1,41 +1,41 @@
 dependencies {
-    compile project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
-    compile project(':repose-aggregator:components:services:http-logging-service:http-logging-service-api')
-    compile project(':repose-aggregator:components:services:uri-redaction-service:uri-redaction-service-api')
-    compile "org.scala-lang:scala-library"
-    compile "org.slf4j:slf4j-api"
-    compile "commons-pool:commons-pool"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "commons-io:commons-io"
-    compile "commons-codec:commons-codec"
-    compile "org.apache.commons:commons-lang3"
-    compile "com.fasterxml.jackson.core:jackson-core"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.apache.httpcomponents:httpcore"
-    compile "org.jvnet.jaxb2_commons:jaxb2-basics-runtime"
-    compile "com.typesafe.play:play-json_$scalaMajDotMin"
-    compile "io.opentracing:opentracing-api"
-    compile "io.opentracing:opentracing-util"
+    api project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
+    api project(':repose-aggregator:components:services:http-logging-service:http-logging-service-api')
+    api project(':repose-aggregator:components:services:uri-redaction-service:uri-redaction-service-api')
+    api "org.scala-lang:scala-library"
+    api "org.slf4j:slf4j-api"
+    api "commons-pool:commons-pool"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "commons-io:commons-io"
+    api "commons-codec:commons-codec"
+    api "org.apache.commons:commons-lang3"
+    api "com.fasterxml.jackson.core:jackson-core"
+    api "com.fasterxml.jackson.core:jackson-databind"
+    api "org.apache.httpcomponents:httpclient"
+    api "org.apache.httpcomponents:httpcore"
+    api "org.jvnet.jaxb:jaxb-plugins-runtime"
+    api "org.playframework:play-json_$scalaMajDotMin"
+    api "io.opentracing:opentracing-api"
+    api "io.opentracing:opentracing-util"
 
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
-    compileOnly "org.glassfish:javax.servlet" //todo: swap these as part of REP-3950
-//    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-    testCompile project(':repose-aggregator:commons:commons-test')
-    testCompile "junit:junit"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.codehaus.groovy:groovy-all"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.spockframework:spock-core"
-    testCompile "org.apache.logging.log4j:log4j-slf4j-impl"
-    testCompile "org.apache.logging.log4j:log4j-core"
-    testCompile group: 'org.apache.logging.log4j', name: 'log4j-core', classifier: 'tests'
-    testCompile "org.springframework:spring-test"
-    testCompile "org.springframework:spring-web"
-    testCompile "org.slf4j:jcl-over-slf4j"
+    testImplementation project(':repose-aggregator:commons:commons-test')
+    testImplementation "junit:junit"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
+    testImplementation "org.apache.logging.log4j:log4j-core"
+    testImplementation "org.apache.logging.log4j:log4j-core-test"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-web"
+    testImplementation "org.slf4j:jcl-over-slf4j"
 }
 
 

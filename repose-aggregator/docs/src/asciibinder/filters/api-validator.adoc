@@ -52,10 +52,16 @@ This filter does not modify the request body.
 This filter is not strictly required by any other filters.
 
 === Response Body Changes
-This filter does not modify the response body.
+Rejected requests receive the validation diagnostic as a UTF-8 `text/plain` response body.
+The HTTP status code still identifies the type of rejection.
+Clients must read validation details from the body rather than the HTTP reason phrase.
+Successful and delegated responses retain their original bodies.
 
 === Response Headers Created
-This filter does not create/modify any response headers.
+Validation error responses set `Content-Type` to `text/plain;charset=UTF-8` and
+`Content-Length` to the size of the encoded diagnostic.
+`Cache-Control: no-store` prevents caching these diagnostics.
+Other response headers produced by the validator, such as `Allow`, are preserved.
 
 === Response Status Codes
 [cols="2", options="header,autowidth"]

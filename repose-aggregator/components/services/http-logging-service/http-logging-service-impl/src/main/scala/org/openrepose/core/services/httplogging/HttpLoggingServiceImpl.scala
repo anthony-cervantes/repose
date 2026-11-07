@@ -20,14 +20,14 @@
 package org.openrepose.core.services.httplogging
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.annotation.{PostConstruct, PreDestroy}
-import javax.inject.{Inject, Named}
+import jakarta.annotation.{PostConstruct, PreDestroy}
+import jakarta.inject.{Inject, Named}
 import org.jtwig.JtwigModel
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.httplogging.HttpLoggingServiceImpl._
 import org.openrepose.core.services.httplogging.config.HttpLoggingConfig
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 /**

@@ -19,15 +19,14 @@
  */
 package features.filters.translation.saxonEE
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Handling
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.XmlParsing
 
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class TranslationSaxonEEFunctionalityTest extends ReposeValveTest {
 
     def static String xmlPayLoad = "<a>test</a>"

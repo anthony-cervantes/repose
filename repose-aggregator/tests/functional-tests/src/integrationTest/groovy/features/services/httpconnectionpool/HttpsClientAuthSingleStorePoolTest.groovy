@@ -23,25 +23,23 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
 import org.eclipse.jetty.http.HttpVersion
 import org.eclipse.jetty.server.*
-import org.eclipse.jetty.server.handler.AbstractHandler
+import org.eclipse.jetty.util.Callback
 import org.eclipse.jetty.util.ssl.SslContextFactory
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Services
 import spock.lang.Shared
 
-import javax.servlet.ServletException
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
+import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.util.concurrent.TimeUnit
 
 import static org.openrepose.framework.test.ReposeLauncher.MAX_STARTUP_TIME
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class HttpsClientAuthSingleStorePoolTest extends ReposeValveTest {
 
     @Shared
@@ -88,7 +86,7 @@ class HttpsClientAuthSingleStorePoolTest extends ReposeValveTest {
         server = new Server()
 
         // SSL Context Factory
-        def sslContextFactory = new SslContextFactory()
+        def sslContextFactory = new SslContextFactory.Server()
         sslContextFactory.keyStorePath = singleFile.absolutePath
         sslContextFactory.keyStorePassword = "password"
         sslContextFactory.keyManagerPassword = "password"
@@ -108,19 +106,20 @@ class HttpsClientAuthSingleStorePoolTest extends ReposeValveTest {
 
         // Start the server with only the one endpoint for the server
         server.connectors = [sslConnector] as Connector[]
-        server.handler = new AbstractHandler() {
+        server.handler = new Handler.Abstract() {
             @Override
-            void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-                if (request.getHeader("x-tenant-id").equals(fakeIdentityV2Service.client_tenantid)
-                        && request.getHeader("x-tenant-name").equals(fakeIdentityV2Service.client_tenantname)
+            boolean handle(Request request, Response response, Callback callback) {
+                if (request.getHeaders().get("x-tenant-id").equals(fakeIdentityV2Service.client_tenantid)
+                        && request.getHeaders().get("x-tenant-name").equals(fakeIdentityV2Service.client_tenantname)
                 ) {
                     response.status = statusCode
-                    response.contentType = contentType
-                    baseRequest.handled = true
-                    response.outputStream.write responseContent
+                    response.getHeaders().put("Content-Type", contentType)
+                    response.write(true, ByteBuffer.wrap(responseContent), callback)
                 } else {
                     response.status = HttpServletResponse.SC_UNAUTHORIZED
+                    callback.succeeded()
                 }
+                return true
             }
         }
         server.start()

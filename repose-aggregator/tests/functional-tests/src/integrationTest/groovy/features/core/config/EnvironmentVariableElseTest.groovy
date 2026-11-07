@@ -19,17 +19,16 @@
  */
 package features.core.config
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Core
 import spock.lang.Shared
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class EnvironmentVariableElseTest extends ReposeValveTest {
 
     @Shared

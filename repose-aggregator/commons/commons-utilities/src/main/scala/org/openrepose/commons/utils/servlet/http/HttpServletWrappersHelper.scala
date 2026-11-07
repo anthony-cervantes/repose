@@ -24,7 +24,7 @@ import java.util
 import org.apache.http.HttpHeaders._
 import org.openrepose.commons.utils.http.media.{MediaType, MimeType}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * This class is full of helper methods to replace the old org.openrepose.commons.utils.http.media classes.

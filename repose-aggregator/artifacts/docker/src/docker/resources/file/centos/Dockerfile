@@ -1,6 +1,6 @@
 # Use CentOS as a base, to enable security patching for CentOS users.
 # The version should be whatever version conforms with the managed CentOS image.
-FROM centos:7
+FROM quay.io/centos/centos:stream10
 
 MAINTAINER The Repose Team <reposecore@rackspace.com>
 
@@ -15,7 +15,12 @@ ENV PKG_DIR=/tmp/packages/repose/
 ENV JAVA_OPTS=
 
 # Install Java from a package repository.
-RUN yum update -q -y && yum install -q -y java-1.8.0-openjdk-headless
+RUN yum update -q -y && yum install -q -y ca-certificates wget \
+    && printf '%s\n' '[Adoptium]' 'name=Eclipse Adoptium' \
+       'baseurl=https://packages.adoptium.net/artifactory/rpm/centos/$releasever/$basearch' \
+       'enabled=1' 'gpgcheck=1' \
+       'gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public' > /etc/yum.repos.d/adoptium.repo \
+    && yum install -q -y temurin-27-jre
 
 # Copy local Repose packages
 COPY repose-*.rpm ${PKG_DIR}

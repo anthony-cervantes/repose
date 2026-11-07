@@ -82,27 +82,27 @@ class OpenApiValidatorFilterSimulation extends AbstractReposeSimulation {
 
   def requestGet: HttpRequestBuilder = {
     http(session => session.scenario)
-      .get("${getPath}")
+      .get("#{getPath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderMockRespStatus, "${getRespCode}")
+      .header(HeaderMockRespStatus, "#{getRespCode}")
       .check(status.is(session => session("getRespCode").as[Int]))
   }
 
   def requestPost: HttpRequestBuilder = {
     http(session => session.scenario)
-      .post("${postPath}")
+      .post("#{postPath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderMockRespStatus, "${postRespCode}")
+      .header(HeaderMockRespStatus, "#{postRespCode}")
       .body(StringBody("{\"name\":\"Fido\"}"))
-      .asJSON
+      .asJson
       .check(status.is(session => session("postRespCode").as[Int]))
   }
 
   def requestDelete: HttpRequestBuilder = {
     http(session => session.scenario)
-      .delete("${deletePath}")
+      .delete("#{deletePath}")
       .header(HttpHeaderNames.Host, "localhost")
-      .header(HeaderMockRespStatus, "${deleteRespCode}")
+      .header(HeaderMockRespStatus, "#{deleteRespCode}")
       .check(status.is(session => session("deleteRespCode").as[Int]))
   }
 }

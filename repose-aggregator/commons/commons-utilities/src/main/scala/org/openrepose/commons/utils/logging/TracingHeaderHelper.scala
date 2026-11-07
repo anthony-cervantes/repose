@@ -30,7 +30,7 @@ import com.typesafe.scalalogging.StrictLogging
 import org.apache.commons.codec.binary.Base64
 import org.slf4j.MDC
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object TracingHeaderHelper extends StrictLogging {
 

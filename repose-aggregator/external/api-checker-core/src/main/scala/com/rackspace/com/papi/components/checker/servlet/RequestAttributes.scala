@@ -1,0 +1,33 @@
+/***
+ *   Copyright 2014 Rackspace US, Inc.
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+package com.rackspace.com.papi.components.checker.servlet
+
+//
+//  Request Keys
+//
+object RequestAttributes {
+  val PARSED_REPRESENTATION = "com.rackspace.com.papi.components.checker.servlet.ParsedRepresentation"
+  val PARSED_XML    = "com.rackspace.com.papi.components.checker.servlet.ParsedXML"
+  val PARSED_XML_SOURCE = "com.rackspace.com.papi.components.checker.servlet.ParsedXMLSource"
+  val PARSED_JSON   = "com.rackspace.com.papi.components.checker.servlet.ParsedJSONTokens"
+  val PARSED_JSON_SEQUENCE  = "com.rackspace.com.papi.components.checker.servlet.ParsedJSONSequence"
+  val PARSED_JSON_XDM_VALUE = "com.rackspace.com.papi.components.checker.servlet.ParsedJSONXDMValue"
+  val CONTENT_ERROR = "com.rackspace.com.papi.components.checker.servlet.ContentError"
+  val CONTENT_ERROR_CODE = "com.rackspace.com.papi.components.checker.servlet.ContentErrorCode"
+  val CONTENT_ERROR_PRIORITY = "com.rackspace.com.papi.components.checker.servlet.ContentErrorPriority"
+  val REQUEST_XDM_VALUE = "com.rackspace.com.papi.components.checker.servlet.RequestAsXdmValue"
+  val MAP_ROLES = "com.rackspace.com.papi.components.checker.servlet.MapRoles"
+}

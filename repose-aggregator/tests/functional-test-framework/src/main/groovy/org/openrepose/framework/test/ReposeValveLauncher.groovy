@@ -301,7 +301,7 @@ class ReposeValveLauncher extends ReposeLauncher {
             return false
         }
 
-        def String beanName = cfgBean.iterator().next().name.toString()
+        def String beanName = cfgBean.iterator().next().getObjectName().toString()
 
         //Doing the JMX invocation here, because it's kinda ugly
         Object[] opParams = [nodeId]

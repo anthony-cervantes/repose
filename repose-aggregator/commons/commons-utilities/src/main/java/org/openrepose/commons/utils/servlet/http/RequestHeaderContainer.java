@@ -23,7 +23,7 @@ import org.openrepose.commons.utils.http.header.HeaderName;
 import org.openrepose.commons.utils.http.header.HeaderValue;
 import org.openrepose.commons.utils.http.header.HeaderValueImpl;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 public class RequestHeaderContainer implements HeaderContainer {

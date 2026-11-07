@@ -19,13 +19,14 @@
  */
 package features.filters.herp
 
-import org.junit.experimental.categories.Category
+import groovy.xml.XmlSlurper
+
+import spock.lang.Tag
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 import java.text.SimpleDateFormat
@@ -33,7 +34,7 @@ import java.text.SimpleDateFormat
 /**
  * Created by jennyvo on 2/23/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class HerpCloudfeedCADFdefaultTemplateTest extends ReposeValveTest {
 
     def setupSpec() {

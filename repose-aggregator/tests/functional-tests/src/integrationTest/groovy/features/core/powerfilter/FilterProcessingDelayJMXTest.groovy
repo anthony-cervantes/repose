@@ -19,12 +19,11 @@
  */
 package features.core.powerfilter
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Core
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class FilterProcessingDelayJMXTest extends ReposeValveTest {
     private static final String KEY_PROPERTIES_PREFIX =
         /001="org",002="openrepose",003="core",004="FilterProcessingTime",005="Delay"/

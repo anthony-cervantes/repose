@@ -20,10 +20,12 @@
 package org.openrepose.filters.openstackidentityv3.utilities
 
 import java.util.concurrent.TimeUnit
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.{Calendar, GregorianCalendar}
 
-import javax.servlet.http.HttpServletResponse._
-import javax.ws.rs.core.HttpHeaders.RETRY_AFTER
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.ws.rs.core.HttpHeaders.RETRY_AFTER
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods._
 import org.apache.http.message.BasicHttpResponse
@@ -35,8 +37,9 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import org.mockito.hamcrest.MockitoHamcrest.argThat
 import org.openrepose.commons.test.HttpUriRequestMatchers.hasMethod
 import org.openrepose.commons.utils.http.HttpDate
 import org.openrepose.commons.utils.http.normal.ExtendedStatusCodes
@@ -232,7 +235,7 @@ class OpenStackIdentityV3APITest extends FunSpec with BeforeAndAfterEach with Ma
 
       identityV3API.getAdminToken(None, checkCache = true)
 
-      verify(mockDatastore).put(argThat(equalTo(AdminTokenKey)), argThat(equalTo("test-admin-token")), intThat(lessThanOrEqualTo((expirationTime.getMillis - currentTime.getMillis).toInt)), argThat(is(theInstance(TimeUnit.MILLISECONDS))))
+      verify(mockDatastore).put(argThat(equalTo(AdminTokenKey)), argThat(equalTo("test-admin-token")), org.mockito.hamcrest.MockitoHamcrest.intThat(lessThanOrEqualTo(java.lang.Integer.valueOf((expirationTime.getMillis - currentTime.getMillis).toInt))), argThat(is(theInstance(TimeUnit.MILLISECONDS))))
     }
   }
 
@@ -343,7 +346,7 @@ class OpenStackIdentityV3APITest extends FunSpec with BeforeAndAfterEach with Ma
 
       identityV3API invokePrivate validateSubjectToken("test-subject-token", None, true)
 
-      verify(mockDatastore).put(argThat(equalTo("IDENTITY:V3:TOKEN:test-subject-token")), any[Serializable], intThat(lessThanOrEqualTo((expirationTime.getMillis - currentTime.getMillis).toInt)), any[TimeUnit])
+      verify(mockDatastore).put(argThat(equalTo("IDENTITY:V3:TOKEN:test-subject-token")), any[Serializable], org.mockito.hamcrest.MockitoHamcrest.intThat(lessThanOrEqualTo(java.lang.Integer.valueOf((expirationTime.getMillis - currentTime.getMillis).toInt))), any[TimeUnit])
     }
 
     val statusCodes = List(SC_REQUEST_ENTITY_TOO_LARGE, ExtendedStatusCodes.SC_TOO_MANY_REQUESTS)
@@ -461,7 +464,7 @@ class OpenStackIdentityV3APITest extends FunSpec with BeforeAndAfterEach with Ma
     Option(entity).foreach(response.setEntity)
     headers.foldLeft(Seq.empty[(String, String)]) { case (aggregate, (headerName, headerValues)) =>
       aggregate ++ headerValues.map(headerName -> _)
-    }.foreach(tupled(response.addHeader))
+    }.foreach { case (name, value) => response.addHeader(name, value) }
     response
   }
 }

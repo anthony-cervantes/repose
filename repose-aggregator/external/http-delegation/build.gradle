@@ -1,0 +1,6 @@
+dependencies {
+    api "org.scala-lang:scala-library"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "junit:junit"
+}

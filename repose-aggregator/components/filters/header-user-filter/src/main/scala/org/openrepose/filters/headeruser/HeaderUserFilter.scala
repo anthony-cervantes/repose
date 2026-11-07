@@ -20,7 +20,7 @@
 package org.openrepose.filters.headeruser
 
 import java.util.concurrent.atomic.AtomicReference
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
+import jakarta.servlet.http.{HttpServletResponse, HttpServletRequest}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener
@@ -30,12 +30,12 @@ import org.openrepose.core.filter.FilterConfigHelper
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.headeruser.config.HeaderUserConfig
 
-import javax.inject.Inject
-import javax.inject.Named
-import javax.servlet._
+import jakarta.inject.Inject
+import jakarta.inject.Named
+import jakarta.servlet._
 import java.net.URL
 
-import collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @Named
 class HeaderUserFilter @Inject()(configurationService: ConfigurationService)
@@ -82,7 +82,7 @@ class HeaderUserFilter @Inject()(configurationService: ConfigurationService)
 
   override def configurationUpdated(config: HeaderUserConfig): Unit = {
     configuredHeaders.set(
-      config.getSourceHeaders.getHeader.map(header => ConfiguredHeader(header.getId, header.getQuality)).toList)
+      config.getSourceHeaders.getHeader.asScala.map(header => ConfiguredHeader(header.getId, header.getQuality)).toList)
     initialized = true
   }
 

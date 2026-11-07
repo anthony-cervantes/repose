@@ -19,7 +19,7 @@
  */
 package features.services.datastore
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.io.ObjectSerializer
 import org.openrepose.core.services.datastore.types.StringValue
 import org.openrepose.framework.test.PortFinder
@@ -27,9 +27,8 @@ import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.springframework.http.HttpHeaders
-import scaffold.category.Services
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class DistDatastoreServiceTest extends ReposeValveTest {
     //Since we're serializing objects here for the dist datastore, we must have the dist datastore objects in our classpath
     final ObjectSerializer objectSerializer = new ObjectSerializer(this.getClass().getClassLoader())

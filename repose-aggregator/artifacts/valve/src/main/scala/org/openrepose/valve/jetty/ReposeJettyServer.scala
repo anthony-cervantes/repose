@@ -22,14 +22,15 @@ package org.openrepose.valve.jetty
 import java.util
 
 import com.typesafe.config.ConfigFactory
-import javax.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
-import javax.servlet.{DispatcherType, Filter}
+import jakarta.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{DispatcherType, Filter}
 import org.eclipse.jetty.http.HttpCompliance.RFC7230_LEGACY
-import org.eclipse.jetty.http.HttpHeader
+import org.eclipse.jetty.http.{HttpHeader, UriCompliance}
 import org.eclipse.jetty.server._
 import org.eclipse.jetty.server.handler.ErrorHandler
-import org.eclipse.jetty.servlet.{FilterHolder, ServletContextHandler, ServletHolder}
+import org.eclipse.jetty.ee11.servlet.{FilterHolder, ServletContextHandler, ServletHolder}
 import org.eclipse.jetty.util.ssl.SslContextFactory
+import org.eclipse.jetty.util.Callback
 import org.openrepose.commons.utils.io.FileUtilities
 import org.openrepose.core.container.config.SslConfiguration
 import org.openrepose.core.spring.{CoreSpringProvider, ReposeSpringProperties}
@@ -56,7 +57,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
                         val httpsPort: Option[Int],
                         sslConfig: Option[SslConfiguration],
                         idleTimeout: Option[Long],
-                        httpChannelListener: HttpChannel.Listener,
+                        httpChannelListener: HttpLoggingServiceChannelListener,
                         requestLog: RequestLog,
                         testMode: Boolean = false) {
 
@@ -95,8 +96,10 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
       ///////////////////////////////////////////////////////////////
       // TODO: Remove this legacy support in v10.0.0.0. (REP-7598) //
       conn.getConnectionFactory(classOf[HttpConnectionFactory])    //
-        .setHttpCompliance(RFC7230_LEGACY)                         //
+        .getHttpConfiguration.setHttpCompliance(RFC7230_LEGACY)                         //
       ///////////////////////////////////////////////////////////////
+      conn.getConnectionFactory(classOf[HttpConnectionFactory]).getHttpConfiguration
+        .setUriCompliance(UriCompliance.DEFAULT.`with`("REPOSE", UriCompliance.Violation.AMBIGUOUS_PATH_SEPARATOR))
 
       if (testMode) {
         conn.setPort(0)
@@ -107,7 +110,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
     }
 
     val httpsConnector: Option[ServerConnector] = httpsPort.map { port =>
-      val cf = new SslContextFactory()
+      val cf = new SslContextFactory.Server()
 
       //TODO: do we make this a URL for realsies?
       //Get the configuration root from the core spring context, because we haven't fired up the app Context yet.
@@ -129,8 +132,10 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
         ////////////////////////////////////////////////////////////////////
         // TODO: Remove this legacy support in v10.0.0.0. (REP-7598)      //
         sslConnector.getConnectionFactory(classOf[HttpConnectionFactory]) //
-          .setHttpCompliance(RFC7230_LEGACY)                              //
+          .getHttpConfiguration.setHttpCompliance(RFC7230_LEGACY)                              //
         ////////////////////////////////////////////////////////////////////
+        sslConnector.getConnectionFactory(classOf[HttpConnectionFactory]).getHttpConfiguration
+          .setUriCompliance(UriCompliance.DEFAULT.`with`("REPOSE", UriCompliance.Violation.AMBIGUOUS_PATH_SEPARATOR))
 
         if (testMode) {
           sslConnector.setPort(0)
@@ -142,16 +147,16 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
         //varargs are annoying, so lets deal with this using the scala methods
         // From https://www.eclipse.org/jetty/documentation/9.4.x/configuring-ssl.html
         // "When working with Includes / Excludes, it is important to know that Excludes will always win."
-        import scala.collection.JavaConversions._
+        import scala.jdk.CollectionConverters._
         // Clear Jetty defaults that were added in later v9.2.x releases.
         cf.setIncludeProtocols()
         cf.setExcludeProtocols()
         cf.setIncludeCipherSuites()
         cf.setExcludeCipherSuites()
-        Option(ssl.getIncludedProtocols) foreach { ip => cf.setIncludeProtocols(ip.getProtocol.toList: _*) }
-        Option(ssl.getExcludedProtocols) foreach { ep => cf.setExcludeProtocols(ep.getProtocol.toList: _*) }
-        Option(ssl.getIncludedCiphers) foreach { ic => cf.setIncludeCipherSuites(ic.getCipher.toList: _*) }
-        Option(ssl.getExcludedCiphers) foreach { ec => cf.setExcludeCipherSuites(ec.getCipher.toList: _*) }
+        Option(ssl.getIncludedProtocols) foreach { ip => cf.setIncludeProtocols(ip.getProtocol.asScala.toList: _*) }
+        Option(ssl.getExcludedProtocols) foreach { ep => cf.setExcludeProtocols(ep.getProtocol.asScala.toList: _*) }
+        Option(ssl.getIncludedCiphers) foreach { ic => cf.setIncludeCipherSuites(ic.getCipher.asScala.toList: _*) }
+        Option(ssl.getExcludedCiphers) foreach { ec => cf.setExcludeCipherSuites(ec.getCipher.asScala.toList: _*) }
 
         cf.setRenegotiationAllowed(Option(ssl.isTlsRenegotiationAllowed).getOrElse(false).asInstanceOf[Boolean])
 
@@ -170,8 +175,6 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
       connectors foreach { connector =>
         idleTimeout foreach connector.setIdleTimeout
 
-        // Wire in the bridge to the HTTP Logging Service (to open contexts)
-        connector.addBean(httpChannelListener)
       }
     }
 
@@ -181,6 +184,10 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
 
     val contextHandler = new ServletContextHandler()
     contextHandler.setContextPath("/")
+    // Encoded slashes are accepted by the connectors and decoded consistently
+    // by the servlet API, as in the supported rate-limiting URI contracts.
+    contextHandler.getServletHandler.setDecodeAmbiguousURIs(true)
+    contextHandler.addEventListener(httpChannelListener)
     contextHandler.addServlet(new ServletHolder(appContext.getBean("reposeRoutingServlet").asInstanceOf[HttpServlet]), "/*")
 
     val filterHolder = new FilterHolder()
@@ -196,9 +203,9 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
     // Prevents Jetty from writing HTML error pages when sendError is called on the response.
     // This is for backwards compatibility, but should eventually be removed.
     s.setErrorHandler(new ErrorHandler() {
-      override def doError(target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse): Unit = {
-        if (getCacheControl != null) response.setHeader(HttpHeader.CACHE_CONTROL.asString, getCacheControl)
-        baseRequest.setHandled(true)
+      override protected def generateResponse(request: Request, response: Response, code: Int,
+                                              message: String, cause: Throwable, callback: Callback): Unit = {
+        callback.succeeded()
       }
     })
 

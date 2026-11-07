@@ -20,15 +20,17 @@
 package org.openrepose.powerfilter
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.{Filter, ServletContext}
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.{Filter, ServletContext}
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, isA, eq => isEq}
+import org.mockito.ArgumentMatchers.{any, isA, eq => isEq}
 import org.mockito.Mockito.{never, verify, when}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.Marshaller.systemModelString
@@ -45,10 +47,10 @@ import org.openrepose.powerfilter.ReposeFilterLoader.{FilterContext, FilterConte
 import org.openrepose.powerfilter.ReposeFilterLoaderTest._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers, OptionValues}
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.springframework.context.ApplicationContext
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ReposeFilterLoaderTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach with OptionValues {

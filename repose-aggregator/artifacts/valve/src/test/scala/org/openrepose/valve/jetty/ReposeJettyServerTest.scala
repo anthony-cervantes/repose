@@ -19,18 +19,21 @@
  */
 package org.openrepose.valve.jetty
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServlet, HttpServletRequest, HttpServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.eclipse.jetty.http.HttpHeader
 import org.eclipse.jetty.server.{HttpChannel, Request, RequestLog}
 import org.junit.runner.RunWith
-import org.mockito.Mockito.{verify, verifyZeroInteractions}
+import org.mockito.ArgumentMatchers.{any, anyBoolean}
+import org.mockito.Mockito.{never, verify, verifyNoMoreInteractions, when}
 import org.openrepose.core.container.config.SslConfiguration
 import org.openrepose.core.spring.{CoreSpringProvider, ReposeSpringProperties}
 import org.openrepose.valve.SpringContextResetter
 import org.openrepose.valve.jetty.ReposeJettyServer.ServerInitializationException
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
@@ -48,8 +51,8 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
   val sslConfig = {
     val s = new SslConfiguration()
     s.setKeyPassword("password")
-    s.setKeystoreFilename("some.file")
-    s.setKeystorePassword("lolpassword")
+    s.setKeystoreFilename(new java.io.File(getClass.getResource("/valveTesting/sslTesting/server.jks").toURI).getAbsolutePath)
+    s.setKeystorePassword("password")
 
     Some(s)
   }
@@ -124,6 +127,41 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
     repose.server.getConnectors.head.getIdleTimeout shouldBe idleTimeout.get
   }
 
+  it("accepts encoded slashes while rejecting other ambiguous paths") {
+    val repose = new ReposeJettyServer(
+      nodeContext, "node", Some(0), None, None, None,
+      mock[HttpLoggingServiceChannelListener], null, testMode = true
+    )
+    val context = repose.server.getHandler.asInstanceOf[org.eclipse.jetty.ee11.servlet.ServletContextHandler]
+    context.getServletHandler.setFilterMappings(Array.empty[org.eclipse.jetty.ee11.servlet.FilterMapping])
+    context.getServletHandler.setFilters(Array.empty[org.eclipse.jetty.ee11.servlet.FilterHolder])
+    context.getServletHandler.getServlets.head.setServlet(new HttpServlet {
+      override def doGet(request: HttpServletRequest, response: HttpServletResponse): Unit = {
+        response.getWriter.write(request.getPathInfo)
+      }
+    })
+
+    val client = java.net.http.HttpClient.newHttpClient()
+    try {
+      repose.server.start()
+      val port = repose.httpConnector.get.getLocalPort
+      def get(path: String): java.net.http.HttpResponse[String] = {
+        val request = java.net.http.HttpRequest.newBuilder(java.net.URI.create(s"http://localhost:$port$path")).build()
+        client.send(request, java.net.http.HttpResponse.BodyHandlers.ofString())
+      }
+
+      val encodedSlash = get("/servers/abc/instances%2F123")
+      encodedSlash.statusCode() shouldBe 200
+      encodedSlash.body() shouldBe "/servers/abc/instances/123"
+      get("/servers/%2e%2e/private").statusCode() shouldBe 400
+      get("/healthy").statusCode() shouldBe 200
+    } finally {
+      client.close()
+      repose.server.stop()
+      repose.server.destroy()
+    }
+  }
+
   it("raises an exception when an HTTPS port is specified, but no ssl config is provided") {
     intercept[ServerInitializationException] {
       new ReposeJettyServer(
@@ -155,9 +193,13 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
   }
 
   it("creates a Jetty server with an error handler that only sets the cache-control header") {
-    val baseRequest = mock[Request]
-    val request = mock[HttpServletRequest]
-    val response = mock[HttpServletResponse]
+    val request = mock[Request]
+    val response = mock[org.eclipse.jetty.server.Response]
+    val headers = org.eclipse.jetty.http.HttpFields.build()
+    val callback = mock[org.eclipse.jetty.util.Callback]
+    when(request.getMethod).thenReturn("GET")
+    when(response.getStatus).thenReturn(400)
+    when(response.getHeaders).thenReturn(headers)
     val repose = new ReposeJettyServer(
       nodeContext,
       "node",
@@ -169,15 +211,15 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
       null
     )
 
-    repose.server.getErrorHandler.handle("some-target", baseRequest, request, response)
-
-    verifyZeroInteractions(request)
-    verify(baseRequest).setHandled(true)
-    verify(response).setHeader(HttpHeader.CACHE_CONTROL.asString(), repose.server.getErrorHandler.getCacheControl)
+    val errorHandler = repose.server.getErrorHandler.asInstanceOf[org.eclipse.jetty.server.handler.ErrorHandler]
+    errorHandler.handle(request, response, callback) shouldBe true
+    verify(callback).succeeded()
+    headers.get(HttpHeader.CACHE_CONTROL) shouldBe errorHandler.getCacheControl
+    verify(response, never).write(anyBoolean(), any[java.nio.ByteBuffer](), any[org.eclipse.jetty.util.Callback]())
   }
 
   it("creates a Jetty server listening on an HTTP port with a registered HttpChannel listener and RequestLog") {
-    val httpChannelListener = mock[HttpChannel.Listener]
+    val httpChannelListener = mock[HttpLoggingServiceChannelListener]
     val requestLog = mock[RequestLog]
     val repose = new ReposeJettyServer(
       nodeContext,
@@ -191,13 +233,12 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
     )
 
     repose.server.getConnectors should have size 1
-    repose.server.getConnectors.head.getBeans(classOf[HttpChannel.Listener]) should have size 1
-    repose.server.getConnectors.head.getBean(classOf[HttpChannel.Listener]) shouldBe httpChannelListener
+    repose.server.getHandler.asInstanceOf[org.eclipse.jetty.ee11.servlet.ServletContextHandler].getEventListeners should contain(httpChannelListener)
     repose.server.getRequestLog shouldBe requestLog
   }
 
   it("creates a Jetty server listening on an HTTPS port with a registered HttpChannel listener and RequestLog") {
-    val httpChannelListener = mock[HttpChannel.Listener]
+    val httpChannelListener = mock[HttpLoggingServiceChannelListener]
     val requestLog = mock[RequestLog]
     val repose = new ReposeJettyServer(
       nodeContext,
@@ -211,8 +252,7 @@ class ReposeJettyServerTest extends FunSpec with Matchers with MockitoSugar {
     )
 
     repose.server.getConnectors should have size 1
-    repose.server.getConnectors.head.getBeans(classOf[HttpChannel.Listener]) should have size 1
-    repose.server.getConnectors.head.getBean(classOf[HttpChannel.Listener]) shouldBe httpChannelListener
+    repose.server.getHandler.asInstanceOf[org.eclipse.jetty.ee11.servlet.ServletContextHandler].getEventListeners should contain(httpChannelListener)
     repose.server.getRequestLog shouldBe requestLog
   }
 

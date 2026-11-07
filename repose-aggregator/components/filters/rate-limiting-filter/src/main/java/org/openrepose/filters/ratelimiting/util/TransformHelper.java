@@ -25,7 +25,7 @@ import org.openrepose.commons.utils.xslt.LogTemplatesWrapper;
 import org.openrepose.core.servlet.PowerApiContextException;
 import org.slf4j.Logger;
 
-import javax.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBContext;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;

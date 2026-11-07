@@ -82,7 +82,7 @@ class Valve {
 
     parser.parse(args, ValveConfig()) map { valveConfig =>
       if (valveConfig.showUsage) {
-        parser.showUsage
+        Console.println(parser.usage)
         1
       } else if (valveConfig.showVersion) {
         Console.println(s"Repose Valve: $reposeVersion on Jetty $jettyVersion")

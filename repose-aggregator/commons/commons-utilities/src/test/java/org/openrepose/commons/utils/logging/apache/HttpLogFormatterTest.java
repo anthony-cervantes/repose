@@ -29,9 +29,9 @@ import org.openrepose.commons.utils.logging.apache.format.stock.*;
 import org.openrepose.commons.utils.servlet.http.HttpServletResponseWrapper;
 import org.openrepose.commons.utils.servlet.http.ResponseMode;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -397,10 +397,8 @@ public class HttpLogFormatterTest {
         private final HttpServletResponseWrapper response;
 
         public WhenEscapingTheMessage() throws IOException {
-            when(mockResponse.getOutputStream()).thenReturn(new ServletOutputStream() {
-                @Override
-                public void write(int b) throws IOException {}
-            });
+            when(mockResponse.getOutputStream()).thenReturn(
+                    new org.springframework.mock.web.DelegatingServletOutputStream(java.io.OutputStream.nullOutputStream()));
 
             response = new HttpServletResponseWrapper(
                     mockResponse,

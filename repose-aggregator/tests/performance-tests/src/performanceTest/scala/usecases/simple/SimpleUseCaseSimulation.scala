@@ -31,13 +31,13 @@ import org.openrepose.performance.test.AbstractReposeSimulation
 class SimpleUseCaseSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(postRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Simple Use Case Test")
-    .forever() {
+    .forever {
       exec(postRequest)
     }
 
@@ -48,7 +48,7 @@ class SimpleUseCaseSimulation extends AbstractReposeSimulation {
     http(session => session.scenario)
       .post("/use-case/simple")
       .body(StringBody("""<root attr="attr-value"/>"""))
-      .asXML
+      .asXml
       .header(HttpHeaderNames.Host, "localhost")
       .check(status.is(201))
   }

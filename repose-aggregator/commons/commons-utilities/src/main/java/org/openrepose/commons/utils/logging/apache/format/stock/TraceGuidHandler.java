@@ -24,8 +24,8 @@ import org.openrepose.commons.utils.http.CommonHttpHeader;
 import org.openrepose.commons.utils.logging.TracingHeaderHelper;
 import org.openrepose.commons.utils.logging.apache.format.FormatterLogic;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collections;
 
 public class TraceGuidHandler extends HeaderHandler implements FormatterLogic {

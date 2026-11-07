@@ -20,12 +20,14 @@
 
 package org.openrepose.filters.uristripper
 
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.apache.http.HttpHeaders
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
@@ -33,7 +35,7 @@ import org.openrepose.commons.utils.servlet.http.{HttpServletRequestWrapper, Htt
 import org.openrepose.filters.uristripper.config.UriStripperConfig
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])
@@ -129,7 +131,7 @@ class UriStripperFilterTest extends FunSpec with BeforeAndAfterEach with Matcher
     */
   def getPostFilterRequest: HttpServletRequestWrapper = {
     val requestCaptor = ArgumentCaptor.forClass(classOf[HttpServletRequestWrapper])
-    verify(filterChain).doFilter(requestCaptor.capture(), any(classOf[MockHttpServletResponse]))
+    verify(filterChain).doFilter(requestCaptor.capture(), any(classOf[HttpServletResponseWrapper]))
     requestCaptor.getValue
   }
 

@@ -19,12 +19,11 @@
  */
 package features.services.metrics
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Services
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class MetricsEnableDisableTest extends ReposeValveTest {
 
     private static final String KEY_PROPERTIES_PREFIX = /001="org",002="openrepose"/

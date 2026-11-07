@@ -23,8 +23,8 @@ import org.junit.Test;
 import org.openrepose.commons.config.parser.common.ConfigurationParser;
 import org.openrepose.commons.config.resource.ConfigurationResource;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 

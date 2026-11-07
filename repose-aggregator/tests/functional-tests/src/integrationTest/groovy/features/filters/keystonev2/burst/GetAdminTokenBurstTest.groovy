@@ -19,20 +19,19 @@
  */
 package features.filters.keystonev2.burst
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Request
 import org.rackspace.deproxy.Response
-import scaffold.category.Identity
 
 import java.util.concurrent.CopyOnWriteArrayList
 
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class GetAdminTokenBurstTest extends ReposeValveTest {
     static final String X_AUTH_TOKEN = "X-Auth-Token"
     static final String CONTENT_TYPE = "Content-Type"

@@ -19,9 +19,8 @@
  */
 package features.core.manifest
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
-import scaffold.category.Core
 
 import java.util.jar.Attributes
 import java.util.jar.JarFile
@@ -32,7 +31,7 @@ import java.util.jar.Manifest
  *  Verify Repose Version added to Jar Manifest
  *  Don't need start repose to verify manifest as long as package build and jar available.
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class VersionAddedManifestTest extends ReposeValveTest {
 
     def "Verify Version added to manifest"() {

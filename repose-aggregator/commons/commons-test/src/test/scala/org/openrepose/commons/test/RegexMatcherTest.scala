@@ -20,11 +20,13 @@
 package org.openrepose.commons.test
 
 import org.hamcrest.Description
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class RegexMatcherTest extends FunSpec with Matchers with MockitoSugar {
@@ -42,7 +44,7 @@ class RegexMatcherTest extends FunSpec with Matchers with MockitoSugar {
   describe("describeTo") {
     it("should append to the descriptor") {
       val description = mock[Description]
-      Mockito.when(description.appendText(org.mockito.Matchers.anyString())).thenReturn(description)
+      Mockito.when(description.appendText(org.mockito.ArgumentMatchers.anyString())).thenReturn(description)
       val matcher = matchesPattern("f.*")
 
       matcher.describeTo(description)

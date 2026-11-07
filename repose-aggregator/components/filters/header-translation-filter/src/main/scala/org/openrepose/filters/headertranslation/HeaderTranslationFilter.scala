@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.headertranslation
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener
@@ -30,7 +30,7 @@ import org.openrepose.core.filter.FilterConfigHelper
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.headertranslation.config.{Header, HeaderTranslationType}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @Named
 class HeaderTranslationFilter @Inject()(configurationService: ConfigurationService)
@@ -72,7 +72,7 @@ class HeaderTranslationFilter @Inject()(configurationService: ConfigurationServi
           httpRequest.getHeadersScala(originalHeaderName)
 
         if (originalHeaderValues.nonEmpty) {
-          sourceHeader.getNewName foreach { newHeaderName =>
+          sourceHeader.getNewName.asScala foreach { newHeaderName =>
             originalHeaderValues foreach { originalHeaderValue =>
               def writeHeaders(writeWithoutQuality: (String, String) => Unit,
                                writeWithQuality: (String, String, Double) => Unit): Unit = {
@@ -114,7 +114,7 @@ class HeaderTranslationFilter @Inject()(configurationService: ConfigurationServi
   }
 
   override def configurationUpdated(configurationObject: HeaderTranslationType): Unit = {
-    sourceHeaders = configurationObject.getHeader.toList
+    sourceHeaders = configurationObject.getHeader.asScala.toList
     initialized = true
   }
 }

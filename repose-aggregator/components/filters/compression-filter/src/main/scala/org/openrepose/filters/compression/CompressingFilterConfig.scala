@@ -20,9 +20,9 @@
 
 package org.openrepose.filters.compression
 
-import javax.servlet.{ServletContext, FilterConfig}
+import jakarta.servlet.{ServletContext, FilterConfig}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class CompressingFilterConfig(config: FilterConfig) extends FilterConfig {
   private var params: Map[String, String] = Map.empty

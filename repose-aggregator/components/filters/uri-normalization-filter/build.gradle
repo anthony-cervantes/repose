@@ -1,32 +1,29 @@
 dependencies {
-    xjc "org.jvnet.jaxb2_commons:jaxb2-fluent-api"
-    xjc "org.jvnet.jaxb2_commons:jaxb2-basics"
 
-    compile project(":repose-aggregator:commons:commons-configuration")
-    compile project(":repose-aggregator:core:repose-core")
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "io.dropwizard.metrics:metrics-core"
-    compile "org.slf4j:slf4j-api"
+    api project(":repose-aggregator:commons:commons-configuration")
+    api project(":repose-aggregator:core:repose-core")
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api "org.scala-lang:scala-library"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "io.dropwizard.metrics:metrics-core"
+    api "org.slf4j:slf4j-api"
 
-    generatedCompile "org.jvnet.jaxb2_commons:jaxb2-basics-runtime"
+    generatedImplementation "org.jvnet.jaxb:jaxb-plugins-runtime"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
 
-    testCompile "junit:junit"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.springframework:spring-test"
+    testImplementation "junit:junit"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.springframework:spring-test"
 }
 
-jaxb {
-    xjc {
-        args = ["-Xfluent-api", "-XtoString"]
-    }
+xjc {
+    extraArgs = ["-Xfluent-api", "-XtoString"]
 }
 
 jacocoTestCoverageVerification {

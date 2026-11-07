@@ -20,8 +20,8 @@
 package org.openrepose.core.services.httpclient
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.annotation.{PostConstruct, PreDestroy}
-import javax.inject.{Inject, Named}
+import jakarta.annotation.{PostConstruct, PreDestroy}
+import jakarta.inject.{Inject, Named}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.healthcheck.{HealthCheckService, HealthCheckServiceProxy, Severity}
@@ -29,7 +29,7 @@ import org.openrepose.core.services.httpclient.HttpClientServiceImpl._
 import org.openrepose.core.services.httpclient.config.HttpConnectionPoolsConfig
 
 import scala.Function.tupled
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @Named
 class HttpClientServiceImpl @Inject()(configurationService: ConfigurationService,

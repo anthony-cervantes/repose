@@ -20,22 +20,24 @@
 package org.openrepose.filters.bodyextractortoheader
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
-import javax.servlet.FilterConfig
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.FilterConfig
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import org.junit.Assert.{assertFalse, assertTrue}
 import org.junit.runner.RunWith
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.filters.bodyextractortoheader.config.{BodyExtractorToHeaderConfig, Extractor}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class BodyExtractorToHeaderFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {
@@ -356,7 +358,7 @@ class BodyExtractorToHeaderFilterTest extends FunSpec with BeforeAndAfterEach wi
       filter.init(mockFilterConfig)
 
       verify(mockConfigurationService).subscribeTo(
-        anyString(),
+        any[String](),
         anyString(),
         any[URL],
         any(),
@@ -370,7 +372,7 @@ class BodyExtractorToHeaderFilterTest extends FunSpec with BeforeAndAfterEach wi
       filter.destroy()
 
       verify(mockConfigurationService).unsubscribeFrom(
-        anyString(),
+        any[String](),
         any()
       )
     }

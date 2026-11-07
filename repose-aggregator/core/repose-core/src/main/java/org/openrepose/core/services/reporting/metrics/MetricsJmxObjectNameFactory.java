@@ -19,7 +19,7 @@
  */
 package org.openrepose.core.services.reporting.metrics;
 
-import com.codahale.metrics.ObjectNameFactory;
+import com.codahale.metrics.jmx.ObjectNameFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

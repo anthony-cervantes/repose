@@ -19,17 +19,16 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.XmlParsing
 import spock.lang.Unroll
 
 /**
  * RBAC tests ported from python
  */
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class RbacTest extends ReposeValveTest {
 
     def setupSpec() {

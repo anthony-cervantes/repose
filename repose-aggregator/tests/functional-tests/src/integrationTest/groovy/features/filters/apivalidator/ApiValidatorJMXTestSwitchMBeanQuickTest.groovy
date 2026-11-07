@@ -19,11 +19,10 @@
  */
 package features.filters.apivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.spockframework.runtime.SpockAssertionError
-import scaffold.category.XmlParsing
 import spock.util.concurrent.PollingConditions
 
 import java.util.concurrent.TimeUnit
@@ -32,7 +31,7 @@ import java.util.concurrent.TimeUnit
  * This is running the same test as the ApiValidatorJMXTestSwitchMBeanTest, but I'm using the short
  * circuit method instead, so hopefully it'll be more stable, and maybe pass
  */
-@Category(XmlParsing)
+@Tag("scaffold.category.XmlParsing")
 class ApiValidatorJMXTestSwitchMBeanQuickTest extends ReposeValveTest {
 
     final def conditions = new PollingConditions(timeout: 10, initialDelay: 3)

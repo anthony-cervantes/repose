@@ -19,19 +19,18 @@
  */
 package features.recipes.tenantcullingrbac
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.*
-import scaffold.category.Recipe
 import spock.lang.Shared
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON
 
-@Category(Recipe)
+@Tag("scaffold.category.Recipe")
 class TenantCullingRBACRecipeTest extends ReposeValveTest {
     @Shared
     MockIdentityV2Service fakeIdentityService

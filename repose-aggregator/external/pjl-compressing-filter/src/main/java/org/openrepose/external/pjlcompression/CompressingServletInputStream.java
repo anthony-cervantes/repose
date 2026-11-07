@@ -36,7 +36,8 @@
 
 package org.openrepose.external.pjlcompression;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ReadListener;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -50,6 +51,7 @@ final class CompressingServletInputStream extends ServletInputStream {
 
     private final InputStream compressingStream;
     private boolean closed;
+    private boolean finished;
 
     CompressingServletInputStream(InputStream rawStream,
                                   CompressingStreamFactory compressingStreamFactory,
@@ -61,19 +63,19 @@ final class CompressingServletInputStream extends ServletInputStream {
     @Override
     public int read() throws IOException {
         checkClosed();
-        return compressingStream.read();
+        return recordEndOfStream(compressingStream.read());
     }
 
     @Override
     public int read(byte[] b) throws IOException {
         checkClosed();
-        return compressingStream.read(b);
+        return recordEndOfStream(compressingStream.read(b));
     }
 
     @Override
     public int read(byte[] b, int offset, int length) throws IOException {
         checkClosed();
-        return compressingStream.read(b, offset, length);
+        return recordEndOfStream(compressingStream.read(b, offset, length));
     }
 
     // Leave implementation of readLine() in superclass alone, even if it's not so efficient
@@ -108,12 +110,35 @@ final class CompressingServletInputStream extends ServletInputStream {
     public synchronized void reset() throws IOException {
         checkClosed();
         compressingStream.reset();
+        finished = false;
     }
 
     @Override
     public boolean markSupported() {
         checkClosed();
         return compressingStream.markSupported();
+    }
+
+    private int recordEndOfStream(int result) {
+        if (result != 0) {
+            finished = result == -1;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return closed || finished;
+    }
+
+    @Override
+    public boolean isReady() {
+        return !closed;
+    }
+
+    @Override
+    public void setReadListener(ReadListener listener) {
+        throw new IllegalStateException("Compression streams support blocking I/O only");
     }
 
     private void checkClosed() {

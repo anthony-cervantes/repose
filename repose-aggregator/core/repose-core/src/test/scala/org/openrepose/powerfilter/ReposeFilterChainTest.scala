@@ -20,19 +20,21 @@
 package org.openrepose.powerfilter
 
 import java.util.concurrent.TimeUnit
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import com.codahale.metrics.{MetricRegistry, Timer}
 import io.opentracing.mock.MockTracer
-import javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{Filter, FilterChain}
+import jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{Filter, FilterChain}
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.Configurator
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.apache.logging.log4j.{Level, LogManager}
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{any, anyLong, same, eq => meq}
+import org.mockito.ArgumentMatchers.{any, anyLong, same, eq => meq}
 import org.mockito.Mockito.{never, verify, when}
 import org.openrepose.commons.utils.http.CommonRequestAttributes
 import org.openrepose.commons.utils.http.PowerApiHeader.TRACE_REQUEST
@@ -43,11 +45,11 @@ import org.openrepose.powerfilter.ReposeFilterLoader.FilterContext
 import org.scalatest.LoneElement._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.slf4j.MDC
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ReposeFilterChainTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {

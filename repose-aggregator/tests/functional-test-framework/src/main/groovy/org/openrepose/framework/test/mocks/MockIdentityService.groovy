@@ -19,6 +19,7 @@
  */
 package org.openrepose.framework.test.mocks
 
+import groovy.xml.XmlSlurper
 import groovy.text.SimpleTemplateEngine
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

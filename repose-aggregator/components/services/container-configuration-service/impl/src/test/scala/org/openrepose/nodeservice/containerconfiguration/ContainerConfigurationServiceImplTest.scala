@@ -20,16 +20,18 @@
 package org.openrepose.nodeservice.containerconfiguration
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.junit.runner.RunWith
 import org.mockito.Mockito.{never, verify, when}
-import org.mockito.{Matchers => MockitoMatchers}
+import org.mockito.{ArgumentMatchers => MockitoMatchers}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.container.config._
 import org.openrepose.core.services.config.ConfigurationService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class ContainerConfigurationServiceImplTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {

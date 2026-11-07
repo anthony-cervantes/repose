@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.mergeheader
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener
@@ -29,7 +29,7 @@ import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.core.filter.FilterConfigHelper
 import org.openrepose.core.services.config.ConfigurationService
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @Named
 class MergeHeaderFilter @Inject()(configurationService: ConfigurationService)
@@ -64,8 +64,8 @@ class MergeHeaderFilter @Inject()(configurationService: ConfigurationService)
       val httpServletResponse = servletResponse.asInstanceOf[HttpServletResponse]
 
       Option(filterConfig.getRequest) foreach { requestConfig =>
-        requestConfig.getHeader foreach { name =>
-          val value = wrappedRequest.getHeaders(name).mkString(", ")
+        requestConfig.getHeader.asScala foreach { name =>
+          val value = wrappedRequest.getHeaders(name).asScala.mkString(", ")
           if (value.nonEmpty) {
             logger.debug(s"REQUEST: merging header $name to $value")
             wrappedRequest.replaceHeader(name, value)
@@ -76,8 +76,8 @@ class MergeHeaderFilter @Inject()(configurationService: ConfigurationService)
       filterChain.doFilter(wrappedRequest, servletResponse)
 
       Option(filterConfig.getResponse) foreach { responseConfig =>
-        responseConfig.getHeader foreach { name =>
-          val value = httpServletResponse.getHeaders(name).mkString(", ")
+        responseConfig.getHeader.asScala foreach { name =>
+          val value = httpServletResponse.getHeaders(name).asScala.mkString(", ")
           if (value.nonEmpty) {
             logger.debug(s"RESPONSE: merging header $name to $value")
             httpServletResponse.setHeader(name, value)

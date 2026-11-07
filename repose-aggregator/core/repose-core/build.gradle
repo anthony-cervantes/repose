@@ -3,74 +3,78 @@ configurations {
 }
 
 dependencies {
-    compile project(":repose-aggregator:commons:commons-configuration")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:components:services:atom-feed-service:atom-feed-service-impl")
-    compile project(":repose-aggregator:components:services:container-configuration-service:api")
-    compile project(":repose-aggregator:components:services:container-configuration-service:impl")
-    compile project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
-    compile project(":repose-aggregator:components:services:datastore-service:datastore-service-impl")
-    compile project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
-    compile project(":repose-aggregator:components:services:health-check-service:health-check-service-impl")
-    compile project(":repose-aggregator:components:services:http-client-service:http-client-service-api")
-    compile project(":repose-aggregator:components:services:http-client-service:http-client-service-impl")
-    compile project(":repose-aggregator:components:services:http-logging-service:http-logging-service-api")
-    compile project(":repose-aggregator:components:services:http-logging-service:http-logging-service-impl")
-    compile project(":repose-aggregator:components:services:open-tracing-service")
-    compile project(":repose-aggregator:components:services:phone-home-service")
-    compile project(":repose-aggregator:components:services:uri-redaction-service:uri-redaction-service-api")
-    compile project(":repose-aggregator:components:services:uri-redaction-service:uri-redaction-service-impl")
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:external:jee6-schemas")
-    compile "commons-collections:commons-collections" // Forces the version used by velocity -> avro-ipc -> flume-ng-sdk -> log4j-flume-ng. Alleviates: CVE-2015-6420, CVE-2017-15708
-    compile "org.apache.flume:flume-ng-sdk" // Forces the version used by log4j-flume-ng. Alleviates: CVE-2015-2156
-    compile "org.apache.logging.log4j:log4j-flume-ng"
-    compile "javax.inject:javax.inject"
-    compile "io.dropwizard.metrics:metrics-graphite"
-    compile "io.dropwizard.metrics:metrics-core"
-    compile "org.springframework:spring-beans"
-    compile "org.springframework:spring-context"
-    compile "org.springframework:spring-core"
-    compile "org.springframework:spring-web"
-    compile "org.slf4j:slf4j-api"
-    compile "org.slf4j:jcl-over-slf4j"
-    compile "org.apache.logging.log4j:log4j-api"
-    compile "org.apache.logging.log4j:log4j-core"
-    compile "org.apache.logging.log4j:log4j-iostreams"
-    compile "org.apache.logging.log4j:log4j-slf4j-impl"
-    compile "org.apache.logging.log4j:log4j-jul"
-    compile "org.scala-lang:scala-library"
-    compile "xerces:xerces-xsd11"
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.apache.httpcomponents:httpcore"
-    compile "joda-time:joda-time"
-    compile "org.apache.commons:commons-lang3"
-    compile "commons-io:commons-io"
-    compile "com.fasterxml.jackson.core:jackson-core"
-    compile "com.fasterxml.jackson.core:jackson-annotations"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.google.guava:guava"
-    compile "com.typesafe:config"
-    compile "javax.ws.rs:javax.ws.rs-api"
-    compile "io.opentracing:opentracing-api"
-    compile "io.opentracing:opentracing-util"
-    compile 'com.squareup.okhttp3:okhttp' // Forces the version used by jaeger-core.
-    compile 'org.apache.thrift:libthrift' // Forces the version used by jaeger-core.
-    compile "io.jaegertracing:jaeger-core"
+    api project(":repose-aggregator:commons:commons-configuration")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:components:services:atom-feed-service:atom-feed-service-impl")
+    api project(":repose-aggregator:components:services:container-configuration-service:api")
+    api project(":repose-aggregator:components:services:container-configuration-service:impl")
+    api project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
+    api project(":repose-aggregator:components:services:datastore-service:datastore-service-impl")
+    api project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
+    api project(":repose-aggregator:components:services:health-check-service:health-check-service-impl")
+    api project(":repose-aggregator:components:services:http-client-service:http-client-service-api")
+    api project(":repose-aggregator:components:services:http-client-service:http-client-service-impl")
+    api project(":repose-aggregator:components:services:http-logging-service:http-logging-service-api")
+    api project(":repose-aggregator:components:services:http-logging-service:http-logging-service-impl")
+    api project(":repose-aggregator:components:services:open-tracing-service")
+    api project(":repose-aggregator:components:services:phone-home-service")
+    api project(":repose-aggregator:components:services:uri-redaction-service:uri-redaction-service-api")
+    api project(":repose-aggregator:components:services:uri-redaction-service:uri-redaction-service-impl")
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:external:jee6-schemas")
+    api "commons-collections:commons-collections" // Forces the version used by velocity -> avro-ipc -> flume-ng-sdk -> log4j-flume-ng. Alleviates: CVE-2015-6420, CVE-2017-15708
+    api "org.apache.flume:flume-ng-sdk" // Forces the version used by log4j-flume-ng. Alleviates: CVE-2015-2156
+    api "org.apache.logging.log4j:log4j-flume-ng"
+    api "jakarta.inject:jakarta.inject-api"
+    api "io.dropwizard.metrics:metrics-graphite"
+    api "io.dropwizard.metrics:metrics-core"
+    api "io.dropwizard.metrics:metrics-jmx"
+    api "org.springframework:spring-beans"
+    api "org.springframework:spring-context"
+    api "org.springframework:spring-core"
+    api "org.springframework:spring-web"
+    api "org.slf4j:slf4j-api"
+    api "org.slf4j:jcl-over-slf4j"
+    api "org.apache.logging.log4j:log4j-api"
+    api "org.apache.logging.log4j:log4j-core"
+    api "org.apache.logging.log4j:log4j-iostreams"
+    api "org.apache.logging.log4j:log4j-slf4j2-impl"
+    api "org.apache.logging.log4j:log4j-jul"
+    api "org.scala-lang:scala-library"
+    api "xerces:xerces-xsd11"
+    api "org.apache.httpcomponents:httpclient"
+    api "org.apache.httpcomponents:httpcore"
+    api "joda-time:joda-time"
+    api "org.apache.commons:commons-lang3"
+    api "commons-io:commons-io"
+    api "com.fasterxml.jackson.core:jackson-core"
+    api "com.fasterxml.jackson.core:jackson-annotations"
+    api "com.fasterxml.jackson.core:jackson-databind"
+    api "com.google.guava:guava"
+    api "com.typesafe:config"
+    api "jakarta.ws.rs:jakarta.ws.rs-api"
+    runtimeOnly "org.glassfish.jersey.core:jersey-common"
+    api "io.opentracing:opentracing-api"
+    api "io.opentracing:opentracing-util"
+    api 'com.squareup.okhttp3:okhttp' // Forces the version used by jaeger-core.
+    api 'org.apache.thrift:libthrift' // Forces the version used by jaeger-core.
+    api "io.jaegertracing:jaeger-core"
 
-    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
 
-    testCompile "junit:junit"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.codehaus.groovy:groovy-all"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
-    testCompile group: 'org.apache.logging.log4j', name: 'log4j-core', classifier: 'tests'
-    testCompile "org.springframework:spring-test"
-    testCompile "org.spockframework:spock-core"
-    testCompile "org.jetbrains:annotations"
-    testCompile "io.opentracing:opentracing-mock"
-    testCompile project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.apache.groovy:groovy-all"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.apache.logging.log4j:log4j-core-test"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.jetbrains:annotations"
+    testImplementation "io.opentracing:opentracing-mock"
+    testImplementation project(":repose-aggregator:commons:commons-test")
 
     testEar project(path: ":repose-aggregator:tests:test-bundles:core-test-filter-bundle", configuration: "archives")
     testEar project(path: ":repose-aggregator:tests:test-bundles:busted-application-name-ear", configuration: "archives")
@@ -81,7 +85,8 @@ dependencies {
 
 sourceSets.main.scala.srcDir "src/main/java"
 sourceSets.main.java.srcDirs = []
-sourceSets.test.compileClasspath.add(project.files([sourceSets.test.scala.outputDir]))
+sourceSets.test.scala.srcDir "src/test/java"
+sourceSets.test.java.srcDirs = []
 
 compileTestGroovy.dependsOn compileTestScala
 
@@ -92,7 +97,7 @@ task copyEars() {
               ":repose-aggregator:tests:test-bundles:busted-web-fragment-ear:ear",
               ":repose-aggregator:tests:test-bundles:second-filter-bundle:ear")
     ext.outputDir = "$buildDir/earFiles/"
-    inputs.files(configurations.testEar.files)
+    inputs.files(configurations.testEar)
     outputs.dir outputDir
 
     doLast {
@@ -105,23 +110,16 @@ task copyEars() {
 }
 
 test.dependsOn copyEars
-testScoverage.dependsOn copyEars
 
 processResources {
     expand(reposeVersion: version, reposeVersionName: reposeCodename)
 }
 
-processScoverageResources {
-    expand(reposeVersion: version, reposeVersionName: reposeCodename)
-}
 
 processTestResources {
     expand(earDirectory: copyEars.outputDir, earVersion: version)
 }
 
-processTestScoverageResources {
-    expand(earDirectory: copyEars.outputDir, earVersion: version)
-}
 
 license {
     excludes(["**/log4j2.component.properties", "**/test.properties", "**/log4j2-List2.json", "**/log4j2-List1.yaml",

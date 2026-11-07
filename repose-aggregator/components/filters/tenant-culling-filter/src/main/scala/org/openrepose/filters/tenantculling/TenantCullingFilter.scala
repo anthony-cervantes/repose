@@ -23,9 +23,9 @@ import java.io.IOException
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.{TENANT_ID, TENANT_ROLES_MAP}
 import org.openrepose.commons.utils.http.PowerApiHeader.RELEVANT_ROLES
 import org.openrepose.commons.utils.json.JsonHeaderHelper

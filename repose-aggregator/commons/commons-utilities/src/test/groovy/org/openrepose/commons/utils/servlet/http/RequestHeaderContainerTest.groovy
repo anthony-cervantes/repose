@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import org.openrepose.commons.utils.http.header.HeaderName
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.hasItems

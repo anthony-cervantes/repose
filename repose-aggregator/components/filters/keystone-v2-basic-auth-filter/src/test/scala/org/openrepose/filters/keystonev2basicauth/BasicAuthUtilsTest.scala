@@ -20,9 +20,11 @@
 package org.openrepose.filters.keystonev2basicauth
 
 import org.apache.commons.codec.binary.Base64
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class BasicAuthUtilsTest extends FunSpec with Matchers with BasicAuthUtils {

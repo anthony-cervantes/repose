@@ -19,7 +19,7 @@
  */
 package org.openrepose.nodeservice.atomfeed.impl.actors
 
-import akka.actor.{Actor, ActorRef, PoisonPill}
+import org.apache.pekko.actor.{Actor, ActorRef, PoisonPill}
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.nodeservice.atomfeed.AtomFeedListener
 import org.openrepose.nodeservice.atomfeed.impl.actors.FeedReader.{CancelScheduledReading, ScheduleReading}

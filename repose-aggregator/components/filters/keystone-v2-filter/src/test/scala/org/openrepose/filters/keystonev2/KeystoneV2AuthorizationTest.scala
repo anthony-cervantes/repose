@@ -19,21 +19,22 @@
  */
 package org.openrepose.filters.keystonev2
 
-import javax.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_UNAUTHORIZED}
+import jakarta.servlet.http.HttpServletResponse.{SC_FORBIDDEN, SC_UNAUTHORIZED}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.filters.keystonev2.AbstractKeystoneV2Filter.Reject
 import org.openrepose.filters.keystonev2.KeystoneV2Common._
 import org.openrepose.filters.keystonev2.config._
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSpec, PartialFunctionValues, TryValues}
+import org.scalatest.{BeforeAndAfterEach, PartialFunctionValues, TryValues}
 import org.springframework.mock.web.MockHttpServletRequest
 
 import scala.util.{Failure, Success}
 
 @RunWith(classOf[JUnitRunner])
 class KeystoneV2AuthorizationTest extends FunSpec
-  with org.scalatest.Matchers
+  with org.scalatest.matchers.should.Matchers
   with BeforeAndAfterEach
   with PartialFunctionValues
   with TryValues {

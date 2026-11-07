@@ -22,19 +22,16 @@ package org.openrepose.commons.test
 import java.net.URI
 
 import org.apache.http.client.methods.HttpUriRequest
-import org.hamcrest.{Description, Factory, Matcher, TypeSafeMatcher}
+import org.hamcrest.{Description, Matcher, TypeSafeMatcher}
 
 /**
   * A factory for [[HttpUriRequest]] [[org.hamcrest.Matcher]]s.
   */
 object HttpUriRequestMatchers {
-  @Factory
   def hasMethod(method: String): Matcher[HttpUriRequest] = new HasMethod(method)
 
-  @Factory
   def hasUri(uri: URI): Matcher[HttpUriRequest] = new HasUri(uri)
 
-  @Factory
   def hasHeader(name: String, valueMatcher: Matcher[_ >: String]): Matcher[HttpUriRequest] = new HasHeader(name, valueMatcher)
 
   private class HasMethod(method: String) extends TypeSafeMatcher[HttpUriRequest] {
@@ -90,7 +87,7 @@ object HttpUriRequestMatchers {
     override def describeMismatchSafely(actualRequest: HttpUriRequest, mismatchDescription: Description): Unit = {
       mismatchDescription
         .appendText("headers were ")
-        .appendValueList("[", ", ", "]", actualRequest.getAllHeaders)
+        .appendValueList("[", ", ", "]", actualRequest.getAllHeaders: _*)
     }
   }
 

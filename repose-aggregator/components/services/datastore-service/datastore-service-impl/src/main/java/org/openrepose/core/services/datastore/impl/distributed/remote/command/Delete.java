@@ -23,7 +23,7 @@ import org.openrepose.commons.utils.http.ServiceClientResponse;
 import org.openrepose.core.services.RequestProxyService;
 import org.openrepose.core.services.datastore.distributed.RemoteBehavior;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 

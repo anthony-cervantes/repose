@@ -20,10 +20,12 @@
 package org.openrepose.core.services.uriredaction
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.regex.PatternSyntaxException
 
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{eq => isEq, _}
+import org.mockito.ArgumentMatchers.{eq => isEq, _}
 import org.mockito.Mockito.verify
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
@@ -31,9 +33,9 @@ import org.openrepose.core.services.uriredaction.UriRedactionServiceImpl._
 import org.openrepose.core.services.uriredaction.config.UriRedactionConfig
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class UriRedactionServiceImplTest extends FunSpec with Matchers with MockitoSugar with BeforeAndAfterEach {

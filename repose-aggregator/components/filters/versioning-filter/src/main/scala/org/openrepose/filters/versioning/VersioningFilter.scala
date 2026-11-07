@@ -21,10 +21,10 @@ package org.openrepose.filters.versioning
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.util.Optional
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.xml.bind.JAXBElement
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.xml.bind.JAXBElement
 
 import com.codahale.metrics.MetricRegistry
 import com.typesafe.scalalogging.StrictLogging
@@ -43,7 +43,7 @@ import org.openrepose.filters.versioning.domain.{ConfigurationData, VersionedHos
 import org.openrepose.filters.versioning.schema.ObjectFactory
 import org.openrepose.filters.versioning.util.{ContentTransformer, RequestMediaRangeInterrogator, VersionChoiceFactory}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @Named
 class VersioningFilter @Inject()(configurationService: ConfigurationService,
@@ -100,7 +100,7 @@ class VersioningFilter @Inject()(configurationService: ConfigurationService,
       logger.error("Filter has not yet initialized... Please check your configuration files and your artifacts directory.")
       httpResponse.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE)
     } else {
-      val configurationData = new ConfigurationData(destinations, serviceVersionMappings)
+      val configurationData = new ConfigurationData(destinations.asJava, serviceVersionMappings.asJava)
 
       try {
         Option(configurationData.getOriginServiceForRequest(wrappedRequest)) match {
@@ -194,7 +194,7 @@ class VersioningFilter @Inject()(configurationService: ConfigurationService,
     private var initialized = false
 
     override def configurationUpdated(configurationObject: SystemModel): Unit = {
-      destinations = configurationObject.getDestinations.getEndpoint
+      destinations = configurationObject.getDestinations.getEndpoint.asScala
         .map(destination => destination.getId -> destination)
         .toMap
 
@@ -208,7 +208,7 @@ class VersioningFilter @Inject()(configurationService: ConfigurationService,
     private var initialized = false
 
     override def configurationUpdated(configurationObject: ServiceVersionMappingList): Unit = {
-      serviceVersionMappings = configurationObject.getVersionMapping.map(svm => svm.getId -> svm).toMap
+      serviceVersionMappings = configurationObject.getVersionMapping.asScala.map(svm => svm.getId -> svm).toMap
       contentTransformer = new ContentTransformer(configurationObject.getJsonFormat)
       initialized = true
     }

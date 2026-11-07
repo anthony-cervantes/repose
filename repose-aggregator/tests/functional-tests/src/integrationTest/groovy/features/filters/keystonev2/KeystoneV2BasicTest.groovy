@@ -20,22 +20,21 @@
 package features.filters.keystonev2
 
 import org.apache.commons.lang3.RandomStringUtils
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Identity
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED
 
 /**
  * Created by jennyvo on 6/18/15.
  *  Test keystone v2 basic functionalities
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class KeystoneV2BasicTest extends ReposeValveTest {
 
     def static originEndpoint

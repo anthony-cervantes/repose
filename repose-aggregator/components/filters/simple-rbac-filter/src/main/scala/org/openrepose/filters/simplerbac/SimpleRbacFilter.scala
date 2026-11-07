@@ -23,9 +23,9 @@ import java.io.{ByteArrayInputStream, File, IOException, InputStream}
 import java.net.URL
 import java.nio.file.{Files, Path, Paths}
 import java.util.UUID
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.xml.transform.stream.StreamSource
 
 import com.rackspace.com.papi.components.checker.handler._
@@ -98,7 +98,7 @@ class SimpleRbacFilter @Inject()(configurationService: ConfigurationService,
     config.checkPlainParams = true
     config.setParamDefaults = true
     config.maskRaxRoles403 = configuration.isMaskRaxRoles403
-    config.setResultHandler(getHandler)
+    config.resultHandler = getHandler
 
     val rbacWadl = Option(configuration.getResources).flatMap { resources =>
         rbacToWadl(Option(resources.getValue).filter(_.trim.nonEmpty)).orElse(

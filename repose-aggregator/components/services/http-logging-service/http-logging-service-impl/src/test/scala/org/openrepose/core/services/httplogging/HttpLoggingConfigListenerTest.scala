@@ -20,12 +20,14 @@
 package org.openrepose.core.services.httplogging
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.openrepose.core.services.httplogging.HttpLoggingConfigListenerTest._
 import org.openrepose.core.services.httplogging.config.{Format, HttpLoggingConfig, Message}
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class HttpLoggingConfigListenerTest extends FunSpec with BeforeAndAfterEach with Matchers {

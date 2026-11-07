@@ -21,7 +21,6 @@
 package org.openrepose.framework.test
 
 import groovy.util.logging.Log4j
-import org.springframework.util.SocketUtils
 
 @Log4j
 @Singleton
@@ -29,7 +28,7 @@ class PortFinder {
     final int DEFAULT_START_PORT = 10000
     final int DEFAULT_WAIT_TIME_MS = 100
 
-    int maxPort = SocketUtils.PORT_RANGE_MAX
+    int maxPort = 65535
     int sleepTime = DEFAULT_WAIT_TIME_MS
     int startPort = DEFAULT_START_PORT
 

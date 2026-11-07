@@ -21,7 +21,7 @@ package org.openrepose.core.services.ratelimit;
 
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.openrepose.commons.utils.http.PowerApiHeader;
 import org.openrepose.core.services.ratelimit.exception.OverLimitException;

@@ -51,6 +51,7 @@ task copyDebFiles() {
         //copy the fake services
         copy {
             from "$projectDir/src/fake-services"
+            exclude '**/node_modules/**'
             into "$debDir/fake-services"
         }
 
@@ -85,6 +86,7 @@ task copyRpmFiles() {
         //copy the fake services
         copy {
             from "$projectDir/src/fake-services"
+            exclude '**/node_modules/**'
             into "$rpmDir/fake-services"
         }
 
@@ -96,16 +98,6 @@ task copyRpmFiles() {
     }
 }
 
-// This forces the usage of jackson dependencies which were not being brought in as expected
-configurations {
-    dockerJava {
-        resolutionStrategy {
-            force 'com.fasterxml.jackson.core:jackson-databind:2.6.4'
-            force 'com.fasterxml.jackson.core:jackson-core:2.6.4'
-            force 'com.fasterxml.jackson.core:jackson-annotations:2.6.4'
-        }
-    }
-}
 
 docker {
     url = "unix:///var/run/docker.sock"
@@ -114,7 +106,7 @@ docker {
 task buildDebImage(type: DockerBuildImage) {
     dependsOn 'copyDebFiles'
     inputDir = file(debDir)
-    tag = 'repose:deb-release-verification'
+    images.add('repose:deb-release-verification')
     buildArgs = ['REPOSE_VERSION': releaseVersion]
 }
 
@@ -122,14 +114,14 @@ task buildDebSmokeTestImage(type: DockerBuildImage) {
     dependsOn 'copyDebFiles'
     finalizedBy 'removeDebSmokeTestImage'
     inputDir = file(debDir)
-    tag = 'repose:deb-release-verification'
+    images.add('repose:deb-release-verification')
     buildArgs = ['REPOSE_VERSION': releaseVersion]
 }
 
 task buildRpmImage(type: DockerBuildImage) {
     dependsOn 'copyRpmFiles'
     inputDir = file(rpmDir)
-    tag = 'repose:rpm-release-verification'
+    images.add('repose:rpm-release-verification')
     buildArgs = ['REPOSE_VERSION': releaseVersion]
 }
 
@@ -137,34 +129,34 @@ task buildRpmSmokeTestImage(type: DockerBuildImage) {
     dependsOn 'copyRpmFiles'
     finalizedBy 'removeRpmSmokeTestImage'
     inputDir = file(rpmDir)
-    tag = 'repose:rpm-release-verification'
+    images.add('repose:rpm-release-verification')
     buildArgs = ['REPOSE_VERSION': releaseVersion]
 }
 
 task createDebContainer(type: DockerCreateContainer) {
     dependsOn 'buildDebImage'
     targetImageId { buildDebImage.getImageId() }
-    portBindings = ['10037:18038', '8080:18088']
+    hostConfig.portBindings = ['10037:18038', '8080:18088']
 }
 
 task createDebSmokeTestContainer(type: DockerCreateContainer) {
     dependsOn 'buildDebSmokeTestImage'
     finalizedBy 'removeDebSmokeTestContainer'
     targetImageId { buildDebSmokeTestImage.getImageId() }
-    portBindings = ['10037:18038', '8080:18088']
+    hostConfig.portBindings = ['10037:18038', '8080:18088']
 }
 
 task createRpmContainer(type: DockerCreateContainer) {
     dependsOn 'buildRpmImage'
     targetImageId { buildRpmImage.getImageId() }
-    portBindings = ['10037:18038', '8080:18088']
+    hostConfig.portBindings = ['10037:18038', '8080:18088']
 }
 
 task createRpmSmokeTestContainer(type: DockerCreateContainer) {
     dependsOn 'buildRpmSmokeTestImage'
     finalizedBy 'removeRpmSmokeTestContainer'
     targetImageId { buildRpmSmokeTestImage.getImageId() }
-    portBindings = ['10037:18038', '8080:18088']
+    hostConfig.portBindings = ['10037:18038', '8080:18088']
 }
 
 task startDebContainer(type: DockerStartContainer) {
@@ -190,7 +182,7 @@ task startRpmSmokeTestContainer(type: DockerStartContainer) {
 task waitDebSmokeTestContainer(type: DockerWaitContainer) {
     dependsOn 'startDebSmokeTestContainer'
     targetContainerId { startDebSmokeTestContainer.getContainerId() }
-    timeout = 180
+    awaitStatusTimeout = 180
 
     doLast {
         if(getExitCode() != 0) {
@@ -202,7 +194,7 @@ task waitDebSmokeTestContainer(type: DockerWaitContainer) {
 task waitRpmSmokeTestContainer(type: DockerWaitContainer) {
     dependsOn 'startRpmSmokeTestContainer'
     targetContainerId { startRpmSmokeTestContainer.getContainerId() }
-    timeout = 180
+    awaitStatusTimeout = 180
 
     doLast {
         if(getExitCode() != 0) {

@@ -36,26 +36,26 @@ app.use (function(req, res, next) {
 
 app.disable('etag');
 
-app.get('/*', function(req, res) {
+app.get('/{*splat}', function(req, res) {
     copyReqHeadersToRes(req, res)
-    res.send(getResStatus(req, 200), '{"server":"obtained successfully"}');
+    res.status(getResStatus(req, 200)).send('{"server":"obtained successfully"}');
 });
 
-app.put('/*', function(req, res) {
+app.put('/{*splat}', function(req, res) {
     res.set('content-type', 'application/atom+xml');
     res.set('x-pp-user', 'user1');
     copyReqHeadersToRes(req, res)
-    res.send(getResStatus(req, 201), '{"server":"updated successfully"}');
+    res.status(getResStatus(req, 201)).send('{"server":"updated successfully"}');
 });
 
-app.delete('/*', function(req, res) {
+app.delete('/{*splat}', function(req, res) {
     copyReqHeadersToRes(req, res)
-    res.send(getResStatus(req, 204), '{"server":"deleted successfully"}');
+    res.status(getResStatus(req, 204)).send('{"server":"deleted successfully"}');
 });
 
-app.post('/*', function(req, res) {
+app.post('/{*splat}', function(req, res) {
     copyReqHeadersToRes(req, res)
-    res.send(getResStatus(req, 201), '{"server":"added successfully"}');
+    res.status(getResStatus(req, 201)).send('{"server":"added successfully"}');
 });
 
 function copyReqHeadersToRes(req, res) {

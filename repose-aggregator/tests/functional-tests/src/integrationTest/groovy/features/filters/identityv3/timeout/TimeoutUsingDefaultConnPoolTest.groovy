@@ -20,12 +20,11 @@
 package features.filters.identityv3.timeout
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV3Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
 import java.util.concurrent.TimeUnit
 
@@ -33,7 +32,7 @@ import java.util.concurrent.TimeUnit
  * Created by jennyvo on 11/9/15.
  *  When no config pool id in keystone-v3 filter it will use default pool
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class TimeoutUsingDefaultConnPoolTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

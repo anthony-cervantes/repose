@@ -19,18 +19,17 @@
  */
 package features.core.jettycontainerconfig
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Core
 import spock.lang.Unroll
 
 /**
  * Created by jennyvo on 6/1/16.
  *   Verify expo some of jetty config item
  */
-@Category(Core)
+@Tag("scaffold.category.Core")
 class JettyConfigTest extends ReposeValveTest {
 
     def static params = [:]

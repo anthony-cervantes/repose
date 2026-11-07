@@ -36,8 +36,8 @@
 
 package org.openrepose.external.pjlcompression;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 

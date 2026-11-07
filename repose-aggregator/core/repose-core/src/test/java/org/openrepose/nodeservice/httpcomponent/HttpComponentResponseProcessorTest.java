@@ -30,8 +30,8 @@ import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class HttpComponentResponseProcessorTest {
 
         HttpComponentResponseProcessor.process(clientResponse, servletResponse);
 
-        verify(servletResponse).setStatus(HttpStatus.SC_OK, reasonPhrase);
+        verify(servletResponse).setStatus(HttpStatus.SC_OK);
     }
 
     @Test

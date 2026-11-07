@@ -20,12 +20,11 @@
 package features.filters.keystonev2.multitenantsheaders
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Identity
 import spock.lang.Unroll
 
 /**
@@ -33,7 +32,7 @@ import spock.lang.Unroll
  * This test verify when user token having multi-tenant client-auth filter will retrieve
  * all tenants and put in multi x-tenant-id in headers
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class MultiTenantHeadersTest extends ReposeValveTest {
 
     def static originEndpoint

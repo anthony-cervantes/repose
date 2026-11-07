@@ -21,12 +21,18 @@ package org.openrepose.commons.utils.io.stream;
 
 import org.junit.Before;
 import org.junit.Test;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ServletInputStreamWrapperTest {
 
@@ -93,5 +99,36 @@ public class ServletInputStreamWrapperTest {
     public void shouldDelegateMarkSupported() throws IOException {
         wrapper.markSupported();
         verify(stream).markSupported();
+    }
+
+    @Test
+    public void shouldReportBufferedEofAndReset() throws IOException {
+        wrapper = new ServletInputStreamWrapper(new ByteArrayInputStream(new byte[] {1}));
+        assertFalse(wrapper.isFinished());
+        wrapper.read();
+        assertTrue(wrapper.isFinished());
+        wrapper.reset();
+        assertFalse(wrapper.isFinished());
+    }
+
+    @Test
+    public void shouldKeepEofAfterZeroLengthRead() throws IOException {
+        when(stream.read()).thenReturn(-1);
+        wrapper.read();
+        wrapper.read(new byte[0]);
+        assertTrue(wrapper.isFinished());
+    }
+
+    @Test
+    public void shouldDelegateServletReadinessAndListener() {
+        ServletInputStream servletStream = mock(ServletInputStream.class);
+        ReadListener listener = mock(ReadListener.class);
+        wrapper = new ServletInputStreamWrapper(servletStream);
+        when(servletStream.isReady()).thenReturn(true);
+        when(servletStream.isFinished()).thenReturn(true);
+        assertTrue(wrapper.isReady());
+        assertTrue(wrapper.isFinished());
+        wrapper.setReadListener(listener);
+        verify(servletStream).setReadListener(listener);
     }
 }

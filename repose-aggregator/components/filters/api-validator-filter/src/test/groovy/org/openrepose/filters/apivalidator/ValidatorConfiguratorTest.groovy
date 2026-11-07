@@ -25,7 +25,7 @@ import org.junit.Before
 import org.junit.Test
 import org.openrepose.filters.apivalidator.config.ValidatorConfiguration
 import org.openrepose.filters.apivalidator.config.ValidatorItem
-import scala.collection.JavaConversions
+import scala.jdk.javaapi.CollectionConverters
 
 class ValidatorConfiguratorTest {
 
@@ -73,7 +73,7 @@ class ValidatorConfiguratorTest {
         vItem.setEnableApiCoverage(true)
 
         DispatchResultHandler handlers = vldtrConfigurator.getHandlers(vItem, false, 0.0, true, "", "")
-        def internalHandlers = JavaConversions.seqAsJavaList(handlers.handlers)
+        def internalHandlers = CollectionConverters.asJava(handlers.handlers)
         assert internalHandlers.get(0) instanceof InstrumentedHandler
         assert internalHandlers.get(1) instanceof ApiCoverageHandler
     }
@@ -84,7 +84,7 @@ class ValidatorConfiguratorTest {
         ValidatorItem vItem = new ValidatorItem()
 
         DispatchResultHandler handlers = vldtrConfigurator.getHandlers(vItem, true, 0.9, true, "", "")
-        def internalHandlers = JavaConversions.seqAsJavaList(handlers.handlers)
+        def internalHandlers = CollectionConverters.asJava(handlers.handlers)
         assert internalHandlers.get(0) instanceof MethodLabelHandler
         assert internalHandlers.get(1) instanceof DelegationHandler
     }

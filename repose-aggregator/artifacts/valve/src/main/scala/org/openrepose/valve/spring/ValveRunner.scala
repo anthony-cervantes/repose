@@ -25,7 +25,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicReference
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
+import jakarta.inject.{Inject, Named}
 import javax.management.{InstanceNotFoundException, ObjectName}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.container.config.ContainerConfiguration
@@ -61,7 +61,7 @@ class ValveRunner @Inject()(
 
   // Note this won't pick up on interfaces added after repose has been turned on I think (oh well?)
   private val localAddresses: Set[InetAddress] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     NetworkInterface.getNetworkInterfaces.asScala.toList.flatMap(interface =>
       interface.getInetAddresses.asScala.toList).toSet
   }
@@ -124,11 +124,11 @@ class ValveRunner @Inject()(
         //Because it's so much easier to have all this in one object rather than having to get it from a hierarchy
         case class ConfiguredNode(nodeId: String, host: String, httpPort: Option[Int], httpsPort: Option[Int])
 
-        import scala.collection.JavaConversions._
+        import scala.jdk.CollectionConverters._
         //Figure out what nodes are new in the system model, and do things
         //Get a list of ConfiguredNodes (so I have all the information I need) from the XML object by mapping the heck out of the
         //ugly jaxb objects
-        val newConfiguredLocalNodes = systemModel.getNodes.getNode.toList.filter(node => isLocal(node.getHostname)).map { xmlNode =>
+        val newConfiguredLocalNodes = systemModel.getNodes.getNode.asScala.toList.filter(node => isLocal(node.getHostname)).map { xmlNode =>
           //This is a wrapper function to go from the XSD's primitive int type to an Option, so that it has meaning
           val intToOption: Int => Option[Int] = { i =>
             if (i == 0) {

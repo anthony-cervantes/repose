@@ -22,11 +22,15 @@ package org.openrepose.commons.utils.servlet.http
 import java.io.InputStream
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.ServletOutputStream
+import jakarta.servlet.{ServletOutputStream, WriteListener}
 
 class PassthroughServletOutputStream(servletOutputStream: ServletOutputStream)
   extends ExtendedServletOutputStream
     with StrictLogging {
+
+  override def isReady: Boolean = servletOutputStream.isReady
+
+  override def setWriteListener(listener: WriteListener): Unit = servletOutputStream.setWriteListener(listener)
 
   override def write(b: Int): Unit = servletOutputStream.write(b)
 

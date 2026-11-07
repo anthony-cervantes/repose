@@ -4,25 +4,25 @@ configurations {
 }
 
 dependencies {
-    integrationTestCompile "junit:junit"
-    integrationTestCompile "org.hamcrest:hamcrest-library"
-    integrationTestCompile "org.codehaus.groovy:groovy-all"
-    integrationTestCompile "org.spockframework:spock-core"
-    integrationTestCompile "org.rackspace:deproxy"
-    integrationTestCompile "joda-time:joda-time"
-    integrationTestCompile project(":repose-aggregator:commons:commons-utilities")
-    integrationTestCompile project(":repose-aggregator:commons:commons-configuration")
-    integrationTestCompile project(":repose-aggregator:core:repose-core-api")
-    integrationTestCompile project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
-    integrationTestCompile project(":repose-aggregator:tests:functional-test-framework")
-    integrationTestCompile "javax.ws.rs:javax.ws.rs-api"
-    integrationTestCompile "org.eclipse.jetty:jetty-server"
-    integrationTestCompile "org.eclipse.jetty:jetty-servlet"
-    integrationTestCompile "org.apache.commons:commons-lang3"
-    integrationTestCompile "org.springframework:spring-web"
-    integrationTestCompile "org.apache.logging.log4j:log4j-slf4j-impl"
-    integrationTestCompile "org.slf4j:jcl-over-slf4j"
-    integrationTestCompile "com.google.guava:guava"
+    integrationTestImplementation "junit:junit"
+    integrationTestImplementation "org.hamcrest:hamcrest"
+    integrationTestImplementation "org.apache.groovy:groovy-all"
+    integrationTestImplementation "org.spockframework:spock-core"
+    integrationTestImplementation "org.rackspace:deproxy"
+    integrationTestImplementation "joda-time:joda-time"
+    integrationTestImplementation project(":repose-aggregator:commons:commons-utilities")
+    integrationTestImplementation project(":repose-aggregator:commons:commons-configuration")
+    integrationTestImplementation project(":repose-aggregator:core:repose-core-api")
+    integrationTestImplementation project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
+    integrationTestImplementation project(":repose-aggregator:tests:functional-test-framework")
+    integrationTestImplementation "jakarta.ws.rs:jakarta.ws.rs-api"
+    integrationTestImplementation "org.eclipse.jetty:jetty-server"
+    integrationTestImplementation "org.eclipse.jetty.ee11:jetty-ee11-servlet"
+    integrationTestImplementation "org.apache.commons:commons-lang3"
+    integrationTestImplementation "org.springframework:spring-web"
+    integrationTestImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
+    integrationTestImplementation "org.slf4j:jcl-over-slf4j"
+    integrationTestImplementation "com.google.guava:guava"
 
     integrationTestRunnable project(path: ":repose-aggregator:artifacts:valve", configuration: "fatJar")
     integrationTestRunnable project(path: ":repose-aggregator:tests:mocks-servlet", configuration: "archives")
@@ -50,8 +50,8 @@ task copyArtifacts() {
               ":repose-aggregator:tests:test-bundles:classloader-bundle-four:ear",
               ":repose-aggregator:tests:test-bundles:classloader-bundle-five:ear")
     ext.outputDir = "$buildDir/repose_home"
-    inputs.files(configurations.integrationTestRunnable.files,
-                 configurations.integrationTestBundle.files)
+    inputs.files(configurations.integrationTestRunnable,
+                 configurations.integrationTestBundle)
     outputs.dir outputDir
 
     doLast {
@@ -90,8 +90,8 @@ integrationTest.dependsOn copyArtifacts, copyConfigs
 
 def container = "valve"
 def targetHostName = "localhost"
-def valveFileName = tasks.getByPath(":repose-aggregator:artifacts:valve:shadowJar").archiveName.split("/").last()
-def mocksFileName = tasks.getByPath(":repose-aggregator:tests:mocks-servlet:war").archiveName.split("/").last()
+def valveFileName = tasks.getByPath(":repose-aggregator:artifacts:valve:shadowJar").archiveFileName.get()
+def mocksFileName = tasks.getByPath(":repose-aggregator:tests:mocks-servlet:war").archiveFileName.get()
 
 processIntegrationTestResources {
     expand(
@@ -107,38 +107,38 @@ processIntegrationTestResources {
 }
 
 integrationTest {
-    useJUnit {
+    useJUnitPlatform {
         def runTest = project.findProperty("run") ?: 'smoke'
         switch(runTest) {
             case "all":
-                excludeCategories "scaffold.category.Bug"
+                excludeTags "scaffold.category.Bug"
                 break
             case "bug":
-                includeCategories "scaffold.category.Bug"
+                includeTags "scaffold.category.Bug"
                 break
             case "core":
-                includeCategories "scaffold.category.Core"
+                includeTags "scaffold.category.Core"
                 break
             case "filters":
-                includeCategories "scaffold.category.Filters"
+                includeTags "scaffold.category.Filters"
                 break
             case "identity":
-                includeCategories "scaffold.category.Identity"
+                includeTags "scaffold.category.Identity"
                 break
             case "intense":
-                includeCategories "scaffold.category.Intense"
+                includeTags "scaffold.category.Intense"
                 break
             case "recipe":
-                includeCategories "scaffold.category.Recipe"
+                includeTags "scaffold.category.Recipe"
                 break
             case "services":
-                includeCategories "scaffold.category.Services"
+                includeTags "scaffold.category.Services"
                 break
             case "xml":
-                includeCategories "scaffold.category.XmlParsing"
+                includeTags "scaffold.category.XmlParsing"
                 break
             default:
-                includeCategories "scaffold.category.Smoke"
+                includeTags "scaffold.category.Smoke"
         }
     }
 

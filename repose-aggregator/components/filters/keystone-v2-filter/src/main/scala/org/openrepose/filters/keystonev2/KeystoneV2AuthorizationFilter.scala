@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.keystonev2
 
-import javax.inject.{Inject, Named}
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.{ROLES, TENANT_ID, TENANT_ROLES_MAP}
@@ -47,7 +47,7 @@ class KeystoneV2AuthorizationFilter @Inject()(configurationService: Configuratio
   override val DEFAULT_CONFIG = "keystone-v2-authorization.cfg.xml"
   override val SCHEMA_LOCATION = "/META-INF/schema/config/keystone-v2-authorization.xsd"
 
-  override val handleFailures: PartialFunction[Try[Unit.type], KeystoneV2Result] = {
+  override val handleFailures: PartialFunction[Try[Unit], KeystoneV2Result] = {
     KeystoneV2Authorization.handleFailures orElse {
       case Failure(e@(_: MissingTenantToRolesMapException |
                       _: MissingEndpointsException |
@@ -57,15 +57,15 @@ class KeystoneV2AuthorizationFilter @Inject()(configurationService: Configuratio
     }
   }
 
-  override def doAuth(request: HttpServletRequestWrapper): Try[Unit.type] = {
+  override def doAuth(request: HttpServletRequestWrapper): Try[Unit] = {
     getTenantToRolesMap(request) flatMap { tenantToRolesMap =>
       doAuthorization(configuration, request, tenantToRolesMap, getEndpoints(request)) match {
         case AuthorizationPassed(scopedTenantToRolesMap, matchedTenants) if scopedTenantToRolesMap.nonEmpty =>
           scopeTenantIdHeader(request, matchedTenants)
           scopeRolesHeader(request, scopedTenantToRolesMap.values.flatten.toSet)
           scopeTenantToRolesMapHeader(request, scopedTenantToRolesMap)
-          Success(Unit)
-        case AuthorizationPassed(_, _) => Success(Unit)
+          Success(())
+        case AuthorizationPassed(_, _) => Success(())
         case AuthorizationFailed(_, _, exception) => Failure(exception)
       }
     }

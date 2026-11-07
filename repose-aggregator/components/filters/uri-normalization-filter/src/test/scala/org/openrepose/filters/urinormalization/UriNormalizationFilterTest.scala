@@ -20,23 +20,25 @@
 package org.openrepose.filters.urinormalization
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.Optional
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.ws.rs.core.HttpHeaders
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.ws.rs.core.HttpHeaders
 
 import com.codahale.metrics.{Meter, MetricRegistry}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyString, same}
+import org.mockito.ArgumentMatchers.{any, anyString, same}
 import org.mockito.Mockito.{reset, verify, when}
 import org.openrepose.core.services.config.ConfigurationService
 import org.openrepose.core.services.reporting.metrics.{MetricsService, AggregateMeterFactory}
 import org.openrepose.filters.urinormalization.config._
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockFilterChain, MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class UriNormalizationFilterTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {
@@ -80,7 +82,7 @@ class UriNormalizationFilterTest extends FunSpec with BeforeAndAfterEach with Ma
       filter.init(new MockFilterConfig())
 
       verify(configurationService).subscribeTo(
-        anyString(),
+        any[String](),
         anyString(),
         any[URL],
         same(filter),
@@ -93,7 +95,7 @@ class UriNormalizationFilterTest extends FunSpec with BeforeAndAfterEach with Ma
     it("should unregister configuration listener") {
       filter.destroy()
 
-      verify(configurationService).unsubscribeFrom(anyString(), same(filter))
+      verify(configurationService).unsubscribeFrom(any[String](), same(filter))
     }
   }
 
@@ -195,9 +197,9 @@ class UriNormalizationFilterTest extends FunSpec with BeforeAndAfterEach with Ma
     // this consistently triggers the undependable ordering of scala.collection.mutable.HashMap, so test it
     it("should load it in order resulting in the ALL target being used") {
       filter.configurationUpdated(createConfig(uriFilterTargets = Iterable(
-        (new Target).withHttpMethods(List(HttpMethod.ALL))
+        (new Target).withHttpMethods(HttpMethod.ALL)
           .withWhitelist((new HttpUriParameterList).withParameter((new UriParameter).withName("a"))),
-        (new Target).withHttpMethods(List(HttpMethod.GET))
+        (new Target).withHttpMethods(HttpMethod.GET)
           .withWhitelist((new HttpUriParameterList).withParameter((new UriParameter).withName("b")))
       )))
 

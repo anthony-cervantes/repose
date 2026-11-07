@@ -19,16 +19,15 @@
  */
 package features.filters.keystonev2.burst
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Request
 import org.rackspace.deproxy.Response
-import scaffold.category.Identity
 
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class ValidateTokenBurstTest extends ReposeValveTest {
 
     def static originEndpoint

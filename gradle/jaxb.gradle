@@ -1,0 +1,35 @@
+// JAXB was removed from the JDK in Java 11. Keep schema generation and its
+// compiler plugins on their own classpath, separate from application classes.
+configurations {
+    jaxb {
+        canBeConsumed = false
+    }
+    xjc {
+        canBeConsumed = false
+        extendsFrom jaxb
+    }
+}
+
+tasks.register('xjc', JavaExec) {
+    ext.schemaDirectory = file('src/main/resources/META-INF/schema')
+    ext.destinationDirectory = file("$buildDir/src/generated-sources")
+    ext.extraArgs = []
+
+    mainClass = 'com.sun.tools.xjc.Driver'
+    classpath = configurations.xjc
+    maxHeapSize = '256m'
+
+    inputs.files(provider { fileTree(schemaDirectory) { include '**/*.xsd', '**/*.xjb' } })
+    inputs.files(configurations.xjc)
+    inputs.property('extraArgs', provider { extraArgs })
+    outputs.dir(provider { destinationDirectory })
+    onlyIf { !fileTree(schemaDirectory) { include '**/*.xsd' }.empty }
+
+    doFirst {
+        destinationDirectory.mkdirs()
+        def schemas = fileTree(schemaDirectory) { include '**/*.xsd' }.files.sort()
+        def bindings = fileTree(schemaDirectory) { include '**/*.xjb' }.files.sort()
+        args = ['-d', destinationDirectory.absolutePath, '-extension', '-no-header', '-quiet'] + extraArgs +
+            bindings.collectMany { ['-b', it.absolutePath] } + schemas.collect { it.absolutePath }
+    }
+}

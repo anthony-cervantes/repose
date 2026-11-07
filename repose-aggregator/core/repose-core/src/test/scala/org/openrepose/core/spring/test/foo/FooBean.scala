@@ -19,7 +19,7 @@
  */
 package org.openrepose.core.spring.test.foo
 
-import javax.inject.Named
+import jakarta.inject.Named
 
 @Named
 class FooBean {

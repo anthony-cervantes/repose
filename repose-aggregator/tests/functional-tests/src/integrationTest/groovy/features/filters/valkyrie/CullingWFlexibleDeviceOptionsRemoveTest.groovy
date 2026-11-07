@@ -20,20 +20,19 @@
 package features.filters.valkyrie
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.openrepose.framework.test.mocks.MockValkyrie
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 import static features.filters.valkyrie.CullingWFlexibleDeviceOptionsTestsHelper.jsonrespbody
 import static features.filters.valkyrie.CullingWFlexibleDeviceOptionsTestsHelper.randomTenant
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class CullingWFlexibleDeviceOptionsRemoveTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

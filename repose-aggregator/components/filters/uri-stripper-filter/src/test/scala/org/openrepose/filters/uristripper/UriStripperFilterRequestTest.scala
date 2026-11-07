@@ -21,18 +21,20 @@
 package org.openrepose.filters.uristripper
 
 import java.nio.charset.Charset
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.{FilterChain, ServletResponse}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.{FilterChain, ServletResponse}
 
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.openrepose.commons.utils.http.media.MimeType
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 import play.api.libs.json.{JsDefined, JsUndefined, Json}
 

@@ -1,0 +1,54 @@
+<!--
+    priority-map.xml
+
+    This data file creates a map from step type to a inital
+    priority. The @multValue is added to the priority for any
+    attribute listed in @attributeMultipliers.
+
+    For example if an URL_FAIL type has a priority of 10000,
+    attributeMultiplers "notMatch notTypes" and a multValue of 150. If
+    an instance of an URL_FAIL step has the notMatch value then the
+    initial priority will be 10000+150=10150.  If both the notMatch
+    and notTypes atttribute is said then the initial priority will be
+    10000+150+150=10300.
+
+    The actual priority of a step is set in priority.xsl.
+
+    Copyright 2014 Rackspace US, Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<priority-map xmlns="http://www.rackspace.com/repose/wadl/checker/priority">
+    <map type="URL_FAIL"      priority="10000" attributeMultipliers="notMatch notTypes" multValue="2"/>
+    <map type="METHOD_FAIL"   priority="20000" attributeMultipliers="notMatch" multValue="50"/>
+    <map type="CONTENT_FAIL"  priority="40000"/>
+    <map type="HEADER"        priority="41000"/>
+    <map type="HEADERXSD"     priority="41000"/>
+    <map type="HEADER_SINGLE" priority="41000"/>
+    <map type="HEADERXSD_SINGLE" priority="41000"/>
+    <map type="HEADER_ANY"    priority="41000"/>
+    <map type="HEADERXSD_ANY" priority="41000"/>
+    <map type="HEADER_ALL"    priority="41000"/>
+    <map type="REQ_TYPE_FAIL" priority="45000"/>
+    <map type="WELL_XML"      priority="50000"/>
+    <map type="WELL_JSON"     priority="50000"/>
+    <map type="PUSH_XML_REP"  priority="50000"/>
+    <map type="PUSH_JSON_REP" priority="50000"/>
+    <map type="XPATH"         priority="50000"/>
+    <map type="JSON_XPATH"    priority="50000"/>
+    <map type="XSL"           priority="50000"/>
+    <map type="ASSERT"        priority="50000"/>
+    <map type="XSD"           priority="55000"/>
+    <map type="JSON_SCHEMA"   priority="55000"/>
+    <map type="ACCEPT"        priority="100000"/>
+</priority-map>

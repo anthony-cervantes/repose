@@ -20,14 +20,16 @@
 package org.openrepose.nodeservice.distributed.servlet
 
 import java.net.InetAddress
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.Collections
 
 import io.opentracing.mock.MockTracer
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse._
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -39,10 +41,10 @@ import org.openrepose.core.services.datastore.{Datastore, DatastoreAccessControl
 import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class DistributedDatastoreServletTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {

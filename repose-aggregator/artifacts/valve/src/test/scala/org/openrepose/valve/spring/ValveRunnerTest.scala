@@ -20,13 +20,15 @@
 package org.openrepose.valve.spring
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.container.config.ContainerConfiguration
 import org.openrepose.core.spring.CoreSpringProvider
 import org.openrepose.core.systemmodel.config.SystemModel
 import org.openrepose.nodeservice.test.FakeContainerConfigurationService
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{FunSpec, Matchers}
+
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.{Await, Future}
@@ -53,7 +55,7 @@ class ValveRunnerTest extends FunSpec with Matchers {
     } finally {
       runner.destroy()
     }
-    Await.ready(runnerTask, 3 seconds)
+    Await.ready(runnerTask, 3.seconds)
   }
 
   def updateSystemModel(resource: String): UpdateListener[SystemModel] = {
@@ -80,7 +82,7 @@ class ValveRunnerTest extends FunSpec with Matchers {
     future.isCompleted shouldBe false
 
     runner.destroy()
-    Await.ready(future, 1 second)
+    Await.ready(future, 1.second)
     future.isCompleted shouldBe true
   }
 
@@ -299,7 +301,7 @@ class ValveRunnerTest extends FunSpec with Matchers {
       updateContainerConfig("/valveTesting/without-keystore.cfg.xml")
       updateSystemModel("/valveTesting/0node/system-model-0.cfg.xml")
       runner.getActiveNodes shouldBe empty
-      val exitCode = Await.result(runnerTask, 1 second)
+      val exitCode = Await.result(runnerTask, 1.second)
       exitCode shouldBe 0
     }
   }

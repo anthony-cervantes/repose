@@ -2,23 +2,22 @@
 # docker build --build-arg REPOSE_VERSION=latest -t repose-container .
 # To run the built image, use a command like the following:
 # docker run --rm repose-container
-FROM ubuntu:xenial
+FROM ubuntu:24.04
 
 MAINTAINER The Repose Team <reposecore@rackspace.com>
 
 # The service ports -- one for accepting HTTP traffic to Repose, and the other for connecting a JDWP debugger
 # Note that these are not exposed to the host by default, but can be using the Docker CLI -p or -P flag.
 EXPOSE 8080 10037
+ENV PATH="/opt/repose-verification-venv/bin:${PATH}"
 
-RUN apt-get update -qq && apt-get install -y -qq \
-    apt-transport-https \
-    ca-certificates \
-    wget \
-    curl \
-    python-pip \
-    openjdk-8-jre-headless
-RUN wget --quiet -O - https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose | apt-key add -
-RUN echo 'deb https://nexus.openrepose.org/repository/debian stable main' > /etc/apt/sources.list.d/openrepose.list
+RUN apt-get update -qq && apt-get install -qq -y ca-certificates wget \
+    && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
+    && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
+    && apt-get update -qq && apt-get install -qq -y temurin-27-jre
+RUN apt-get install -qq -y curl python3-venv python3-pip build-essential
+RUN wget --quiet -O /usr/share/keyrings/openrepose.asc https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose
+RUN echo 'deb [signed-by=/usr/share/keyrings/openrepose.asc] https://nexus.openrepose.org/repository/debian stable main' > /etc/apt/sources.list.d/openrepose.list
 
 # Note: The COPY instruction was used rather than VOLUME since the behave of VOLUME varies based on the host OS
 COPY etc_repose /release-verification/etc_repose
@@ -32,11 +31,13 @@ RUN sh /release-verification/scripts/node_install.sh
 
 RUN sh /release-verification/scripts/fake_keystone_prepare.sh
 RUN cp /release-verification/fake-services/fake-keystone2/package.json /opt/fake-keystone/package.json
+RUN cp /release-verification/fake-services/fake-keystone2/package-lock.json /opt/fake-keystone/package-lock.json
 RUN cp /release-verification/fake-services/fake-keystone2/app.js /opt/fake-keystone/app.js
 RUN sh /release-verification/scripts/fake_keystone_install.sh
 
 RUN sh /release-verification/scripts/fake_origin_prepare.sh
 RUN cp /release-verification/fake-services/fake-origin/package.json /opt/fake-origin/package.json
+RUN cp /release-verification/fake-services/fake-origin/package-lock.json /opt/fake-origin/package-lock.json
 RUN cp /release-verification/fake-services/fake-origin/app.js /opt/fake-origin/app.js
 RUN sh /release-verification/scripts/fake_origin_install.sh
 

@@ -20,10 +20,12 @@
 package org.openrepose.filters.openstackidentityv3
 
 import java.util.{Calendar, GregorianCalendar}
-import javax.servlet.http.HttpServletResponse._
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.http.HttpServletResponse._
 
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{eq => mockitoEq}
+import org.mockito.ArgumentMatchers.{eq => mockitoEq}
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.commons.utils.http.{HttpDate, OpenStackServiceHeader}
 import org.openrepose.commons.utils.servlet.filter.FilterAction

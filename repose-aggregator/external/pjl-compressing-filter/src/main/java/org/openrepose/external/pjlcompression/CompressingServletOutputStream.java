@@ -36,7 +36,8 @@
 
 package org.openrepose.external.pjlcompression;
 
-import javax.servlet.ServletOutputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -55,6 +56,16 @@ final class CompressingServletOutputStream extends ServletOutputStream {
     private ThresholdOutputStream thresholdOutputStream;
     private boolean closed;
     private boolean aborted;
+
+    @Override
+    public boolean isReady() {
+        return !closed;
+    }
+
+    @Override
+    public void setWriteListener(WriteListener listener) {
+        throw new IllegalStateException("Compression streams support blocking I/O only");
+    }
 
     CompressingServletOutputStream(OutputStream rawStream,
                                    CompressingStreamFactory compressingStreamFactory,

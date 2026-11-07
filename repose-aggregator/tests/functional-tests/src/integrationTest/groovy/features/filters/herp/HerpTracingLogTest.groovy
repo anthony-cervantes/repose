@@ -20,17 +20,16 @@
 package features.filters.herp
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 
 /**
  * Created by jennyvo on 5/22/15.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class HerpTracingLogTest extends ReposeValveTest {
 
     def setupSpec() {

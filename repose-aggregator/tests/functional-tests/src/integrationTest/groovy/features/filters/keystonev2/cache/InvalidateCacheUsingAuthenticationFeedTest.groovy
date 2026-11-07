@@ -19,7 +19,7 @@
  */
 package features.filters.keystonev2.cache
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
@@ -31,7 +31,7 @@ import scaffold.category.Identity
  * Created by jennyvo on 1/22/16.
  *  identity using authenticated feed
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class InvalidateCacheUsingAuthenticationFeedTest extends ReposeValveTest {
 
     def originEndpoint

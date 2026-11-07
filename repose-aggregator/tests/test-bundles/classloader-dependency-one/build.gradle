@@ -1,5 +1,5 @@
 dependencies {
-    compile "org.scala-lang:scala-library"
+    api "org.scala-lang:scala-library"
 }
 
 dependencyCheck {

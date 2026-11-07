@@ -20,15 +20,14 @@
 package features.filters.uristripper
 
 import groovy.json.JsonBuilder
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.commons.utils.http.media.MimeType
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class UriStripperRequestLinkResourceJsonMismatchFailTest extends ReposeValveTest {
 
     def static String tenantId = "94828347"

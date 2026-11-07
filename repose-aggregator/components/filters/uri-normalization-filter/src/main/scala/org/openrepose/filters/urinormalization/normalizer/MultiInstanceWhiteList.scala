@@ -22,7 +22,7 @@ package org.openrepose.filters.urinormalization.normalizer
 import org.openrepose.commons.utils.http.normal.ParameterFilter
 import org.openrepose.filters.urinormalization.config.{HttpUriParameterList, UriParameter}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 class MultiInstanceWhiteList(val parameterList: HttpUriParameterList) extends ParameterFilter {
 
@@ -30,7 +30,7 @@ class MultiInstanceWhiteList(val parameterList: HttpUriParameterList) extends Pa
 
   def shouldAccept(name: String): Boolean = {
     Option(parameterList) exists { pl =>
-      pl.getParameter.find(parameter => if (parameter.isCaseSensitive) name == parameter.getName else name.equalsIgnoreCase(parameter.getName))
+      pl.getParameter.asScala.find(parameter => if (parameter.isCaseSensitive) name == parameter.getName else name.equalsIgnoreCase(parameter.getName))
         .exists(logHit)
     }
   }

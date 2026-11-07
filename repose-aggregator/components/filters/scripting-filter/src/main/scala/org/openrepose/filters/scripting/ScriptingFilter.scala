@@ -20,10 +20,10 @@
 package org.openrepose.filters.scripting
 
 import java.net.URL
-import javax.inject.{Inject, Named}
+import jakarta.inject.{Inject, Named}
 import javax.script._
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.{UpdateFailedException, UpdateListener}
@@ -100,8 +100,8 @@ class ScriptingFilter @Inject()(configurationService: ConfigurationService)
       case Some(engine) =>
         ScriptRunner(configurationObject.getValue, engine)
       case None =>
-        logger.error(configurationObject.getLanguage + " is not a supported language")
-        throw new UpdateFailedException(configurationObject.getLanguage + " is not a supported language", null)
+        logger.error(configurationObject.getLanguage.toString + " is not a supported language")
+        throw new UpdateFailedException(configurationObject.getLanguage.toString + " is not a supported language", null)
     }
 
     initialized = true

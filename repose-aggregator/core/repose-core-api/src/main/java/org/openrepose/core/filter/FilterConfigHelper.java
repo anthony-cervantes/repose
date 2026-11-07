@@ -21,7 +21,7 @@ package org.openrepose.core.filter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 
 public class FilterConfigHelper {
     public static final String FILTER_CONFIG = "filter-config";

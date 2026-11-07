@@ -22,8 +22,8 @@ package org.openrepose.commons.utils.logging.apache.format.stock;
 import org.openrepose.commons.utils.http.PowerApiHeader;
 import org.openrepose.commons.utils.logging.apache.format.FormatterLogic;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class RemoteUserHandler implements FormatterLogic {
 

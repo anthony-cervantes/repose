@@ -20,15 +20,17 @@
 
 package org.openrepose.core.systemmodel.config
 
-import javax.servlet.ServletInputStream
+import jakarta.servlet.ServletInputStream
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.MockHttpServletRequest
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class OrTest extends FunSpec with Matchers with MockitoSugar {

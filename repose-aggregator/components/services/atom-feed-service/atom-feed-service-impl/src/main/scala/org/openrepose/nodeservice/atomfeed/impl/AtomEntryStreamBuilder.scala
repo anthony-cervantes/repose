@@ -33,7 +33,7 @@ import org.openrepose.commons.utils.http.CommonHttpHeader
 import org.openrepose.commons.utils.logging.TracingHeaderHelper
 import org.openrepose.nodeservice.atomfeed.{AuthenticatedRequestFactory, AuthenticationRequestContext, FeedReadRequest}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -92,8 +92,8 @@ object AtomEntryStreamBuilder {
         feedReadRequest.getHeaders.put(CommonHttpHeader.TRACE_GUID, util.Arrays.asList(tracingHeader))
 
         val httpGet = RequestBuilder.get(feedReadRequest.getURI).build()
-        feedReadRequest.getHeaders foreach { case (key, values) =>
-          values.foreach(value => httpGet.addHeader(key, value))
+        feedReadRequest.getHeaders.asScala foreach { case (key, values) =>
+          values.asScala.foreach(value => httpGet.addHeader(key, value))
         }
 
         val httpResponse = httpClient.execute(httpGet)
@@ -107,13 +107,13 @@ object AtomEntryStreamBuilder {
             // todo: support character encodings other than UTF-8, based on the response Content-Type charset
             val feed = parser.parse[Feed](content).getRoot
 
-            feed.getLinks.find(link => link.getRel.equals("next")) match {
+            feed.getLinks.asScala.find(link => link.getRel.equals("next")) match {
               case Some(nextPageLink) =>
                              // V This cast is important, it forces the list to fully realize and not stream
-                feed.getEntries.asInstanceOf[FOMList[Entry]].getAsList.toStream #::: buildR(nextPageLink.getResolvedHref.toURI, httpClient, context, authenticator, authenticationTimeout)
+                feed.getEntries.asInstanceOf[FOMList[Entry]].getAsList.asScala.toStream #::: buildR(nextPageLink.getResolvedHref.toURI, httpClient, context, authenticator, authenticationTimeout)
               case None =>
                              // V This cast is important, it forces the list to fully realize and not stream
-                feed.getEntries.asInstanceOf[FOMList[Entry]].getAsList.toStream
+                feed.getEntries.asInstanceOf[FOMList[Entry]].getAsList.asScala.toStream
             }
           } else if (statusCode >= 400 && statusCode < 500) {
             authenticator.foreach(_.onInvalidCredentials)

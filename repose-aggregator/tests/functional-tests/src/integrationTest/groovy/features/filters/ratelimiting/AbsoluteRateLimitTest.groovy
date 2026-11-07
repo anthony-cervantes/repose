@@ -20,7 +20,8 @@
 package features.filters.ratelimiting
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import groovy.xml.XmlSlurper
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeLogSearch
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
@@ -28,7 +29,6 @@ import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 import javax.xml.parsers.DocumentBuilder
@@ -36,12 +36,12 @@ import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
 /**
  * Copied most of this from the RateLimitingTest
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class AbsoluteRateLimitTest extends ReposeValveTest {
     final Map<String, String> userHeaderDefault = ["X-PP-User": "user"]
     final Map<String, String> groupHeaderDefault = ["X-PP-Groups": "customer"]

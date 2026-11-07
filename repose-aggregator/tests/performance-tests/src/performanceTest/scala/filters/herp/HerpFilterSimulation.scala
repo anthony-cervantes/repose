@@ -45,14 +45,14 @@ class HerpFilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getResource)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Herp Filter Test")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getResource)
     }
 
@@ -65,13 +65,13 @@ class HerpFilterSimulation extends AbstractReposeSimulation {
       .queryParam("tenantid", "12345")
       .header(HttpHeaderNames.Accept, HttpHeaderValues.ApplicationXml)
       .header(HttpHeaderNames.Host, "localhost")
-      .header("x-tenant-id", "${tenantId}")
-      .header("x-auth-token", "${authToken}")
+      .header("x-tenant-id", "#{tenantId}")
+      .header("x-auth-token", "#{authToken}")
       .header("x-roles", "default")
-      .header("x-user-id", "${userId}")
-      .header("x-user-name", "${userName}")
-      .header("x-impersonator-id", "${impersonatorId}")
-      .header("x-impersonator-name", "${impersonatorName}")
+      .header("x-user-id", "#{userId}")
+      .header("x-user-name", "#{userName}")
+      .header("x-impersonator-id", "#{impersonatorId}")
+      .header("x-impersonator-name", "#{impersonatorName}")
       .check(status.is(200))
   }
 }

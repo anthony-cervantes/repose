@@ -20,11 +20,13 @@
 package org.openrepose.filters.keystonev2
 
 import java.util.UUID
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.concurrent.TimeUnit
 
 import org.junit.runner.RunWith
 import org.mockito.AdditionalMatchers._
-import org.mockito.Matchers.{any => mockitoAny, eq => mockitoEq, _}
+import org.mockito.ArgumentMatchers.{any => mockitoAny, eq => mockitoEq, _}
 import org.mockito.Mockito
 import org.mockito.Mockito._
 import org.openrepose.core.services.config.ConfigurationService
@@ -36,7 +38,7 @@ import org.openrepose.filters.keystonev2.config.AtomFeedType
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, AtomFeedService}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.springframework.mock.web.MockFilterConfig
 
 @RunWith(classOf[JUnitRunner])

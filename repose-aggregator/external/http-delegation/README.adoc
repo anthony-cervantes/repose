@@ -1,0 +1,5 @@
+= HTTP Delegation
+
+Restored from this repository immediately before removal commit
+e5101bc5e02a801de01a0796aa9a455b9da32955, retaining the original license headers.
+The delegation protocol and its tests are now maintained with Repose.

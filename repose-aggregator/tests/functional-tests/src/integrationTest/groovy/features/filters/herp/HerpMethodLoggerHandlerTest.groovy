@@ -20,12 +20,11 @@
 package features.filters.herp
 
 import groovy.json.JsonSlurper
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
@@ -33,7 +32,7 @@ import spock.lang.Unroll
  *  When using with api validator with enable-api-coverage
  *  method name should be moved forward to log
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class HerpMethodLoggerHandlerTest extends ReposeValveTest {
 
     def setupSpec() {

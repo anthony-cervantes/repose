@@ -19,14 +19,13 @@
  */
 package features.core.powerfilter
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Response
-import scaffold.category.Core
 
 
-@Category(Core)
+@Tag("scaffold.category.Core")
 class HeaderParserTest extends ReposeValveTest {
 
     def static String locations = "/v1/queues/mqueue/messages?ids=locationOne,locationTwo"

@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser')
 const express = require('express');
-const libxml = require('libxmljs');
-const uuidV4 = require('uuid/v4');
+const libxml = require('libxmljs2');
+const uuidV4 = require('uuid').v4;
 require('date-utils');
 
 const app = express();

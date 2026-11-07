@@ -23,21 +23,21 @@ import java.io.{BufferedReader, InputStreamReader}
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.util
-import javax.servlet.ServletInputStream
-import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
+import jakarta.servlet.ServletInputStream
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.utils.DateUtils
 import org.openrepose.commons.utils.io.RawInputStreamReader
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.{TreeMap, TreeSet}
 import scala.collection.mutable
 
 class HttpServletRequestWrapper(originalRequest: HttpServletRequest,
                                 val inputStream: ServletInputStream)
-  extends javax.servlet.http.HttpServletRequestWrapper(originalRequest)
+  extends jakarta.servlet.http.HttpServletRequestWrapper(originalRequest)
     with HeaderInteractor {
 
   import HttpServletRequestWrapper._
@@ -54,6 +54,7 @@ class HttpServletRequestWrapper(originalRequest: HttpServletRequest,
   private var formParameterMap: Option[Map[String, Array[String]]] = None
   private var headerMap: Map[String, List[String]] = new TreeMap[String, List[String]]()(caseInsensitiveOrdering)
   private var removedHeaders: Set[String] = new TreeSet[String]()(caseInsensitiveOrdering)
+  private var removedOriginalHeaders: Set[String] = new TreeSet[String]()(caseInsensitiveOrdering)
 
   def this(originalRequest: HttpServletRequest) = this(originalRequest, originalRequest.getInputStream)
 
@@ -69,7 +70,12 @@ class HttpServletRequestWrapper(originalRequest: HttpServletRequest,
 
   override def getHeaderNames: util.Enumeration[String] = getHeaderNamesScala.toIterator.asJavaEnumeration
 
-  def getHeaderNamesScala: Set[String] = headerMap.keySet ++ Option(super.getHeaderNames).getOrElse(util.Collections.emptyEnumeration).asScala.toSet.diff(removedHeaders)
+  def getHeaderNamesScala: Set[String] = {
+    val originalNames = new TreeSet[String]()(caseInsensitiveOrdering) ++ Option(super.getHeaderNames)
+      .getOrElse(util.Collections.emptyEnumeration).asScala.filterNot(removedOriginalHeaders.contains)
+    // Avoid relying on TreeSet union to choose the casing of duplicate keys.
+    headerMap.keySet.filterNot(originalNames.contains) ++ originalNames
+  }
 
   override def getHeaderNamesList: util.List[String] = getHeaderNamesScala.toList.asJava
 
@@ -106,6 +112,7 @@ class HttpServletRequestWrapper(originalRequest: HttpServletRequest,
 
   override def removeHeader(headerName: String): Unit = {
     removedHeaders = removedHeaders + headerName
+    removedOriginalHeaders = removedOriginalHeaders + headerName
     headerMap = headerMap - headerName
   }
 

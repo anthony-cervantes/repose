@@ -31,13 +31,13 @@ import org.openrepose.performance.test.AbstractReposeSimulation
 class TranslationFilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
-    .forever() {
+    .forever {
       exec(getFooBarBaz)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Translation Filter Test")
-    .forever() {
+    .forever {
       exec(getFooBarBaz)
     }
 

@@ -20,8 +20,8 @@
 package org.openrepose.core.services.httpclient
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.annotation.PreDestroy
-import javax.inject.Named
+import jakarta.annotation.PreDestroy
+import jakarta.inject.Named
 import org.apache.http.impl.client.CloseableHttpClient
 import org.springframework.scheduling.annotation.Scheduled
 

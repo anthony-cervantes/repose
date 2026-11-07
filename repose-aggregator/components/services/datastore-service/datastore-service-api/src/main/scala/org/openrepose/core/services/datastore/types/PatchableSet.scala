@@ -27,8 +27,15 @@ import scala.collection.mutable
 /**
   * Created by adrian on 1/21/16.
   */
-class PatchableSet[A] extends mutable.HashSet[A]
+class PatchableSet[A] extends mutable.AbstractSet[A] with mutable.Set[A] with Serializable
   with Patchable[PatchableSet[A], SetPatch[A]] {
+  private val elements = mutable.HashSet.empty[A]
+  override def iterator: Iterator[A] = elements.iterator
+  override def contains(value: A): Boolean = elements.contains(value)
+  override def addOne(value: A): this.type = { elements.addOne(value); this }
+  override def subtractOne(value: A): this.type = { elements.subtractOne(value); this }
+  override def clear(): Unit = elements.clear()
+
   override def applyPatch(patch: SetPatch[A]): PatchableSet[A] = {
     val returnedSet = PatchableSet(this.toList: _*)
     this.add(patch.patchValue)

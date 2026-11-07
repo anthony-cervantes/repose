@@ -19,17 +19,16 @@
  */
 package features.filters.keystonev2.authorization
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Identity
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 import static org.openrepose.commons.utils.string.Base64Helper.base64DecodeUtf8
 
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class AuthorizationHeadersTest extends ReposeValveTest {
     def static originEndpoint
     def static identityEndpoint

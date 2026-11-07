@@ -20,21 +20,20 @@
 package features.filters.keystonev2.admintoken
 
 import org.joda.time.DateTime
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
 import org.rackspace.deproxy.Response
-import scaffold.category.Identity
 import spock.lang.Unroll
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
 /**
  * Specific tests for admin token
  */
-@Category(Identity)
+@Tag("scaffold.category.Identity")
 class IdentityAdminTokenTest extends ReposeValveTest {
 
     def static originEndpoint

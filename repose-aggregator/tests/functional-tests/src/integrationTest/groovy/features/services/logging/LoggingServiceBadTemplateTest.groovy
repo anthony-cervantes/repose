@@ -21,23 +21,21 @@ package features.services.logging
 
 import org.junit.After
 import org.junit.Before
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.openrepose.framework.test.mocks.MockValkyrie
 import org.openrepose.framework.test.server.CustomizableSocketServerConnector
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.Endpoint
-import scaffold.category.Filters
-import scaffold.category.Services
 import spock.lang.Shared
 import spock.lang.Unroll
 
 import java.util.concurrent.TimeUnit
 
-import static javax.servlet.http.HttpServletResponse.SC_OK
+import static jakarta.servlet.http.HttpServletResponse.SC_OK
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class LoggingServiceBadTemplateTest extends ReposeValveTest {
     def static originEndpoint
     @Shared

@@ -25,13 +25,13 @@ import java.util
 import java.util.Date
 
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.{ServletOutputStream, ServletResponse}
-import javax.ws.rs.core.HttpHeaders
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.{ServletOutputStream, ServletResponse}
+import jakarta.ws.rs.core.HttpHeaders
 import org.apache.http.client.utils.DateUtils
 import org.slf4j.LoggerFactory
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.immutable.TreeMap
 import scala.io.Source
 
@@ -79,7 +79,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
                                  headerMode: ResponseMode,
                                  bodyMode: ResponseMode,
                                  desiredOutputStream: ServletOutputStream)
-  extends javax.servlet.http.HttpServletResponseWrapper(originalResponse)
+  extends jakarta.servlet.http.HttpServletResponseWrapper(originalResponse)
     with HeaderInteractor
     with StrictLogging {
 
@@ -120,9 +120,9 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
     doSetStatus(i)(originalResponse.setStatus(i))
   }
 
-  override def setStatus(i: Int, s: String): Unit = {
+  def setStatus(i: Int, s: String): Unit = {
     logger.trace("setStatus called with status code: {}, message: {}", Integer.valueOf(i), s)
-    doSetStatus(i, s)(originalResponse.setStatus(i, s))
+    doSetStatus(i, s)(originalResponse.setStatus(i))
   }
 
   private def doSetStatus(i: Int, s: String = null)(setStatusFunc: => Unit): Unit = {
@@ -227,25 +227,25 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
     throw new UnsupportedOperationException("setResponse is not supported")
   }
 
-  override def getHeaderNamesList: util.List[String] = getHeaderNames.toList
+  override def getHeaderNamesList: util.List[String] = getHeaderNames.asScala.toList.asJava
 
-  override def getHeaderNames: util.Collection[String] = headerMap.keys
+  override def getHeaderNames: util.Collection[String] = headerMap.keys.asJavaCollection
 
   override def containsHeader(name: String): Boolean = headerMap.contains(name)
 
-  override def getHeaders(name: String): util.Collection[String] = getHeaderValues(name)
+  override def getHeaders(name: String): util.Collection[String] = getHeaderValues(name).asJava
 
   override def getPreferredHeaders(name: String): util.List[String] =
-    getPreferredHeaderValues(getHeaderValues(name)).map(_.value)
+    getPreferredHeaderValues(getHeaderValues(name)).map(_.value).asJava
 
   override def getPreferredHeadersWithParameters(name: String): util.List[String] =
-    getPreferredHeaderValues(getHeaderValues(name)).map(_.headerValue)
+    getPreferredHeaderValues(getHeaderValues(name)).map(_.headerValue).asJava
 
   override def getPreferredSplittableHeaders(name: String): util.List[String] =
-    getPreferredHeaderValues(getSplittableHeaders(name)).map(_.value)
+    getPreferredHeaderValues(getSplittableHeaders(name).asScala.toSeq).map(_.value).asJava
 
   override def getPreferredSplittableHeadersWithParameters(name: String): util.List[String] =
-    getPreferredHeaderValues(getSplittableHeaders(name)).map(_.headerValue)
+    getPreferredHeaderValues(getSplittableHeaders(name).asScala.toSeq).map(_.headerValue).asJava
 
   private def getPreferredHeaderValues(values: Seq[String]): Seq[HeaderValue] = {
     values match {
@@ -260,7 +260,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
 
   override def getSplittableHeaders(name: String): util.List[String] =
     getHeaderValues(name).foldLeft(List.empty[String])((list, value) => list ++ value.split(","))
-      .map(_.trim)
+      .map(_.trim).asJava
 
   private def getHeaderValues(name: String): Seq[String] = headerMap.getOrElse(name, Seq.empty[String])
 
@@ -308,7 +308,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
   override def appendHeader(name: String, value: String): Unit = {
     logger.trace("Appending header value to the response with header name: {}, value: {}", name, value)
     ifMutable(headerMode) {
-      val existingValues = getHeadersList(name)
+      val existingValues = getHeadersList(name).asScala.toSeq
       existingValues.headOption match {
         case Some(currentHeadValue) =>
           if (isCommitted) {
@@ -324,7 +324,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
     }
   }
 
-  override def getHeadersList(name: String): util.List[String] = getHeaderValues(name)
+  override def getHeadersList(name: String): util.List[String] = getHeaderValues(name).asJava
 
   private def ifMutable[T](mode: ResponseMode)(processMutable: => T): T = {
     mode match {
@@ -635,7 +635,7 @@ class HttpServletResponseWrapper(originalResponse: HttpServletResponse,
       reason match {
         case Some(msg) =>
           logger.debug("Setting the status on the underlying response to status code: {}, message: {}", Integer.valueOf(statusCode), msg)
-          originalResponse.setStatus(statusCode, msg)
+          originalResponse.setStatus(statusCode)
         case None =>
           logger.debug("Setting the status on the underlying response to status code: {}", Integer.valueOf(statusCode))
           originalResponse.setStatus(statusCode)

@@ -19,6 +19,7 @@
  */
 package org.openrepose.framework.test.mocks
 
+import groovy.xml.XmlSlurper
 import groovy.json.JsonBuilder
 import groovy.text.SimpleTemplateEngine
 import groovy.xml.MarkupBuilder
@@ -34,7 +35,7 @@ import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
 import java.util.concurrent.atomic.AtomicInteger
 
-import static javax.servlet.http.HttpServletResponse.*
+import static jakarta.servlet.http.HttpServletResponse.*
 
 /**
  * Created by jennyvo on 6/16/15.

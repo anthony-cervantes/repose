@@ -19,11 +19,10 @@
  */
 package features.core.proxy
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Bug
 
 /**
  * User: dimi5963
@@ -44,7 +43,7 @@ import scaffold.category.Bug
  *
  * Fix would map client-request-logging attribute to HttpClient
  */
-@Category(Bug)
+@Tag("scaffold.category.Bug")
 class ClientRequestLogging extends ReposeValveTest {
 
     def setupSpec() {

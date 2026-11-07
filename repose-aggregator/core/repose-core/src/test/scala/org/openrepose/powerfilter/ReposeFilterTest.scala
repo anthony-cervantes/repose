@@ -20,21 +20,23 @@
 package org.openrepose.powerfilter
 
 import java.util.{Optional, UUID}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import com.codahale.metrics.MetricRegistry
 import io.opentracing.Tracer.SpanBuilder
 import io.opentracing.{Scope, Span, SpanContext, Tracer}
-import javax.servlet._
-import javax.servlet.http.HttpServletResponse._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.methods.HttpGet
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
-import org.apache.logging.log4j.test.appender.ListAppender
+import org.apache.logging.log4j.core.test.appender.ListAppender
 import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyBoolean, anyString, contains}
+import org.mockito.ArgumentMatchers.{any, anyBoolean, anyString, contains}
 import org.mockito.Mockito._
 import org.openrepose.commons.test.MockitoAnswers
 import org.openrepose.commons.utils.http.CommonHttpHeader.TRACE_GUID
@@ -50,12 +52,12 @@ import org.openrepose.nodeservice.response.ResponseHeaderService
 import org.openrepose.powerfilter.ReposeFilterLoader.{FilterContext, FilterContextList, FilterContextRegistrar}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.slf4j.MDC
 import org.springframework.context.support.AbstractApplicationContext
 import org.springframework.mock.web.{MockFilterConfig, MockHttpServletRequest, MockHttpServletResponse}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @RunWith(classOf[JUnitRunner])
 class ReposeFilterTest extends FunSpec
@@ -94,7 +96,7 @@ class ReposeFilterTest extends FunSpec
   override def beforeEach(): Unit = {
     nodeId = "randomNode"
     reposeVersion = "0.1.2.3"
-    metricRegistry = spy(new MetricRegistry)
+    metricRegistry = org.openrepose.commons.test.MockitoSpy.spyInstance(new MetricRegistry)
     mockMetricsService = mock[MetricsService]
     when(mockMetricsService.getRegistry).thenReturn(metricRegistry)
     optMetricsService = Optional.ofNullable(mockMetricsService)
@@ -108,8 +110,8 @@ class ReposeFilterTest extends FunSpec
     spanBuilder = mock[SpanBuilder]
     scope = mock[Scope]
     span = mock[Span]
-    when(scope.span()).thenReturn(span)
-    when(spanBuilder.startActive(anyBoolean())).thenReturn(scope)
+    when(spanBuilder.start()).thenReturn(span)
+    when(tracer.activateSpan(span)).thenReturn(scope)
     when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
     when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
     when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
@@ -120,7 +122,7 @@ class ReposeFilterTest extends FunSpec
     filterConfig = new FilterConfig
     filterConfig.setName("foo")
     filterContexts = List(FilterContext(mockFilter, filterConfig, (request: HttpServletRequest) => true, mockAbstractApplicationContext))
-    filterContextList = spy(new FilterContextList(mock[FilterContextRegistrar], filterContexts, None))
+    filterContextList = org.openrepose.commons.test.MockitoSpy.spyInstance(new FilterContextList(mock[FilterContextRegistrar], filterContexts, None))
     when(reposeFilterLoader.getFilterContextList).thenReturn(Option(filterContextList))
     filter = new ReposeFilter(
       nodeId,
@@ -183,7 +185,7 @@ class ReposeFilterTest extends FunSpec
     it("should start a span") {
       filter.doFilter(request, response, filterChain)
 
-      verify(spanBuilder, atLeastOnce).startActive(true)
+      verify(spanBuilder, atLeastOnce).start()
     }
 
     it("should start a span even with an empty filter list") {
@@ -191,7 +193,7 @@ class ReposeFilterTest extends FunSpec
 
       filter.doFilter(request, response, filterChain)
 
-      verify(spanBuilder, atLeastOnce).startActive(true)
+      verify(spanBuilder, atLeastOnce).start()
     }
 
     it("should close the span") {
@@ -241,7 +243,7 @@ class ReposeFilterTest extends FunSpec
     it("should log and return Bad Gateway (502) when an exception is caught") {
       when(mockFilter.doFilter(any[HttpServletRequest], any[HttpServletResponse], any[FilterChain])).thenThrow(new RuntimeException("abc"))
 
-      val spyResponse = spy(response)
+      val spyResponse = org.openrepose.commons.test.MockitoSpy.spyInstance(response)
       when(spyResponse.isCommitted).thenThrow(new RuntimeException("def")).thenReturn(false)
 
       filter.doFilter(request, spyResponse, filterChain)

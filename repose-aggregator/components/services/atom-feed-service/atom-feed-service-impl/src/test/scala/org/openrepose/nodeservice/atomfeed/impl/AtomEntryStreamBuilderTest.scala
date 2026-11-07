@@ -20,16 +20,18 @@
 package org.openrepose.nodeservice.atomfeed.impl
 
 import java.io.StringWriter
+import org.scalatest.funsuite.{AnyFunSuite => FunSuite}
 import java.net.URI
 import java.util.Date
 
-import akka.http.scaladsl.model._
+import org.openrepose.nodeservice.atomfeed.impl.MockService.Response
+import java.nio.charset.StandardCharsets.UTF_8
 import org.apache.abdera.Abdera
 import org.apache.abdera.model.Feed
 import org.apache.http.client.HttpClient
 import org.apache.http.impl.client.HttpClients
 import org.junit.runner.RunWith
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.mockito.{AdditionalAnswers, ArgumentCaptor}
 import org.openrepose.commons.utils.http.CommonHttpHeader
@@ -37,7 +39,7 @@ import org.openrepose.nodeservice.atomfeed.impl.auth.AuthenticationRequestContex
 import org.openrepose.nodeservice.atomfeed.{AuthenticatedRequestFactory, AuthenticationRequestContext, AuthenticationRequestException, FeedReadRequest}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.{BeforeAndAfterEach}
 
 import scala.concurrent.TimeoutException
 import scala.concurrent.duration._
@@ -52,6 +54,12 @@ class AtomEntryStreamBuilderTest extends FunSuite with BeforeAndAfterEach with M
   var mockAtomFeedService: MockService = _
   var httpClient: HttpClient = _
   var feed: Feed = _
+
+  override def afterEach(): Unit = {
+    Option(httpClient).foreach(_.asInstanceOf[java.io.Closeable].close())
+    Option(mockAtomFeedService).foreach(_.close())
+    super.afterEach()
+  }
 
   override def beforeEach() = {
     httpClient = HttpClients.createDefault()
@@ -75,11 +83,11 @@ class AtomEntryStreamBuilderTest extends FunSuite with BeforeAndAfterEach with M
     feed.writeTo(sw)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), sw.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = sw.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     mockAtomFeedService.start()
@@ -215,14 +223,14 @@ class AtomEntryStreamBuilderTest extends FunSuite with BeforeAndAfterEach with M
     feedPageTwo.writeTo(swpt)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), swpo.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = swpo.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, Uri.Path("/feed2"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), swpt.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed2" =>
+        Response(body = swpt.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     val entryStream = AtomEntryStreamBuilder.build(new URI(mockAtomFeedService.getUrl + "/feed"), httpClient, AuthenticationRequestContextImpl("requestId", "1.0"))
@@ -235,11 +243,11 @@ class AtomEntryStreamBuilderTest extends FunSuite with BeforeAndAfterEach with M
     mockAtomFeedService.start()
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(403)
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(403)
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     reset(mockAuthRequestFactory)
@@ -278,14 +286,14 @@ class AtomEntryStreamBuilderTest extends FunSuite with BeforeAndAfterEach with M
     feedPageTwo.writeTo(swpt)
 
     mockAtomFeedService.requestHandler = {
-      case HttpRequest(_, Uri.Path("/feed"), _, _, _) =>
-        HttpResponse(entity = HttpEntity(ContentType.WithMissingCharset(MediaTypes.`application/atom+xml`), swpo.toString.getBytes))
+      case request if request.getRequestURI.getPath == "/feed" =>
+        Response(body = swpo.toString.getBytes(UTF_8), contentType = "application/atom+xml")
 
-      case HttpRequest(_, Uri.Path("/feed2"), _, _, _) =>
-        HttpResponse(403)
+      case request if request.getRequestURI.getPath == "/feed2" =>
+        Response(403)
 
-      case HttpRequest(_, _, _, _, _) =>
-        HttpResponse(404, entity = "Not Found")
+      case _ =>
+        Response(404, "Not Found".getBytes(UTF_8))
     }
 
     reset(mockAuthRequestFactory)

@@ -20,11 +20,12 @@
 package org.openrepose.core.services.httpclient
 
 import org.apache.http.impl.client.CloseableHttpClient
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
 import org.junit.runner.RunWith
 import org.mockito.Mockito.{never, verify}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class HttpClientDecommissionerTest extends FunSpec with BeforeAndAfterEach with MockitoSugar {

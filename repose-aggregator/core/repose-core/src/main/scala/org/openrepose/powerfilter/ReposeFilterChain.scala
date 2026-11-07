@@ -20,6 +20,7 @@
 package org.openrepose.powerfilter
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import org.openrepose.commons.utils.opentracing.ScopeHelper
 import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics.MetricRegistry
@@ -27,9 +28,9 @@ import com.fasterxml.jackson.annotation.{JsonAutoDetect, PropertyAccessor}
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.Tracer
-import javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
+import jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.{FilterChain, ServletRequest, ServletResponse}
 import org.openrepose.commons.utils.http.PowerApiHeader.TRACE_REQUEST
 import org.openrepose.commons.utils.io.{BufferedServletInputStream, RawInputStreamReader}
 import org.openrepose.commons.utils.logging.HttpLoggingContextHelper
@@ -122,7 +123,7 @@ class ReposeFilterChain(val filterChain: List[FilterContext],
   def doMetrics(filter: String)(requestProcess: (HttpServletRequest, HttpServletResponse) => Unit): (HttpServletRequest, HttpServletResponse) => Unit = (request, response) => {
     val startTime = System.currentTimeMillis()
 
-    val scope = tracer.buildSpan(s"Filter $filter").startActive(true)
+    val scope = ScopeHelper.startActive(tracer, tracer.buildSpan(s"Filter $filter"))
 
     requestProcess(request, response)
 

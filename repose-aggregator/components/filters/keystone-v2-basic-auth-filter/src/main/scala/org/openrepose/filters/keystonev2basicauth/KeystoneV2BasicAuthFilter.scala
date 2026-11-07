@@ -25,10 +25,10 @@ import java.util.{Calendar, GregorianCalendar}
 
 import com.rackspace.httpdelegation.HttpDelegationManager
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.ws.rs.core.HttpHeaders
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.ws.rs.core.HttpHeaders
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.RequestBuilder
@@ -222,7 +222,7 @@ class KeystoneV2BasicAuthFilter @Inject()(configurationService: ConfigurationSer
         val requestBuilder = RequestBuilder.post(identityServiceUri + TOKEN_ENDPOINT)
           .setEntity(requestBody)
           .addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_XML.getMimeType)
-        requestTracingHeader.foreach(tupled(requestBuilder.addHeader))
+        requestTracingHeader.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
         val request = requestBuilder.build()
 
         val cachingContext = CachingHttpClientContext.create()

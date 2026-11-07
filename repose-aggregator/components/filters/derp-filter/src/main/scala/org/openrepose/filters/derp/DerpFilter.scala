@@ -19,14 +19,14 @@
  */
 package org.openrepose.filters.derp
 
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import javax.ws.rs.core.MediaType
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.ws.rs.core.MediaType
 
 import com.rackspace.httpdelegation._
 import com.typesafe.scalalogging.StrictLogging
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success}
 
 /**

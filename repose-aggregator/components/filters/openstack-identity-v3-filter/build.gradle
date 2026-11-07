@@ -1,42 +1,40 @@
 dependencies {
-    xjc "org.jvnet.jaxb2_commons:jaxb2-default-value"
 
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
-    compile project(":repose-aggregator:components:services:atom-feed-service:atom-feed-service-api")
-    compile project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "org.openrepose:http-delegation"
-    compile "commons-codec:commons-codec"
-    compile "org.springframework:spring-web"
-    compile "joda-time:joda-time"
-    compile "org.joda:joda-convert"
-    compile "com.typesafe.play:play-json_$scalaMajDotMin"
-    compile "org.apache.httpcomponents:httpclient"
-    compile "org.apache.httpcomponents:httpcore"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:components:services:datastore-service:datastore-service-api")
+    api project(":repose-aggregator:components:services:atom-feed-service:atom-feed-service-api")
+    api project(':repose-aggregator:components:services:http-client-service:http-client-service-api')
+    api "org.scala-lang:scala-library"
+    api "org.scala-lang.modules:scala-xml_$scalaMajDotMin"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api project(":repose-aggregator:external:http-delegation")
+    api "commons-codec:commons-codec"
+    api "org.springframework:spring-web"
+    api "joda-time:joda-time"
+    api "org.joda:joda-convert"
+    api "org.playframework:play-json_$scalaMajDotMin"
+    api "org.apache.httpcomponents:httpclient"
+    api "org.apache.httpcomponents:httpcore"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
-    compileOnly "javax.ws.rs:javax.ws.rs-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
+    compileOnly "jakarta.ws.rs:jakarta.ws.rs-api"
 
-    testCompile project(":repose-aggregator:core:repose-core")
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile("org.mockito:mockito-core")
-    testCompile "org.springframework:spring-test"
-    testCompile "org.slf4j:jcl-over-slf4j"
+    testImplementation project(":repose-aggregator:core:repose-core")
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation("org.mockito:mockito-core")
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.slf4j:jcl-over-slf4j"
 }
 
-jaxb {
-    xjc {
-        args = ["-Xdefault-value"]
-    }
+xjc {
+    extraArgs = ["-Xdefault-value"]
 }
 
 jacocoTestCoverageVerification {

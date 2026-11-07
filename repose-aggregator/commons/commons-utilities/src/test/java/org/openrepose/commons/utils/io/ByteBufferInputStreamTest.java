@@ -228,10 +228,10 @@ public class ByteBufferInputStreamTest {
     }
 
     @Ignore
-    public static class IsByteArray extends ArgumentMatcher<byte[]> {
+    public static class IsByteArray implements ArgumentMatcher<byte[]> {
 
         @Override
-        public boolean matches(Object argument) {
+        public boolean matches(byte[] argument) {
             boolean result = (argument instanceof byte[]);
 
             return result;

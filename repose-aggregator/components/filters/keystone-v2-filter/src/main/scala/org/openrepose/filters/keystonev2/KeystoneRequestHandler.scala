@@ -23,8 +23,8 @@ import java.util.{Calendar, GregorianCalendar}
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.typesafe.scalalogging.StrictLogging
-import javax.servlet.http.HttpServletResponse._
-import javax.ws.rs.core.{HttpHeaders, MediaType}
+import jakarta.servlet.http.HttpServletResponse._
+import jakarta.ws.rs.core.{HttpHeaders, MediaType}
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.entity.EntityBuilder
@@ -81,7 +81,7 @@ class KeystoneRequestHandler(identityServiceUri: String, httpClient: HttpClient,
       .build()
     val requestBuilder = RequestBuilder.post(s"$identityServiceUri$TOKEN_ENDPOINT")
       .setEntity(requestEntity)
-    requestHeaders.foreach(tupled(requestBuilder.addHeader))
+    requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
     val request = requestBuilder.build()
 
     val cacheContext = CachingHttpClientContext.create()
@@ -163,7 +163,7 @@ class KeystoneRequestHandler(identityServiceUri: String, httpClient: HttpClient,
       HttpHeaders.ACCEPT -> MediaType.APPLICATION_JSON)
       .++(traceId.map(CommonHttpHeader.TRACE_GUID -> _))
     val requestBuilder = RequestBuilder.get(s"$identityServiceUri$TOKEN_ENDPOINT/$validatableToken${getApplyRcnRoles(applyRcnRoles)}")
-    requestHeaders.foreach(tupled(requestBuilder.addHeader))
+    requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
     val request = requestBuilder.build()
 
     val cacheContext = CachingHttpClientContext.create()
@@ -194,7 +194,7 @@ class KeystoneRequestHandler(identityServiceUri: String, httpClient: HttpClient,
       HttpHeaders.ACCEPT -> MediaType.APPLICATION_JSON)
       .++(traceId.map(CommonHttpHeader.TRACE_GUID -> _))
     val requestBuilder = RequestBuilder.get(s"$identityServiceUri${ENDPOINTS_ENDPOINT(forToken)}${getApplyRcnRoles(applyRcnRoles)}")
-    requestHeaders.foreach(tupled(requestBuilder.addHeader))
+    requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
     val request = requestBuilder.build()
 
     val cacheContext = CachingHttpClientContext.create()
@@ -220,7 +220,7 @@ class KeystoneRequestHandler(identityServiceUri: String, httpClient: HttpClient,
       HttpHeaders.ACCEPT -> MediaType.APPLICATION_JSON)
       .++(traceId.map(CommonHttpHeader.TRACE_GUID -> _))
     val requestBuilder = RequestBuilder.get(s"$identityServiceUri${GROUPS_ENDPOINT(forToken)}")
-    requestHeaders.foreach(tupled(requestBuilder.addHeader))
+    requestHeaders.foreach { case (name, value) => requestBuilder.addHeader(name, value) }
     val request = requestBuilder.build()
 
     val cacheContext = CachingHttpClientContext.create()

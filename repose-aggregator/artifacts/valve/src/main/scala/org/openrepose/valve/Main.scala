@@ -21,12 +21,14 @@ package org.openrepose.valve
 
 import com.typesafe.config.ConfigFactory
 
-object Main extends App {
-  val config = ConfigFactory.load("valve-config")
-  val valve = new Valve()
+object Main {
+  def main(args: Array[String]): Unit = {
+    val config = ConfigFactory.load("valve-config")
+    val valve = new Valve()
 
-  val exitCode = Console.withIn(System.in)(Console.withOut(System.out)(Console.withErr(System.err)(
-    valve.execute(args, config))))
+    val exitCode = Console.withIn(System.in)(Console.withOut(System.out)(Console.withErr(System.err)(
+      valve.execute(args, config))))
 
-  sys.exit(exitCode)
+    sys.exit(exitCode)
+  }
 }

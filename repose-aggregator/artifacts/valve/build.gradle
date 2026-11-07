@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'nebula.ospackage'
+apply plugin: 'com.gradleup.shadow'
+apply plugin: 'com.netflix.nebula.ospackage'
 
 configurations {
     fatJar
@@ -10,40 +10,38 @@ configurations {
 }
 
 dependencies {
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-configuration")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:components:services:http-logging-service:http-logging-service-api")
-    compile project(":repose-aggregator:core:repose-core")
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "org.slf4j:jcl-over-slf4j"
-    compile "com.github.scopt:scopt_$scalaMajDotMin"
-    compile "com.typesafe:config"
-    compile "org.springframework:spring-core"
-    compile "org.springframework:spring-context"
-    compile "org.springframework:spring-web"
-    compile "org.springframework:spring-beans"
-    compile "org.eclipse.jetty:jetty-servlet"
-    compile "org.eclipse.jetty:jetty-server"
-    compile "org.eclipse.jetty:jetty-util"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-configuration")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:components:services:http-logging-service:http-logging-service-api")
+    api project(":repose-aggregator:core:repose-core")
+    api "org.scala-lang:scala-library"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "org.slf4j:jcl-over-slf4j"
+    api "com.github.scopt:scopt_$scalaMajDotMin"
+    api "com.typesafe:config"
+    api "org.springframework:spring-core"
+    api "org.springframework:spring-context"
+    api "org.springframework:spring-web"
+    api "org.springframework:spring-beans"
+    api "org.eclipse.jetty.ee11:jetty-ee11-servlet"
+    api "org.eclipse.jetty:jetty-server"
+    api "org.eclipse.jetty:jetty-util"
 
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.inject:jakarta.inject-api"
 
-    testCompile "junit:junit"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.apache.httpcomponents:httpclient"
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.apache.httpcomponents:httpclient"
 }
 
 processResources {
     expand(reposeVersion: version, jettyVersion: versionProperties.get('jettyVersion'))
 }
 
-processScoverageResources {
-    expand(reposeVersion: version, jettyVersion: versionProperties.get('jettyVersion'))
-}
 
 jar {
     manifest {
@@ -52,7 +50,7 @@ jar {
 }
 
 shadowJar {
-    archiveName = 'repose.jar'
+    archiveFileName = 'repose.jar'
     exclude 'META-INF/*.SF'
     exclude 'META-INF/*.DSA'
     exclude 'META-INF/*.RSA'
@@ -75,13 +73,8 @@ signing {
 publishing {
     publications {
         nebula(MavenPublication) {
-            artifact shadowJar {
-                //this is neccessary because i changed the archive name in shadow jar,
-                // so i wouldn't have to go hack the crap out of the testing framework
-                groupId project.group
-                artifactId project.name
-                version project.version
-                classifier 'all'
+            artifact(shadowJar) {
+                classifier = 'all'
             }
             if(project.hasProperty('release')) {
                 artifact source: signShadowJar.singleSignature, extension: 'asc'
@@ -114,14 +107,14 @@ ospackage {
         createDirectoryEntry true
         user 'root'
         permissionGroup 'root'
-        fileMode 0555
+        filePermissions { unix('0555') }
     }
 
     //the web app
     from(shadowJar.outputs.files) {
         user 'root'
         permissionGroup 'root'
-        fileMode 0555
+        filePermissions { unix('0555') }
     }
 
     //the filter bundle directory
@@ -130,7 +123,7 @@ ospackage {
         createDirectoryEntry true
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0755
+        filePermissions { unix('0755') }
     }
 
     //the artifact exploding directory
@@ -139,7 +132,7 @@ ospackage {
         createDirectoryEntry true
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0750
+        filePermissions { unix('0750') }
     }
 
     //the log directory
@@ -148,7 +141,7 @@ ospackage {
         createDirectoryEntry true
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0750
+        filePermissions { unix('0750') }
     }
 
     //the log rotate settings
@@ -157,7 +150,7 @@ ospackage {
         createDirectoryEntry false
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0644
+        filePermissions { unix('0644') }
     }
 
     //the configs directory
@@ -166,7 +159,7 @@ ospackage {
         createDirectoryEntry true
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0770
+        filePermissions { unix('0770') }
     }
 
     //the basic configs
@@ -175,8 +168,8 @@ ospackage {
         createDirectoryEntry true
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0640
-        fileType CONFIG | NOREPLACE
+        filePermissions { unix('0640') }
+        fileType new org.redline_rpm.payload.Directive(CONFIG.flag() | NOREPLACE.flag())
 
         //INFO: We'd like to use the more standard gradle 'expand( docsHome: docsHome)',
         // however it chokes pretty hard on the regexs we sprinkle into our xml specifically the `\`.
@@ -192,7 +185,7 @@ ospackage {
         createDirectoryEntry true
         user 'repose'
         permissionGroup 'repose'
-        fileMode 0640
+        filePermissions { unix('0640') }
 
         //INFO: We'd like to use the more standard gradle 'expand( docsHome: docsHome)',
         // however it chokes pretty hard on the regexs we sprinkle into our xml specifically the `\`.
@@ -208,7 +201,7 @@ ospackage {
         createDirectoryEntry false
         user 'root'
         permissionGroup 'root'
-        fileMode 0644
+        filePermissions { unix('0644') }
     }
 
     //the systemd wrapper script
@@ -218,7 +211,7 @@ ospackage {
         createDirectoryEntry false
         user 'root'
         permissionGroup 'root'
-        fileMode 0755
+        filePermissions { unix('0755') }
     }
 
     //the sysconfig
@@ -227,14 +220,14 @@ ospackage {
         createDirectoryEntry false
         user 'root'
         permissionGroup 'root'
-        fileMode 0644
+        filePermissions { unix('0644') }
     }
 
     //clean up script
     from('src/config/scripts/clean-repose-deploy') {
         user 'root'
         permissionGroup 'root'
-        fileMode 0755
+        filePermissions { unix('0755') }
     }
     link('/usr/bin/clean-repose-deploy', '/usr/share/repose/clean-repose-deploy')
 
@@ -243,7 +236,7 @@ ospackage {
         into '/usr/share/doc/repose'
         user 'root'
         permissionGroup 'root'
-        fileMode 0444
+        filePermissions { unix('0444') }
     }
 
     conflicts('repose-war')
@@ -261,10 +254,10 @@ buildDeb {
         createDirectoryEntry false
         user 'root'
         permissionGroup 'root'
-        fileMode 0755
+        filePermissions { unix('0755') }
     }
 
-    requires('java8-runtime-headless')
+    requires('java27-runtime-headless')
     preInstall file('src/config/scripts/preinst-deb')
     configurationFile '/etc/repose/container.cfg.xml'
     configurationFile '/etc/repose/system-model.cfg.xml'
@@ -282,10 +275,16 @@ buildRpm {
         createDirectoryEntry false
         user 'root'
         permissionGroup 'root'
-        fileMode 0755
+        filePermissions { unix('0755') }
     }
 
-    requires('java', '1.8.0', GREATER | EQUAL)
+    requires('java', '27', GREATER | EQUAL)
     preInstall file('src/config/scripts/preinst-rpm')
-    postInstall('/sbin/chkconfig --add repose')
+    postInstall('if [ -x /sbin/chkconfig ]; then /sbin/chkconfig --add repose; fi')
+}
+
+tasks.named('test') {
+    doFirst {
+        systemProperty 'repose.main.classpath', sourceSets.main.runtimeClasspath.asPath
+    }
 }

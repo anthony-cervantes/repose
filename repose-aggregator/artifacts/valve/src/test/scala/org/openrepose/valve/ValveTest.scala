@@ -20,6 +20,8 @@
 package org.openrepose.valve
 
 import java.io.{ByteArrayOutputStream, File, PrintStream}
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.concurrent.ConcurrentSkipListSet
 
 import com.typesafe.config.ConfigFactory
@@ -28,7 +30,7 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
 import org.junit.runner.RunWith
 import org.scalatestplus.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfterAll, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll}
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.{Await, Future}
@@ -122,7 +124,7 @@ class ValveTest extends FunSpec with Matchers with TestUtils with BeforeAndAfter
    * Need to keep track of stuff to clean up, so this is used to clean up the mess
    */
   override protected def afterAll() = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     cleanUpDirs.asScala.foreach { f =>
       deleteRecursive(f.toPath)
     }
@@ -167,7 +169,7 @@ class ValveTest extends FunSpec with Matchers with TestUtils with BeforeAndAfter
 
         valve.shutdown() //Terminate it!
 
-        Await.result(exitValue, 1 second) shouldBe 0
+        Await.result(exitValue, 1.second) shouldBe 0
       }
     }
     it("outputs to stdout the settings it's going to hand to the individual jetties") {

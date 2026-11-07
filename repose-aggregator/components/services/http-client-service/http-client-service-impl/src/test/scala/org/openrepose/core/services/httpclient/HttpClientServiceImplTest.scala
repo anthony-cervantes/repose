@@ -20,6 +20,8 @@
 package org.openrepose.core.services.httpclient
 
 import java.net.URL
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import java.util.UUID
 
 import org.apache.http.HttpHost
@@ -28,7 +30,7 @@ import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.protocol.HttpContext
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers.{any, eq => isEq, _}
+import org.mockito.ArgumentMatchers.{any, eq => isEq, _}
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.core.services.config.ConfigurationService
@@ -37,7 +39,7 @@ import org.openrepose.core.services.httpclient
 import org.openrepose.core.services.httpclient.config.{HttpConnectionPoolsConfig, PoolConfig}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with MockitoSugar with Matchers {
@@ -95,7 +97,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))
@@ -130,7 +132,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))
@@ -163,7 +165,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))
@@ -196,7 +198,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))
@@ -235,7 +237,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))
@@ -268,7 +270,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))
@@ -301,7 +303,7 @@ class HttpClientServiceImplTest extends FunSpec with BeforeAndAfterEach with Moc
 
       val configurationListenerCaptor = ArgumentCaptor.forClass(classOf[UpdateListener[HttpConnectionPoolsConfig]])
       verify(configService).subscribeTo(
-        anyString(),
+        any[String](),
         any[URL],
         configurationListenerCaptor.capture(),
         isEq(classOf[HttpConnectionPoolsConfig]))

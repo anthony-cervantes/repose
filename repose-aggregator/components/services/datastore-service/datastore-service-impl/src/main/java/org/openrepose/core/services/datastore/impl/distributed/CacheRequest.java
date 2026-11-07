@@ -26,7 +26,7 @@ import org.openrepose.commons.utils.io.BufferCapacityException;
 import org.openrepose.commons.utils.io.RawInputStreamReader;
 import org.openrepose.core.services.datastore.distributed.RemoteBehavior;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 

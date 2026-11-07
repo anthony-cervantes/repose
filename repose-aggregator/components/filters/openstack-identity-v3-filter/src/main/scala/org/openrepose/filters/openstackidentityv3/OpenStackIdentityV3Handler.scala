@@ -20,8 +20,8 @@
 package org.openrepose.filters.openstackidentityv3
 
 import java.util.{Calendar, GregorianCalendar}
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletResponse._
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse._
 
 import com.rackspace.httpdelegation.HttpDelegationManager
 import com.typesafe.scalalogging.StrictLogging
@@ -34,7 +34,7 @@ import org.openrepose.filters.openstackidentityv3.objects._
 import org.openrepose.filters.openstackidentityv3.utilities._
 import org.springframework.http.HttpHeaders
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 import scala.util.{Failure, Success, Try}
 

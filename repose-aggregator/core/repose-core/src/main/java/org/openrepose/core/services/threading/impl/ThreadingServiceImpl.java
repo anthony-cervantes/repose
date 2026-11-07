@@ -21,7 +21,7 @@ package org.openrepose.core.services.threading.impl;
 
 import org.openrepose.core.services.threading.ThreadingService;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;

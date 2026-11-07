@@ -21,9 +21,9 @@ package org.openrepose.filters.openstackidentityv3
 
 import java.net.URL
 
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import com.typesafe.scalalogging.StrictLogging
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.commons.utils.servlet.filter.FilterAction
@@ -38,7 +38,7 @@ import org.openrepose.filters.openstackidentityv3.utilities.Cache._
 import org.openrepose.filters.openstackidentityv3.utilities.OpenStackIdentityV3API
 import org.openrepose.nodeservice.atomfeed.{AtomFeedListener, AtomFeedService, LifecycleEvents}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.xml.XML
 
 @Named
@@ -101,7 +101,7 @@ class OpenStackIdentityV3Filter @Inject()(configurationService: ConfigurationSer
   def configurationUpdated(config: OpenstackIdentityV3Config) {
     // This will also un-register any Atom Feeds not present in the new config.
     CacheInvalidationFeedListener.updateFeeds(
-      Option(config.getCache).map(_.getAtomFeed.map(_.getId).toSet).getOrElse(Set.empty)
+      Option(config.getCache).map(_.getAtomFeed.asScala.map(_.getId).toSet).getOrElse(Set.empty)
     )
 
     httpClient = httpClientService.getClient(config.getConnectionPoolId)

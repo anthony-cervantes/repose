@@ -21,16 +21,15 @@ package features.filters.herp
 
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.lang3.RandomStringUtils
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockIdentityV2Service
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 import spock.lang.Ignore
 
-import javax.servlet.http.HttpServletResponse
-import javax.ws.rs.core.HttpHeaders
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.ws.rs.core.HttpHeaders
 
 /**
  * Created by jennyvo on 10/7/15.
@@ -38,7 +37,7 @@ import javax.ws.rs.core.HttpHeaders
  *  - Replace client-auth-n with keystone-v2 filter
  */
 @Ignore
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class BasicAuthHerpDerpRMSMultiMatchAuthTest extends ReposeValveTest {
 
     def static originEndpoint

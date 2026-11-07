@@ -27,7 +27,7 @@ import org.openrepose.core.services.datastore.DatastoreOperationException;
 import org.openrepose.core.services.datastore.distributed.SerializablePatch;
 import org.openrepose.core.services.datastore.impl.distributed.CacheRequest;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

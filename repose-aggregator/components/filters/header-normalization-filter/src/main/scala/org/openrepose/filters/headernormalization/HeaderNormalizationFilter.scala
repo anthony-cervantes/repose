@@ -23,9 +23,9 @@ import java.util.Optional
 
 import com.codahale.metrics.MetricRegistry
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.openrepose.commons.utils.servlet.http.ResponseMode.{MUTABLE, PASSTHROUGH}
 import org.openrepose.commons.utils.servlet.http.{HttpServletRequestWrapper, HttpServletResponseWrapper}
 import org.openrepose.commons.utils.string.RegexString
@@ -35,7 +35,7 @@ import org.openrepose.core.services.reporting.metrics.{MetricNameUtility, Metric
 import org.openrepose.filters.headernormalization.HeaderNormalizationFilter._
 import org.openrepose.filters.headernormalization.config.{HeaderNormalizationConfig, HttpHeaderList, HttpMethod, Target => ConfigTarget}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 @Named
 class HeaderNormalizationFilter @Inject()(configurationService: ConfigurationService, optMetricsService: Optional[MetricsService])
@@ -57,7 +57,7 @@ class HeaderNormalizationFilter @Inject()(configurationService: ConfigurationSer
     } foreach { target =>
       // figure out which headers to remove, and remove them
       (target.access match {
-        case WhiteList => wrappedRequest.getHeaderNamesScala.diff(target.headers)
+        case WhiteList => wrappedRequest.getHeaderNamesScala.filterNot(name => target.headers.contains(name.toLowerCase(java.util.Locale.ROOT)))
         case BlackList => target.headers
       }).foreach(wrappedRequest.removeHeader)
 
@@ -79,7 +79,7 @@ class HeaderNormalizationFilter @Inject()(configurationService: ConfigurationSer
 
     def getResponseHeaders: Set[String] = {
       if (responseHeaders.isEmpty) {
-        responseHeaders = Option(wrappedResponse.get.getHeaderNames.asScala.map(_.toLowerCase).toSet)
+        responseHeaders = Option(wrappedResponse.get.getHeaderNames.asScala.map(_.toLowerCase(java.util.Locale.ROOT)).toSet)
       }
       responseHeaders.get
     }
@@ -112,14 +112,14 @@ class HeaderNormalizationFilter @Inject()(configurationService: ConfigurationSer
         new RegexString(Option(target.getUriRegex).getOrElse(".*")), // if not configured, default is ".*"
         target.getHttpMethods.asScala.map(_.toString).padTo(1, AllHttpMethods).toSet, // default is "ALL"
         accessList,
-        headers.getHeader.asScala.map(_.getId.toLowerCase).toSet))
+        headers.getHeader.asScala.map(_.getId.toLowerCase(java.util.Locale.ROOT)).toSet))
     }
 
     val targets = (Option(config.getHeaderFilters) map { hdrFilter =>
       logger.warn("Your Header Normalization configuration will not be compatible with v10.0.0.0.")
       logger.warn("Please refer to the documentation to update your Header Normalization configuration accordingly.")
       hdrFilter.getTarget
-    }).getOrElse(config.getTarget).asScala
+    }).getOrElse(config.getTarget).asScala.toList
 
     this.configRequest = targets flatMap { target =>
       if (Option(target.getRequest).isDefined) {

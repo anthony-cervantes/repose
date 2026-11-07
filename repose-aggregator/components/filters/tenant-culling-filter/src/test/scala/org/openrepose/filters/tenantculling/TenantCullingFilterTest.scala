@@ -20,9 +20,11 @@
 package org.openrepose.filters.tenantculling
 
 import java.util.Base64
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR
 
 import org.junit.runner.RunWith
 import org.openrepose.commons.utils.http.OpenStackServiceHeader.{TENANT_ID, TENANT_ROLES_MAP}
@@ -32,7 +34,7 @@ import org.openrepose.commons.utils.servlet.http.HttpServletRequestWrapper
 import org.openrepose.filters.tenantculling.TenantCullingFilter.TenantToRolesMap
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 import org.springframework.mock.web.{MockFilterChain, MockHttpServletRequest, MockHttpServletResponse}
 
 @RunWith(classOf[JUnitRunner])

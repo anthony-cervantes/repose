@@ -1,37 +1,35 @@
 dependencies {
-    xjc "org.jvnet.jaxb2_commons:jaxb2-fluent-api"
 
-    compile project(":repose-aggregator:core:repose-core-api")
-    compile project(":repose-aggregator:commons:commons-utilities")
-    compile project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
-    compile "commons-io:commons-io"
-    compile "org.slf4j:slf4j-api"
-    compile "org.scala-lang:scala-library"
-    compile "org.scala-lang:scala-reflect" // Forces the version used by scala-logging.
-    compile "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
-    compile "io.dropwizard.metrics:metrics-core"
-    compile "xalan:xalan"
-    compile "org.springframework:spring-beans"
+    api project(":repose-aggregator:core:repose-core-api")
+    api project(":repose-aggregator:commons:commons-utilities")
+    api project(":repose-aggregator:components:services:health-check-service:health-check-service-api")
+    api "commons-io:commons-io"
+    api "org.slf4j:slf4j-api"
+    api "org.scala-lang:scala-library"
+    api "com.typesafe.scala-logging:scala-logging_$scalaMajDotMin"
+    api "io.dropwizard.metrics:metrics-core"
+    api "xalan:xalan"
+    api "org.springframework:spring-beans"
 
-    compileOnly "javax.servlet:javax.servlet-api"
-    compileOnly "javax.inject:javax.inject"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+    compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "com.google.code.findbugs:jsr305"
 
-    testCompile project(":repose-aggregator:commons:commons-test")
-    testCompile "junit:junit"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.scalatest:scalatest_$scalaMajDotMin"
-    testCompile "org.springframework:spring-test"
-    testCompile "org.springframework:spring-web"
-    testCompile "org.slf4j:jcl-over-slf4j"
-    testCompile "org.xmlunit:xmlunit-matchers"
+    testImplementation project(":repose-aggregator:commons:commons-test")
+    testImplementation "junit:junit"
+    testImplementation "org.hamcrest:hamcrest"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:mockito-5-23_$scalaMajDotMin"
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-web"
+    testImplementation "org.slf4j:jcl-over-slf4j"
+    testImplementation "org.xmlunit:xmlunit-matchers"
 }
 
-jaxb {
-    xjc {
-        args = ["-Xfluent-api"]
-    }
+xjc {
+    extraArgs = ["-Xfluent-api"]
 }
 
 license {

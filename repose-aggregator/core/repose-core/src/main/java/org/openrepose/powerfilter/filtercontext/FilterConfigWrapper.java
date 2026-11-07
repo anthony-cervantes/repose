@@ -22,8 +22,8 @@ package org.openrepose.powerfilter.filtercontext;
 import com.oracle.javaee6.FilterType;
 import com.oracle.javaee6.ParamValueType;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;

@@ -20,6 +20,8 @@
 package org.openrepose.commons.test
 
 import java.net.URI
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 
 import org.apache.http.HttpHeaders
 import org.apache.http.client.methods.{HttpGet, HttpPost, HttpUriRequest, RequestBuilder}
@@ -27,11 +29,11 @@ import org.apache.http.entity.ContentType
 import org.hamcrest.Matchers.{anything, containsString, equalTo}
 import org.hamcrest.{Description, Matcher, SelfDescribing}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyObject, anyString}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.{verify, when}
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{FunSpec, Matchers}
+
 
 @RunWith(classOf[JUnitRunner])
 class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar {
@@ -55,7 +57,7 @@ class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar
         val description = mock[Description]
 
         when(description.appendText(anyString())).thenReturn(description)
-        when(description.appendValue(anyObject())).thenReturn(description)
+        when(description.appendValue(any())).thenReturn(description)
 
         HttpUriRequestMatchers.hasMethod(HttpGet.METHOD_NAME).describeTo(description)
 
@@ -70,7 +72,7 @@ class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar
         val description = mock[Description]
 
         when(description.appendText(anyString())).thenReturn(description)
-        when(description.appendValue(anyObject())).thenReturn(description)
+        when(description.appendValue(any())).thenReturn(description)
 
         HttpUriRequestMatchers.hasMethod(HttpGet.METHOD_NAME).describeMismatch(actualRequest, description)
 
@@ -101,7 +103,7 @@ class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar
         val description = mock[Description]
 
         when(description.appendText(anyString())).thenReturn(description)
-        when(description.appendValue(anyObject())).thenReturn(description)
+        when(description.appendValue(any())).thenReturn(description)
 
         HttpUriRequestMatchers.hasUri(uri).describeTo(description)
 
@@ -117,7 +119,7 @@ class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar
         val description = mock[Description]
 
         when(description.appendText(anyString())).thenReturn(description)
-        when(description.appendValue(anyObject())).thenReturn(description)
+        when(description.appendValue(any())).thenReturn(description)
 
         HttpUriRequestMatchers.hasUri(uri).describeMismatch(actualRequest, description)
 
@@ -148,7 +150,7 @@ class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar
         val description = mock[Description]
 
         when(description.appendText(anyString())).thenReturn(description)
-        when(description.appendValue(anyObject())).thenReturn(description)
+        when(description.appendValue(any())).thenReturn(description)
         when(description.appendDescriptionOf(any[SelfDescribing])).thenReturn(description)
 
         HttpUriRequestMatchers.hasHeader(HttpHeaders.ACCEPT, valueMatcher).describeTo(description)
@@ -172,7 +174,7 @@ class HttpUriRequestMatchersTest extends FunSpec with Matchers with MockitoSugar
         HttpUriRequestMatchers.hasHeader(HttpHeaders.ACCEPT, anything()).describeMismatch(actualRequest, description)
 
         verify(description).appendText("headers were ")
-        verify(description).appendValueList("[", ", ", "]", actualRequest.getAllHeaders)
+        verify(description).appendValueList("[", ", ", "]", actualRequest.getAllHeaders: _*)
       }
     }
   }

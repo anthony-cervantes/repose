@@ -52,14 +52,14 @@ class TenantCullingFilterSimulation extends AbstractReposeSimulation {
   // set up the warm up scenario
   override val warmupScenario = scenario("Warmup")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 
   // set up the main scenario
   override val mainScenario = scenario("Tenant Culling Filter Test")
     .feed(feeder)
-    .forever() {
+    .forever {
       exec(getRequest)
     }
 

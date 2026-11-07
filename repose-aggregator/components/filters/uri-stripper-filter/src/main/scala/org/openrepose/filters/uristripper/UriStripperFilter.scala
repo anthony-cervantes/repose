@@ -24,17 +24,18 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
 import java.net.{URI, URL}
 import java.nio.charset.Charset
 
-import _root_.io.gatling.jsonpath.AST.{Field, RootNode}
-import _root_.io.gatling.jsonpath.Parser
+import org.openrepose.filters.uristripper.jsonpath.AST.{Field, RootNode}
+import org.openrepose.filters.uristripper.jsonpath.Parser
 import com.typesafe.scalalogging.StrictLogging
-import javax.inject.{Inject, Named}
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.inject.{Inject, Named}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import javax.xml.transform._
 import javax.xml.transform.dom._
 import javax.xml.transform.stream._
 import net.sf.saxon.serialize.MessageWarner
 import net.sf.saxon.{Controller, TransformerFactoryImpl}
+import net.sf.saxon.jaxp.TransformerImpl
 import org.apache.http.HttpHeaders
 import org.openrepose.commons.config.manager.UpdateListener
 import org.openrepose.commons.utils.StringUriUtilities
@@ -49,7 +50,7 @@ import org.xml.sax.SAXParseException
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.language.{implicitConversions, postfixOps, reflectiveCalls}
 import scala.util.{Failure, Success, Try}
@@ -69,7 +70,7 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
   private val DROP_CODE: String = "[[DROP]]"
 
   def addLogErrorListener(c : Controller) : Unit = {
-    c.asInstanceOf[Transformer].setErrorListener (new LogErrorListener)
+    c.setErrorListener (new LogErrorListener)
     c.setMessageEmitter(new MessageWarner())
   }
 
@@ -113,9 +114,9 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
         wrappedRequest.setRequestURI(joinTokensIntoPath(uriTokens))
       }
 
-      val requestLinkPaths = config.getLinkResource
+      val requestLinkPaths = config.getLinkResource.asScala
         .filter(resource => resource.getUriPathRegex =~ wrappedRequest.getRequestURI)
-        .filter(resource => isMatchingMethod(resource.getHttpMethods.toSet, wrappedRequest.getMethod))
+        .filter(resource => isMatchingMethod(resource.getHttpMethods.asScala.toSet, wrappedRequest.getMethod))
         .flatMap(resource => getPathsForContentType(wrappedRequest.getContentType, resource.getRequest))
         .toList
 
@@ -152,9 +153,9 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
         }
       }
 
-      val responseLinkPaths = config.getLinkResource
+      val responseLinkPaths = config.getLinkResource.asScala
         .filter(resource => resource.getUriPathRegex =~ wrappedRequest.getRequestURI)
-        .filter(resource => isMatchingMethod(resource.getHttpMethods.toSet, wrappedRequest.getMethod))
+        .filter(resource => isMatchingMethod(resource.getHttpMethods.asScala.toSet, wrappedRequest.getMethod))
         .flatMap(resource => getPathsForContentType(wrappedResponse.getContentType, resource.getResponse))
         .toList
 
@@ -193,11 +194,11 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
       val result = applicableLinkPaths.foldLeft(wrappedRequest.getInputStream) { (in: InputStream, linkPath: LinkPath) =>
         val out = new ByteArrayOutputStream()
         val transformer = templateMapRequest(linkPath).newTransformer
-        addLogErrorListener(transformer.asInstanceOf[Controller])
+        addLogErrorListener(transformer.asInstanceOf[TransformerImpl].getUnderlyingController)
         transformer.setParameter("removedToken", "")
         transformer.setParameter("prefixToken", "")
         transformer.setParameter("postfixToken", "")
-        Try(transformer.transform(new StreamSource(in), new StreamResult(out))) match {
+        transformXmlLinks(transformer, in, out) match {
           case Success(_) => new ServletInputStreamWrapper(new ByteArrayInputStream(out.toByteArray))
           case Failure(e: SAXParseException) =>
             if (linkPath.getLinkMismatchAction == FAIL) throw e
@@ -237,11 +238,11 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
       val result = applicableLinkPaths.foldLeft(wrappedResponse.getOutputStreamAsInputStream) { (in: InputStream, linkPath: LinkPath) =>
         val out = new ByteArrayOutputStream()
         val transformer = templateMapResponse(linkPath).newTransformer
-        addLogErrorListener(transformer.asInstanceOf[Controller])
+        addLogErrorListener(transformer.asInstanceOf[TransformerImpl].getUnderlyingController)
         transformer.setParameter("removedToken", token.getOrElse(""))
         transformer.setParameter("prefixToken", previousToken.getOrElse(""))
         transformer.setParameter("postfixToken", nextToken.getOrElse(""))
-        Try(transformer.transform(new StreamSource(in), new StreamResult(out))) match {
+        transformXmlLinks(transformer, in, out) match {
           case Success(_) => new ByteArrayInputStream(out.toByteArray)
           case Failure(e: SAXParseException) =>
             if (linkPath.getLinkMismatchAction == FAIL) throw e
@@ -257,6 +258,19 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
     } catch {
       case e: PathRewriteException => wrappedResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage)
       case e: SAXParseException => wrappedResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage)
+    }
+  }
+
+  private def transformXmlLinks(transformer: Transformer, in: InputStream, out: ByteArrayOutputStream): Try[Unit] = {
+    Try(transformer.transform(new StreamSource(in), new StreamResult(out))).recoverWith {
+      // Saxon 9.8 wraps exceptions raised by message listeners and extension
+      // functions. Preserve the link-mismatch handling used by both directions.
+      case e: RuntimeException =>
+        val failure = Iterator.iterate[Throwable](e)(_.getCause).takeWhile(_ != null).collectFirst {
+          case cause: SAXParseException => cause
+          case cause: PathRewriteException => cause
+        }.getOrElse(e)
+        Failure(failure)
     }
   }
 
@@ -334,15 +348,15 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
 
   private def getPathsForContentType(contentType: String, resource: HttpMessage): List[LinkPath] = {
     (Option(contentType), Option(resource)) match {
-      case (Some(ct), Some(res)) if ct.toLowerCase.contains("json") => res.getJson.toList
-      case (Some(ct), Some(res)) if ct.toLowerCase.contains("xml") => res.getXml.toList map (_.getXpath)
+      case (Some(ct), Some(res)) if ct.toLowerCase.contains("json") => res.getJson.asScala.toList
+      case (Some(ct), Some(res)) if ct.toLowerCase.contains("xml") => res.getXml.asScala.toList map (_.getXpath)
       case _ => List.empty
     }
   }
 
   // todo: this function only provides support for named '$' and '.' JSONPath operators
   private def stringToJsPath(jsonPath: String): JsPath = {
-    Parser.parse(Parser.query, jsonPath)
+    new Parser().compile(jsonPath)
       .getOrElse(throw MalformedJsonPathException(s"Unable to parse JsonPath: $jsonPath"))
       .foldLeft(new JsPath) { (jsPath, pathToken) =>
         pathToken match {
@@ -434,12 +448,12 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
       setupTransformer.setParameter("xpath", xmlElement.getXpath.getValue)
       setupTransformer.setParameter("namespaces", new StreamSource(
         <namespaces xmlns="http://www.rackspace.com/repose/params">
-          {for (namespace <- xmlElement.getNamespace) yield
+          {for (namespace <- xmlElement.getNamespace.asScala) yield
             <ns prefix={namespace.getName} uri={namespace.getUrl}/>}
         </namespaces>
       ))
       setupTransformer.setParameter("failOnMiss", xmlElement.getXpath.getLinkMismatchAction == FAIL)
-      addLogErrorListener(setupTransformer.asInstanceOf[Controller])
+      addLogErrorListener(setupTransformer.asInstanceOf[TransformerImpl].getUnderlyingController)
       val updateXPathXSLTDomResult = new DOMResult()
       setupTransformer.transform(new StreamSource(<ignore-input/>), updateXPathXSLTDomResult)
 
@@ -452,11 +466,11 @@ class UriStripperFilter @Inject()(configurationService: ConfigurationService)
 
     config = uriStripperConfig
 
-    templateMapRequest = (for (resource <- config.getLinkResource;
-                               xml <- Option(resource.getRequest).map(_.getXml.toList).getOrElse(List.empty))
+    templateMapRequest = (for (resource <- config.getLinkResource.asScala;
+                               xml <- Option(resource.getRequest).map(_.getXml.asScala.toList).getOrElse(List.empty))
                                yield xml.getXpath -> setupTransformer(xml, isRequest = true)).toMap
-    templateMapResponse = (for (resource <- config.getLinkResource;
-                                xml <- Option(resource.getResponse).map(_.getXml.toList).getOrElse(List.empty))
+    templateMapResponse = (for (resource <- config.getLinkResource.asScala;
+                                xml <- Option(resource.getResponse).map(_.getXml.asScala.toList).getOrElse(List.empty))
                                 yield xml.getXpath -> setupTransformer(xml, isRequest = false)).toMap
     initialized = true
   }

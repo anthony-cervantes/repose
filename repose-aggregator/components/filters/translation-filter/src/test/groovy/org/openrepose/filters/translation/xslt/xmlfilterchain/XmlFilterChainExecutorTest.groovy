@@ -19,9 +19,9 @@
  */
 package org.openrepose.filters.translation.xslt.xmlfilterchain
 
-import net.sf.saxon.Configuration
 import net.sf.saxon.Controller
-import net.sf.saxon.Filter
+import net.sf.saxon.TransformerFactoryImpl
+import net.sf.saxon.jaxp.FilterImpl as Filter
 import net.sf.saxon.value.TextFragmentValue
 import org.openrepose.filters.translation.TranslationFilter
 import org.openrepose.filters.translation.xslt.XsltParameter
@@ -29,6 +29,7 @@ import spock.lang.Specification
 
 import javax.xml.transform.Transformer
 import javax.xml.transform.sax.SAXTransformerFactory
+import javax.xml.transform.stream.StreamSource
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
@@ -49,8 +50,9 @@ class XmlFilterChainExecutorTest extends Specification {
 
         factory = mock(SAXTransformerFactory.class)
 
-        controller = new Controller(new Configuration())
-        filter = new Filter(controller);
+        filter = new TransformerFactoryImpl().newXMLFilter(new StreamSource(new StringReader(
+                '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"/>')))
+        controller = filter.getTransformer().getUnderlyingController()
         List<XmlFilterReference> xmlFilterReferenceList = new ArrayList<XmlFilterReference>();
         xmlFilterReferenceList.add(new XmlFilterReference("some thing", filter))
         chain = new XmlFilterChain(factory, xmlFilterReferenceList)
@@ -66,7 +68,7 @@ class XmlFilterChainExecutorTest extends Specification {
     def "Execute Chain for Saxon will remove expected documents"() {
         given:
         XmlFilterChainExecutor executor = new XmlFilterChainExecutor(chain)
-        controller.getDocumentPool().add(new TextFragmentValue("butts", "a uri"), "a uri")
+        controller.getDocumentPool().add(new TextFragmentValue(controller.getConfiguration(), "butts", "a uri"), "a uri")
         inputs.add(new XsltParameter(TranslationFilter.INPUT_HEADERS_URI, "a uri"))
         when:
         executor.executeChain(input, out, inputs, outputs)
@@ -77,7 +79,7 @@ class XmlFilterChainExecutorTest extends Specification {
     def "Execute Chain for Saxon will not remove expected documents"() {
         given:
         XmlFilterChainExecutor executor = new XmlFilterChainExecutor(chain)
-        controller.getDocumentPool().add(new TextFragmentValue("butts", "a uri"), "a uri")
+        controller.getDocumentPool().add(new TextFragmentValue(controller.getConfiguration(), "butts", "a uri"), "a uri")
         inputs.add(new XsltParameter("butts", "a uri"))
         when:
         executor.executeChain(input, out, inputs, outputs)

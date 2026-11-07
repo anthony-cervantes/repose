@@ -19,11 +19,11 @@
  */
 package org.openrepose.filters.irivalidator
 
-import javax.servlet._
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet._
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.typesafe.scalalogging.StrictLogging
-import org.apache.jena.iri.{IRIException, IRIFactory}
+import org.apache.jena.iri.{IRIException0 => IRIException, IRIFactory}
 
 /**
  * This filter validates that the request URI is a valid IRI.

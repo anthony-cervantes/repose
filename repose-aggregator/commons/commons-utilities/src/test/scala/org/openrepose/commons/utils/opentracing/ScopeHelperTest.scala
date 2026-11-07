@@ -20,17 +20,19 @@
 package org.openrepose.commons.utils.opentracing
 
 import io.opentracing.Tracer.SpanBuilder
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import io.opentracing._
 import io.opentracing.propagation.Format
 import io.opentracing.tag.Tags
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import jakarta.servlet.http.{HttpServletRequest, HttpServletResponse}
 import org.junit.runner.RunWith
-import org.mockito.Matchers.{any, anyBoolean, anyString, isNull, eq => eql}
+import org.mockito.ArgumentMatchers.{any, anyBoolean, anyString, isNull, eq => eql}
 import org.mockito.Mockito.{verify, when}
 import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 import org.slf4j.Logger
 import org.springframework.mock.web.{MockHttpServletRequest, MockHttpServletResponse}
 
@@ -44,6 +46,7 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
   var spanContext: SpanContext = _
   var spanBuilder: SpanBuilder = _
   var scope: Scope = _
+  var span: Span = _
   var uriRedactionService: UriRedactionService = _
 
   override def beforeEach(): Unit = {
@@ -53,41 +56,46 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
     spanContext = mock[SpanContext]
     spanBuilder = mock[SpanBuilder]
     scope = mock[Scope]
+    span = mock[Span]
     uriRedactionService = mock[UriRedactionService]
     when(uriRedactionService.redact(request.getRequestURI)).thenReturn(redactedPath)
   }
 
   describe("startSpan") {
     it("should create a new span with the existing span as a parent") {
-      when(tracer.extract(any[Format[_]], any())).thenReturn(spanContext)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(spanContext)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
-      when(spanBuilder.startActive(anyBoolean())).thenReturn(scope)
+      when(spanBuilder.start()).thenReturn(span)
+      when(tracer.activateSpan(span)).thenReturn(scope)
 
       val result = ScopeHelper.startSpan(request, tracer, logger, Tags.SPAN_KIND_CLIENT, "1.two.III", uriRedactionService)
 
       verify(tracer).extract(eql(Format.Builtin.HTTP_HEADERS), any())
       verify(tracer).buildSpan(s"${request.getMethod} $redactedPath")
       verify(spanBuilder).asChildOf(spanContext)
-      verify(spanBuilder).startActive(true)
-      result shouldBe scope
+      verify(spanBuilder).start()
+      verify(tracer).activateSpan(span)
+      result.span() shouldBe span
     }
 
     it("should create a new span with no parent if no parent context exists") {
-      when(tracer.extract(any[Format[_]], any())).thenReturn(null)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(null)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
-      when(spanBuilder.startActive(anyBoolean())).thenReturn(scope)
+      when(spanBuilder.start()).thenReturn(span)
+      when(tracer.activateSpan(span)).thenReturn(scope)
 
       val result = ScopeHelper.startSpan(request, tracer, logger, Tags.SPAN_KIND_CLIENT, "1.two.III", uriRedactionService)
 
       verify(tracer).extract(eql(Format.Builtin.HTTP_HEADERS), any())
       verify(tracer).buildSpan(s"${request.getMethod} $redactedPath")
       verify(spanBuilder).asChildOf(isNull(classOf[SpanContext]))
-      verify(spanBuilder).startActive(true)
-      result shouldBe scope
+      verify(spanBuilder).start()
+      verify(tracer).activateSpan(span)
+      result.span() shouldBe span
     }
 
     it("should set the operation name of the new span to the method and path") {
@@ -103,47 +111,50 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
       request.setMethod(method)
       request.setRequestURI(path)
 
-      when(tracer.extract(any[Format[_]], any())).thenReturn(spanContext)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(spanContext)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
-      when(spanBuilder.startActive(anyBoolean())).thenReturn(scope)
+      when(spanBuilder.start()).thenReturn(span)
+      when(tracer.activateSpan(span)).thenReturn(scope)
       when(uriRedactionService.redact(request.getRequestURI)).thenReturn(redactedPath)
 
       val result = ScopeHelper.startSpan(request, tracer, logger, Tags.SPAN_KIND_CLIENT, "1.two.III", uriRedactionService)
 
       verify(tracer).buildSpan(s"$method $redactedPath")
-      result shouldBe scope
+      result.span() shouldBe span
     }
 
     it("should set the span kind tag") {
       val spanKind = Tags.SPAN_KIND_PRODUCER
 
-      when(tracer.extract(any[Format[_]], any())).thenReturn(null)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(null)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
-      when(spanBuilder.startActive(anyBoolean())).thenReturn(scope)
+      when(spanBuilder.start()).thenReturn(span)
+      when(tracer.activateSpan(span)).thenReturn(scope)
 
       val result = ScopeHelper.startSpan(request, tracer, logger, spanKind, "1.two.III", uriRedactionService)
 
       verify(tracer).buildSpan(s"${request.getMethod} $redactedPath")
       verify(spanBuilder).withTag(Tags.SPAN_KIND.getKey, spanKind)
-      result shouldBe scope
+      result.span() shouldBe span
     }
 
     it("should set the repose version tag") {
-      when(tracer.extract(any[Format[_]], any())).thenReturn(null)
+      when(tracer.extract(any[Format[Any]](), any[Any]())).thenReturn(null)
       when(tracer.buildSpan(anyString())).thenReturn(spanBuilder)
       when(spanBuilder.asChildOf(any[SpanContext])).thenReturn(spanBuilder)
       when(spanBuilder.withTag(anyString(), anyString())).thenReturn(spanBuilder)
-      when(spanBuilder.startActive(anyBoolean())).thenReturn(scope)
+      when(spanBuilder.start()).thenReturn(span)
+      when(tracer.activateSpan(span)).thenReturn(scope)
 
       val result = ScopeHelper.startSpan(request, tracer, logger, Tags.SPAN_KIND_PRODUCER, "1.two.III", uriRedactionService)
 
       verify(tracer).buildSpan(s"${request.getMethod} $redactedPath")
       verify(spanBuilder).withTag(ReposeTags.ReposeVersion, "1.two.III")
-      result shouldBe scope
+      result.span() shouldBe span
     }
   }
 
@@ -155,9 +166,8 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
       val span = mock[Span]
 
       response.setStatus(status)
-      when(scope.span()).thenReturn(span)
 
-      ScopeHelper.closeSpan(response, scope)
+      ScopeHelper.closeSpan(response, new ScopeHelper.SpanScope(scope, span))
 
       verify(span).setTag(Tags.HTTP_STATUS.getKey, status)
     }
@@ -166,11 +176,12 @@ class ScopeHelperTest extends FunSpec with MockitoSugar with Matchers with Befor
       val response = new MockHttpServletResponse()
       val scope = mock[Scope]
 
-      when(scope.span()).thenReturn(mock[Span])
+      val span = mock[Span]
 
-      ScopeHelper.closeSpan(response, scope)
+      ScopeHelper.closeSpan(response, new ScopeHelper.SpanScope(scope, span))
 
       verify(scope).close()
+      verify(span).finish()
     }
   }
 }

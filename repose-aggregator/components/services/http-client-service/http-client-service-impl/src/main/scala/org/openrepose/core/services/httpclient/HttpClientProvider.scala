@@ -29,7 +29,7 @@ import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.httpclient._
 import com.typesafe.scalalogging.StrictLogging
 import io.opentracing.Tracer
-import javax.inject.{Inject, Named}
+import jakarta.inject.{Inject, Named}
 import javax.net.ssl.SSLContext
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
@@ -47,7 +47,7 @@ import org.openrepose.core.services.uriredaction.UriRedactionService
 import org.openrepose.core.spring.ReposeSpringProperties
 import org.springframework.beans.factory.annotation.Value
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
 import scala.util.Try
 

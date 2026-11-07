@@ -20,10 +20,12 @@
 package org.openrepose.filters.openstackidentityv3.utilities
 
 import org.junit.runner.RunWith
+import org.scalatest.funspec.{AnyFunSpec => FunSpec}
+import org.scalatest.matchers.should.Matchers
 import org.openrepose.core.services.datastore.Datastore
 import org.scalatestplus.junit.JUnitRunner
 import org.scalatestplus.mockito.MockitoSugar
-import org.scalatest.{BeforeAndAfterEach, FunSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach}
 
 @RunWith(classOf[JUnitRunner])
 class CacheTest extends FunSpec with BeforeAndAfterEach with Matchers with MockitoSugar {

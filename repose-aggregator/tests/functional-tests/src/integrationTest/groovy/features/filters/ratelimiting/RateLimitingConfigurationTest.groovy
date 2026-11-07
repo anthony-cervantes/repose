@@ -19,12 +19,11 @@
  */
 package features.filters.ratelimiting
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Filters
 
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class RateLimitingConfigurationTest extends ReposeValveTest {
 
     def "when starting Repose with a rate limiting config without the request-endpoint element, should not throw a NPE"() {

@@ -25,11 +25,11 @@ import java.util
 import java.util.{Collections, Optional}
 
 import com.atlassian.oai.validator.model.{Request, SimpleRequest}
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 import org.openrepose.commons.utils.http.normal.{QueryParameter, QueryParameterCollection}
 import org.openrepose.filters.openapivalidator.HttpServletValidatorRequest._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.io.Source
 
 /**
@@ -55,12 +55,12 @@ class HttpServletValidatorRequest(httpServletRequest: HttpServletRequest)
   private lazy val queryParameters: Seq[QueryParameter] = {
     Option(httpServletRequest.getQueryString)
       .map(new QueryParameterCollection(_))
-      .map(_.getParameters.asScala)
+      .map(_.getParameters.asScala.toList)
       .getOrElse(Seq.empty)
   }
 
-  // Leverages the SimpleRequest.Builder to perform additional header processing like value splitting on commas
-  // and constructing a key-case-insensitive Map.
+  // Build a case-insensitive map while preserving raw header values. The
+  // validator splits list values according to the parameter's schema and style.
   private lazy val headers: util.Map[String, util.Collection[String]] = {
     val requestBuilder = SimpleRequest.Builder.get("/")
     httpServletRequest.getHeaderNames.asScala.foreach { headerName =>

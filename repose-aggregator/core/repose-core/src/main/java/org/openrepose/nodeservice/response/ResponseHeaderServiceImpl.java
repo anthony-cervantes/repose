@@ -26,10 +26,10 @@ import org.openrepose.core.spring.ReposeSpringProperties;
 import org.openrepose.nodeservice.containerconfiguration.ContainerConfigurationService;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Named

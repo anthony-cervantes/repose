@@ -19,17 +19,16 @@
  */
 package features.filters.openapivalidator
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.rackspace.deproxy.Deproxy
 import org.rackspace.deproxy.MessageChain
-import scaffold.category.Filters
 import spock.lang.Unroll
 
 /**
  * Verifies the behavior of the OpenAPI Validator Filter.
  */
-@Category(Filters)
+@Tag("scaffold.category.Filters")
 class OpenApiValidationTest extends ReposeValveTest {
 
     def setupSpec() {

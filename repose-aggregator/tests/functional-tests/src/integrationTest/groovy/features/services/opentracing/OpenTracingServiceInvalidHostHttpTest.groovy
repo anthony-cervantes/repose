@@ -19,14 +19,13 @@
  */
 package features.services.opentracing
 
-import org.junit.experimental.categories.Category
+import spock.lang.Tag
 import org.openrepose.framework.test.ReposeValveTest
 import org.openrepose.framework.test.mocks.MockTracerCollector
 import org.rackspace.deproxy.Deproxy
-import scaffold.category.Services
 import spock.lang.Unroll
 
-@Category(Services)
+@Tag("scaffold.category.Services")
 class OpenTracingServiceInvalidHostHttpTest extends ReposeValveTest {
 
     def static originEndpoint
