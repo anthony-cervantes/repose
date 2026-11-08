@@ -94,7 +94,7 @@ org-apache-httpcomponents-httpclient = { module = "org.apache.httpcomponents:htt
 org-apache-httpcomponents-httpcore = { module = "org.apache.httpcomponents:httpcore", version.ref = "httpCoreVersion" }
 org-asciidoctor-asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", version = "3.2.1" }
 # Deproxy 0.21 requires the classic call-site API retained by Groovy 5.
-org-apache-groovy-groovy-all = { module = "org.apache.groovy:groovy-all", version = "5.1.3" }
+org-apache-groovy-groovy-all = { module = "org.apache.groovy:groovy-all", version = "6.0.0" }
 org-eclipse-jetty-jetty-server = { module = "org.eclipse.jetty:jetty-server", version.ref = "jettyVersion" }
 org-eclipse-jetty-ee11-jetty-ee11-servlet = { module = "org.eclipse.jetty.ee11:jetty-ee11-servlet", version.ref = "jettyVersion" }
 org-eclipse-jetty-jetty-util = { module = "org.eclipse.jetty:jetty-util", version.ref = "jettyVersion" }
