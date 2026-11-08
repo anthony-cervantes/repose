@@ -2,7 +2,7 @@
 # docker build --build-arg REPOSE_VERSION=latest -t repose-container .
 # To run the built image, use a command like the following:
 # docker run --rm repose-container
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 MAINTAINER The Repose Team <reposecore@rackspace.com>
 
