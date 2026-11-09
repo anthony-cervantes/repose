@@ -1,33 +1,44 @@
+# syntax=docker/dockerfile:1
 # Use Ubuntu as a base, since it works and is familiar.
 # The version should be the latest tested, LTS version.
 FROM ubuntu:24.04
 
-MAINTAINER The Repose Team <reposecore@rackspace.com>
+LABEL org.opencontainers.image.authors="The Repose Team <reposecore@rackspace.com>"
 
 # Setting constants
 ENV APP_ROOT=/etc/repose
 ENV APP_VARS=/var/repose
 ENV APP_LOGS=/var/log/repose
-ENV PKG_DIR=/tmp/packages/repose/
 
 # This environment variable is used to set command-line options.
 # The user can manually set these options using the "-e" flag with the Docker run command.
 ENV JAVA_OPTS=
 
-# Install Java from a package repository.
-RUN apt-get update -qq && apt-get install -qq -y ca-certificates wget \
-    && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
-    && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
-    && apt-get update -qq && apt-get install -qq -y temurin-27-jre
+# The optional CA bundle is mounted only while downloading packages. It is not
+# copied into image layers and normal builds use the system CA roots.
+RUN --mount=type=secret,id=proxy_ca \
+    set -eu; \
+    wget_ca=''; \
+    if [ -f /run/secrets/proxy_ca ]; then \
+        printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99-build-proxy-ca; \
+        wget_ca='--ca-certificate=/run/secrets/proxy_ca'; \
+    fi; \
+    apt-get update -qq; \
+    apt-get install -qq -y ca-certificates wget; \
+    wget $wget_ca -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public; \
+    echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list; \
+    apt-get update -qq; \
+    apt-get install -qq -y temurin-27-jre; \
+    rm -f /etc/apt/apt.conf.d/99-build-proxy-ca; \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy local Repose packages
-COPY repose_*.deb ${PKG_DIR}
-COPY repose-filter-bundle_*.deb ${PKG_DIR}
-COPY repose-extensions-filter-bundle_*.deb ${PKG_DIR}
-COPY repose-experimental-filter-bundle_*.deb ${PKG_DIR}
-
-# Install Repose directly from packages
-RUN dpkg -R --install ${PKG_DIR}
+# Install local packages from the build context without retaining the DEB
+# archives in image layers (the four archives total roughly 400 MB).
+RUN --mount=type=bind,target=/tmp/repose-packages \
+    dpkg --install /tmp/repose-packages/repose_*.deb \
+      /tmp/repose-packages/repose-filter-bundle_*.deb \
+      /tmp/repose-packages/repose-extensions-filter-bundle_*.deb \
+      /tmp/repose-packages/repose-experimental-filter-bundle_*.deb
 
 # Turn off local logging
 RUN sed -i 's,<\(Appender.*RollingFile.*/\)>,<!--\1-->,' ${APP_ROOT}/log4j2.xml
@@ -50,4 +61,4 @@ USER repose
 EXPOSE 8080
 
 # Start Repose.
-CMD java $JAVA_OPTS -jar /usr/share/repose/repose.jar -c /etc/repose
+CMD exec java $JAVA_OPTS -jar /usr/share/repose/repose.jar -c /etc/repose

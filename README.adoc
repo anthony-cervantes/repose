@@ -87,6 +87,22 @@ HTTP/1.1 reason phrases. Successful and delegated response bodies are unchanged.
 ./gradlew build
 ----
 
+== Release Versions and GHCR
+
+Release tags use Semantic Versioning. `10.0.0` is the major release for the Java 27,
+Scala 3, and Jakarta API migration; custom extensions must be rebuilt.
+CI-only changes do not require an application version bump.
+
+The `Publish Repose image` workflow builds one Linux amd64 image, verifies Java 27,
+the application version and an HTTP request through the packaged Echo filter,
+then pushes `ghcr.io/anthony-cervantes/repose:10.0.0` and an immutable commit tag.
+It runs on matching `v*` tags or manual dispatch, with a 30-minute limit and a
+standard Ubuntu runner. Pull requests do not publish images.
+
+For local container packaging, use `./gradlew -PcontainerRelease :repose-aggregator:artifacts:docker:copyPackages :repose-aggregator:artifacts:docker:copyDockerfiles`.
+This selects the stable application/package version without invoking the separate
+legacy Maven publication and signing configuration.
+
 == Installation
 You can install *Repose* using the following methods:
 
