@@ -7,6 +7,8 @@ extensions require rebuilding; see <<java-27-upgrade-notes.adoc#,Java 27 Upgrade
 Validation diagnostics are returned in UTF-8 response bodies rather than custom
 HTTP reason phrases. The GHCR image is built from local packages and verified
 before publication. Container tags use SemVer plus a commit-specific tag.
+This fork's version 10 marks that runtime and extension compatibility boundary;
+the upstream project's separate configuration/filter cleanup wishlist remains deferred.
 
 
 == 9.1.0.5 (2024-02-29)
