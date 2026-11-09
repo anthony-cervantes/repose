@@ -49,6 +49,7 @@ updates:
   - package-ecosystem: docker
     directories:
       - /repose-aggregator/artifacts/docker/src/docker/resources/*/*
+      - /repose-aggregator/artifacts/docker/src/docker/resources/ghcr
       - /repose-aggregator/tests/release-verification/src/docker/*
     schedule:
       interval: weekly

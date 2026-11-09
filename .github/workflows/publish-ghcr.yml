@@ -58,6 +58,7 @@ jobs:
           REVISION: ${{ steps.release.outputs.revision }}
         run: |
           docker build \
+            --file repose-aggregator/artifacts/docker/src/docker/resources/ghcr/Dockerfile \
             --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
             --label "org.opencontainers.image.revision=$GITHUB_SHA" \
             --label "org.opencontainers.image.version=$VERSION" \
