@@ -33,7 +33,7 @@ jobs:
             settings.gradle
             gradle/libs.versions.toml
             gradle/wrapper/gradle-wrapper.properties
-      - name: Select immutable version and image tags
+      - name: Select release version and commit tags
         id: release
         shell: bash
         run: |

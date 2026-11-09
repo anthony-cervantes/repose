@@ -2,6 +2,8 @@
 FROM eclipse-temurin:27-jre
 
 LABEL org.opencontainers.image.authors="The Repose Team <reposecore@rackspace.com>"
+LABEL org.opencontainers.image.title="Repose"
+LABEL org.opencontainers.image.description="Repose with Java 27 and packaged filter bundles"
 ENV JAVA_OPTS=""
 ENV APP_ROOT=/etc/repose
 ENV APP_VARS=/var/repose
@@ -30,4 +32,4 @@ WORKDIR /etc/repose
 VOLUME /etc/repose
 USER repose
 EXPOSE 8080
-CMD exec java $JAVA_OPTS -jar /usr/share/repose/repose.jar -c /etc/repose
+CMD ["/bin/sh", "-c", "exec java $JAVA_OPTS -jar /usr/share/repose/repose.jar -c /etc/repose"]

@@ -41,15 +41,16 @@ cat >"$smoke_dir/system-model.cfg.xml" <<'XML'
 XML
 chmod 755 "$smoke_dir"
 chmod 644 "$smoke_dir/system-model.cfg.xml"
-docker run --detach --name "$smoke_container" \
+docker run --detach --name "$smoke_container" --publish 127.0.0.1::8080 \
     --mount "type=bind,src=$smoke_dir/system-model.cfg.xml,dst=/etc/repose/system-model.cfg.xml,readonly" \
     "$image" >/dev/null
+smoke_address="$(docker port "$smoke_container" 8080/tcp)"
 
 for attempt in {1..45}; do
-    if docker exec "$smoke_container" wget --server-response \
-        --header='X-Repose-Smoke: ready' -O /dev/null http://127.0.0.1:8080/ \
-        >"$smoke_dir/http.txt" 2>&1 && \
-        grep -q 'HTTP/1.1 200' "$smoke_dir/http.txt" && \
+    if curl --silent --show-error --max-time 2 \
+        --header 'X-Repose-Smoke: ready' --dump-header "$smoke_dir/http.txt" \
+        --output /dev/null "http://$smoke_address/" 2>"$smoke_dir/curl.txt" && \
+        grep -Eq '^HTTP/[0-9.]+ 200' "$smoke_dir/http.txt" && \
         grep -qi 'X-Repose-Smoke: ready' "$smoke_dir/http.txt"; then
         cat "$smoke_dir/http.txt"
         printf 'Java 27, Repose %s, and packaged Echo filter passed.\n' "$expected_version"
@@ -61,5 +62,6 @@ for attempt in {1..45}; do
     sleep 1
 done
 cat "$smoke_dir/http.txt" || true
+cat "$smoke_dir/curl.txt" || true
 docker logs "$smoke_container"
 exit 1
