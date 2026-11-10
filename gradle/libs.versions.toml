@@ -99,7 +99,7 @@ org-eclipse-jetty-jetty-server = { module = "org.eclipse.jetty:jetty-server", ve
 org-eclipse-jetty-ee11-jetty-ee11-servlet = { module = "org.eclipse.jetty.ee11:jetty-ee11-servlet", version.ref = "jettyVersion" }
 org-eclipse-jetty-jetty-util = { module = "org.eclipse.jetty:jetty-util", version.ref = "jettyVersion" }
 # Diffson 4.7 requires the unreleased Play JSON 3.1 line.
-org-gnieh-diffson-play-json-3 = { module = "org.gnieh:diffson-play-json_3", version = "4.6.1" }
+org-gnieh-diffson-play-json-3 = { module = "org.gnieh:diffson-play-json_3", version = "4.7.1" }
 org-hamcrest-hamcrest = { module = "org.hamcrest:hamcrest", version = "3.0" }
 org-jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.0" }
 org-jtwig-jtwig-core = { module = "org.jtwig:jtwig-core", version = "5.87.0.RELEASE" }
