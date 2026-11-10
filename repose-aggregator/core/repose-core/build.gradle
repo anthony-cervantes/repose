@@ -111,12 +111,20 @@ task copyEars() {
 
 test.dependsOn copyEars
 
+test {
+    systemProperty 'repose.expectedVersion', version.toString()
+}
+
 processResources {
+    inputs.property('reposeVersion', version.toString())
+    inputs.property('reposeVersionName', reposeCodename)
     expand(reposeVersion: version, reposeVersionName: reposeCodename)
 }
 
 
 processTestResources {
+    inputs.property('earDirectory', copyEars.outputDir.toString())
+    inputs.property('earVersion', version.toString())
     expand(earDirectory: copyEars.outputDir, earVersion: version)
 }
 

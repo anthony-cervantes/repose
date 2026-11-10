@@ -1,0 +1,82 @@
+name: Publish Repose image
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-ghcr-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '27'
+          cache: gradle
+          cache-dependency-path: |
+            **/*.gradle
+            settings.gradle
+            gradle/libs.versions.toml
+            gradle/wrapper/gradle-wrapper.properties
+      - name: Select release version and commit tags
+        id: release
+        shell: bash
+        run: |
+          version=$(sed -n "s/.*def baseVersion = '\([^']*\)'.*/\1/p" build.gradle)
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo 'Version tag does not match build.gradle' >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "revision=${GITHUB_SHA:0:12}" >> "$GITHUB_OUTPUT"
+      - name: Package local application and filter bundles
+        run: |
+          ./gradlew --no-daemon --max-workers=2 -PcontainerRelease \
+            :repose-aggregator:artifacts:docker:copyPackages \
+            :repose-aggregator:artifacts:docker:copyDockerfiles
+      - name: Build and smoke-test the exact image to publish
+        env:
+          IMAGE: ${{ steps.release.outputs.image }}
+          VERSION: ${{ steps.release.outputs.version }}
+          REVISION: ${{ steps.release.outputs.revision }}
+        run: |
+          docker build \
+            --file repose-aggregator/artifacts/docker/src/docker/resources/ghcr/Dockerfile \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "org.opencontainers.image.version=$VERSION" \
+            --tag "$IMAGE:$VERSION" --tag "$IMAGE:sha-$REVISION" \
+            repose-aggregator/artifacts/docker/build/docker/ubuntu
+          scripts/verify-container.sh "$IMAGE:$VERSION" "$VERSION"
+      - name: Push verified image to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE: ${{ steps.release.outputs.image }}
+          VERSION: ${{ steps.release.outputs.version }}
+          REVISION: ${{ steps.release.outputs.revision }}
+        run: |
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          docker push "$IMAGE:$VERSION"
+          docker push "$IMAGE:sha-$REVISION"
+          {
+            echo "Published: \`$IMAGE:$VERSION\`"
+            echo "Commit tag: \`$IMAGE:sha-$REVISION\`"
+            docker image inspect "$IMAGE:$VERSION" --format '{{range .RepoDigests}}{{println .}}{{end}}'
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,5 +1,16 @@
 = Release Notes
 
+== 10.0.0
+
+This major version adopts Java 27, Scala 3 and Jakarta APIs. Custom filters and
+extensions require rebuilding; see <<java-27-upgrade-notes.adoc#,Java 27 Upgrade Notes>>.
+Validation diagnostics are returned in UTF-8 response bodies rather than custom
+HTTP reason phrases. The GHCR image is built from local packages and verified
+before publication. Container tags use SemVer plus a commit-specific tag.
+This fork's version 10 marks that runtime and extension compatibility boundary;
+the upstream project's separate configuration/filter cleanup wishlist remains deferred.
+
+
 == 9.1.0.5 (2024-02-29)
 * [.enhancement-tag]#Enhancement# - Added option to <<../filters/api-validator.adoc#, API Validator Filter>> to disable byte code gen in Saxon EE.
 * Updated dependencies:

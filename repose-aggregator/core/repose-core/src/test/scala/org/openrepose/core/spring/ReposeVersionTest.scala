@@ -31,20 +31,25 @@ import org.scalatestplus.junit.JUnitRunner
   * Time: 9:43 AM
   */
 @RunWith(classOf[JUnitRunner])
-class NextVersionTimebombTest extends FunSpec with Matchers with TestFilterBundlerHelper {
+class ReposeVersionTest extends FunSpec with Matchers with TestFilterBundlerHelper {
 
   val coreSpringProvider = CoreSpringProvider.getInstance()
   coreSpringProvider.initializeCoreContext("/etc/repose", false)
 
   describe("Repose Version") {
-    it("is not 10 (timebomb)") {
+    it("matches the requested build version") {
       val reposeVersion = coreSpringProvider.getCoreContext.getEnvironment.getProperty(
         ReposeSpringProperties.stripSpringValueStupidity(ReposeSpringProperties.CORE.REPOSE_VERSION))
 
-      reposeVersion should not startWith "10"
+      val expectedVersion = System.getProperty("repose.expectedVersion")
+      expectedVersion should not be null
+      reposeVersion shouldBe expectedVersion
 
       /*
-       * Before moving to version 10, the following updates should be made:
+       * The upstream project's version-10 cleanup wishlist is retained below
+       * for reference. This fork's 10.0.0 marks the Java 27, Scala 3, and Jakarta
+       * compatibility boundary. These independent configuration and filter
+       * cleanups remain deferred; this release does not claim to implement them.
        *
        * 1. Update the Header Normalization filters deprecated items:
        *    a. Remove the deprecated `header-filters` element.

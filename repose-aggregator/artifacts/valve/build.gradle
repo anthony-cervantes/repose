@@ -39,6 +39,8 @@ dependencies {
 }
 
 processResources {
+    inputs.property('reposeVersion', version.toString())
+    inputs.property('jettyVersion', versionProperties.get('jettyVersion'))
     expand(reposeVersion: version, jettyVersion: versionProperties.get('jettyVersion'))
 }
 

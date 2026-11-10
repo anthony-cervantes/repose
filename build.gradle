@@ -117,8 +117,10 @@ task('release', description: 'Release the project and publish to all repos.', gr
 
 allprojects {
     group = 'org.openrepose'
-    def baseVersion = '9.1.0.5'
-    version = project.hasProperty('release') ? baseVersion : "$baseVersion~SNAPSHOT"
+    def baseVersion = '10.0.0'
+    // Container packaging uses the stable version without invoking legacy Maven
+    // publication/signature configuration. It does not publish Maven artifacts.
+    version = (project.hasProperty('release') || project.hasProperty('containerRelease')) ? baseVersion : "$baseVersion~SNAPSHOT"
 
     apply plugin: 'idea'
     apply plugin: 'com.netflix.nebula.dependency-recommender'

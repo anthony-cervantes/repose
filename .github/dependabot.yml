@@ -49,6 +49,7 @@ updates:
   - package-ecosystem: docker
     directories:
       - /repose-aggregator/artifacts/docker/src/docker/resources/*/*
+      - /repose-aggregator/artifacts/docker/src/docker/resources/ghcr
       - /repose-aggregator/tests/release-verification/src/docker/*
     schedule:
       interval: weekly
@@ -58,5 +59,18 @@ updates:
     open-pull-requests-limit: 5
     groups:
       docker-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    groups:
+      actions-minor-patch:
         patterns: ["*"]
         update-types: [minor, patch]
