@@ -53,6 +53,10 @@
         <filter-class>org.openrepose.filters.destinationrouter.DestinationRouterFilter</filter-class>
     </filter>
     <filter>
+        <filter-name>empty-request-filter</filter-name>
+        <filter-class>org.openrepose.filters.emptyrequest.EmptyRequestFilter</filter-class>
+    </filter>
+    <filter>
         <filter-name>forwarded-proto</filter-name>
         <filter-class>org.openrepose.filters.forwardedproto.ForwardedProtoFilter</filter-class>
     </filter>

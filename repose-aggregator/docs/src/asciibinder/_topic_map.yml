@@ -135,6 +135,8 @@ Topics:
     File: destination-router.adoc
   - Name: Echo Filter
     File: echo.adoc
+  - Name: Empty Request Filter
+    File: empty-request-filter.adoc
   - Name: Forwarded Protocol Filter
     File: forwarded-proto.adoc
   - Name: Header Normalization filter
