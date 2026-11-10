@@ -1,0 +1,71 @@
+= Empty Request Filter
+
+Replaces a zero-byte POST or PUT body with the UTF-8 JSON object `{}`.
+
+== General Filter Information
+
+* *Name:* `empty-request-filter`
+* *Configuration:* optional legacy `empty-request-filter.cfg.xml` (no settings)
+* *Bundle:* `repose-filter-bundle`, included in the GHCR image
+* *Available since:* `10.1.0`
+
+== Enabling the Filter
+
+The filter is disabled by default. Add it explicitly to the filters in `system-model.cfg.xml`:
+
+[source,xml]
+----
+<filter name="empty-request-filter"/>
+----
+
+Place it before filters that parse, validate, or sign the request body so that they see the replacement.
+Do not also enable the legacy `custom-bundle-1.0.12.ear` implementation under the same name.
+The built-in implementation uses Jakarta Servlet and does not need the legacy bundle.
+
+== Behavior
+
+For POST and PUT, the filter checks the actual stream for EOF, including when `Content-Length` is absent or zero.
+An empty body becomes `{}` with `Content-Type: application/json` and `Content-Length: 2`.
+The servlet content type and both content-length accessors reflect those values too.
+Any old `Transfer-Encoding` or `Content-Encoding` header is removed from the replacement.
+The endpoint's `chunked-encoding` setting controls the final wire framing.
+Its default, `true`, forwards a valid chunked body without a `Content-Length` header.
+Use `chunked-encoding="false"` or `chunked-encoding="auto"` on the destination endpoint
+if the backend requires `Content-Length: 2` for these replacements.
+
+Non-empty bodies, including whitespace and binary data, retain every byte and their original headers.
+Only one byte is inspected and put back; the filter does not buffer the entire body.
+Other HTTP methods pass through without inspecting their bodies.
+
+== Legacy RBA Configuration
+
+The legacy filename and namespace remain supported:
+
+[source,xml]
+----
+<empty-request-filter xmlns="http://docs.example.com/rba/empty-request-filter/v1.0"/>
+----
+
+There are no settings to load, so this file is optional and is not read at runtime.
+An existing file may remain in place; its presence alone does not enable the filter.
+The example is shipped under `/etc/repose/examples`, and its schema is included in the filter JAR.
+
+== Verification
+
+Run the focused Gradle tests with JDK 27:
+
+[source,shell]
+----
+./gradlew --max-workers=2 :repose-aggregator:components:filters:empty-request-filter:test
+----
+
+After building the local GHCR Dockerfile image, exercise the actual proxy and a test backend:
+
+[source,shell]
+----
+python3 scripts/verify-empty-request-filter.py LOCAL_IMAGE
+----
+
+This requires Docker and Python 3. It runs a temporary `python:3.14-alpine` backend and verifies
+empty requests, missing/zero content lengths, chunked requests, non-empty binary bodies, other methods,
+all three endpoint chunked-encoding settings, and operation without the filter enabled. Temporary containers and the test network are removed on exit.

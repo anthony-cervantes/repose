@@ -1,0 +1,9 @@
+dependencies {
+    api project(":repose-aggregator:commons:commons-utilities")
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
+
+    testImplementation "junit:junit"
+    testImplementation "org.scalatest:scalatest_$scalaMajDotMin"
+    testImplementation "org.scalatestplus:junit-4-13_$scalaMajDotMin"
+    testImplementation "org.springframework:spring-test"
+}
