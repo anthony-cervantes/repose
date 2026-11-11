@@ -14,10 +14,10 @@ configurations {
 
 dependencies {
     //todo: not certain why this was neccessary, but it lets things compile
-    testCompileOnly 'org.scala-lang:scala-library:2.13.18'
+    testCompileOnly 'org.scala-lang:scala-library:3.10.0'
 
     performanceTestImplementation project(':repose-aggregator:tests:performance-test-framework')
-    performanceTestCompileOnly 'org.scala-lang:scala-library:2.13.18'
+    performanceTestCompileOnly 'org.scala-lang:scala-library:3.10.0'
     performanceTestCompileOnly 'io.gatling:gatling-core'
     performanceTestCompileOnly 'io.gatling:gatling-http'
 
