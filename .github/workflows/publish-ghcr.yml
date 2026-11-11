@@ -65,6 +65,8 @@ jobs:
             --tag "$IMAGE:$VERSION" --tag "$IMAGE:sha-$REVISION" \
             repose-aggregator/artifacts/docker/build/docker/ubuntu
           scripts/verify-container.sh "$IMAGE:$VERSION" "$VERSION"
+          python3 scripts/verify-legacy-monitor-host.py "$IMAGE:$VERSION"
+          python3 scripts/verify-empty-request-filter.py "$IMAGE:$VERSION"
       - name: Push verified image to GHCR
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}

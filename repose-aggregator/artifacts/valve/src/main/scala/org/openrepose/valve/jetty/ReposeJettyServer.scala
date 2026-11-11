@@ -89,7 +89,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
 
     //Set up connectors
     val httpConnector: Option[ServerConnector] = httpPort.map { port =>
-      val conn = new ServerConnector(s)
+      val conn = new ServerConnector(s, new LegacyMonitorHttpConnectionFactory())
       conn.getConnectionFactory(classOf[HttpConnectionFactory])
         .getHttpConfiguration
         .setSendServerVersion(false)
@@ -128,7 +128,7 @@ class ReposeJettyServer(val nodeContext: AbstractApplicationContext,
           }
         }
 
-        val sslConnector = new ServerConnector(s, cf)
+        val sslConnector = new ServerConnector(s, cf, new LegacyMonitorHttpConnectionFactory())
         ////////////////////////////////////////////////////////////////////
         // TODO: Remove this legacy support in v10.0.0.0. (REP-7598)      //
         sslConnector.getConnectionFactory(classOf[HttpConnectionFactory]) //
