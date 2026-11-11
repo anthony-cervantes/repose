@@ -4,6 +4,11 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Optional image tag; required for patch builds on a non-default branch'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -36,6 +41,9 @@ jobs:
       - name: Select release version and commit tags
         id: release
         shell: bash
+        env:
+          REQUESTED_IMAGE_TAG: ${{ inputs.image_tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           version=$(sed -n "s/.*def baseVersion = '\([^']*\)'.*/\1/p" build.gradle)
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
@@ -43,7 +51,17 @@ jobs:
             echo 'Version tag does not match build.gradle' >&2
             exit 1
           fi
+          image_tag="${REQUESTED_IMAGE_TAG:-$version}"
+          if [[ ! "$image_tag" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}$ ]]; then
+            echo 'Invalid container image tag' >&2
+            exit 1
+          fi
+          if [[ "$GITHUB_REF_TYPE" != tag && "$GITHUB_REF_NAME" != "$DEFAULT_BRANCH" && "$image_tag" == "$version" ]]; then
+            echo 'Patch builds must use a separate image_tag to preserve the release tag' >&2
+            exit 1
+          fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$image_tag" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
           echo "revision=${GITHUB_SHA:0:12}" >> "$GITHUB_OUTPUT"
       - name: Package local application and filter bundles
@@ -55,6 +73,7 @@ jobs:
         env:
           IMAGE: ${{ steps.release.outputs.image }}
           VERSION: ${{ steps.release.outputs.version }}
+          IMAGE_TAG: ${{ steps.release.outputs.tag }}
           REVISION: ${{ steps.release.outputs.revision }}
         run: |
           docker build \
@@ -62,23 +81,23 @@ jobs:
             --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
             --label "org.opencontainers.image.revision=$GITHUB_SHA" \
             --label "org.opencontainers.image.version=$VERSION" \
-            --tag "$IMAGE:$VERSION" --tag "$IMAGE:sha-$REVISION" \
+            --tag "$IMAGE:$IMAGE_TAG" --tag "$IMAGE:sha-$REVISION" \
             repose-aggregator/artifacts/docker/build/docker/ubuntu
-          scripts/verify-container.sh "$IMAGE:$VERSION" "$VERSION"
-          python3 scripts/verify-legacy-monitor-host.py "$IMAGE:$VERSION"
-          python3 scripts/verify-empty-request-filter.py "$IMAGE:$VERSION"
+          scripts/verify-container.sh "$IMAGE:$IMAGE_TAG" "$VERSION"
+          python3 scripts/verify-legacy-monitor-host.py "$IMAGE:$IMAGE_TAG"
+          python3 scripts/verify-empty-request-filter.py "$IMAGE:$IMAGE_TAG"
       - name: Push verified image to GHCR
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           IMAGE: ${{ steps.release.outputs.image }}
-          VERSION: ${{ steps.release.outputs.version }}
+          IMAGE_TAG: ${{ steps.release.outputs.tag }}
           REVISION: ${{ steps.release.outputs.revision }}
         run: |
           printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
-          docker push "$IMAGE:$VERSION"
+          docker push "$IMAGE:$IMAGE_TAG"
           docker push "$IMAGE:sha-$REVISION"
           {
-            echo "Published: \`$IMAGE:$VERSION\`"
+            echo "Published: \`$IMAGE:$IMAGE_TAG\`"
             echo "Commit tag: \`$IMAGE:sha-$REVISION\`"
-            docker image inspect "$IMAGE:$VERSION" --format '{{range .RepoDigests}}{{println .}}{{end}}'
+            docker image inspect "$IMAGE:$IMAGE_TAG" --format '{{range .RepoDigests}}{{println .}}{{end}}'
           } >> "$GITHUB_STEP_SUMMARY"

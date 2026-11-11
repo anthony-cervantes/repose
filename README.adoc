@@ -101,6 +101,8 @@ the application version and an HTTP request through the packaged Echo filter,
 then pushes `ghcr.io/anthony-cervantes/repose:10.1.0` and a source commit tag.
 It runs on matching `v*` tags or manual dispatch, with a 30-minute limit and a
 standard Ubuntu runner. Pull requests do not publish images.
+Manual dispatch accepts an `image_tag` override for a patch image. Builds from a
+non-default branch must use a separate image tag to preserve the release tag.
 
 For local container packaging, use `./gradlew -PcontainerRelease :repose-aggregator:artifacts:docker:copyPackages :repose-aggregator:artifacts:docker:copyDockerfiles`.
 This selects the stable application/package version without invoking the separate
