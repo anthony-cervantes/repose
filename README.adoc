@@ -92,19 +92,27 @@ HTTP/1.1 reason phrases. Successful and delegated response bodies are unchanged.
 Release tags use Semantic Versioning. `10.0.0` is the major release for the Java 27,
 Scala 3, and Jakarta API migration; custom extensions must be rebuilt.
 CI-only changes do not require an application version bump.
-The proposed `10.1.0` release adds the opt-in
+The `10.1.0` release adds the opt-in
 link:repose-aggregator/docs/src/asciibinder/filters/empty-request-filter.adoc[Empty Request Filter].
+The `10.1.1` patch release adds opt-in compatibility for the legacy monitor Host format.
 
 The `Publish Repose image` workflow uses the official Temurin 27 runtime image
 and locally built application/filter packages. It builds one Linux amd64 image and verifies Java 27,
 the application version and an HTTP request through the packaged Echo filter,
-then pushes `ghcr.io/anthony-cervantes/repose:10.1.0` and a source commit tag.
+then pushes `ghcr.io/anthony-cervantes/repose:10.1.1` and a source commit tag.
 It runs on matching `v*` tags or manual dispatch, with a 30-minute limit and a
 standard Ubuntu runner. Pull requests do not publish images.
+Manual dispatch accepts an `image_tag` override for a patch image. Builds from a
+non-default branch must use a separate image tag to preserve the release tag.
 
 For local container packaging, use `./gradlew -PcontainerRelease :repose-aggregator:artifacts:docker:copyPackages :repose-aggregator:artifacts:docker:copyDockerfiles`.
 This selects the stable application/package version without invoking the separate
 legacy Maven publication and signing configuration.
+
+The opt-in
+link:repose-aggregator/docs/src/asciibinder/recipes/legacy-monitor-host.adoc[legacy monitor Host compatibility]
+setting handles the observed `/lb_monitor` Host suffix before HTTP parsing rejects it,
+while retaining authentication and strict validation of other malformed Host values.
 
 == Installation
 You can install *Repose* using the following methods:

@@ -1,0 +1,122 @@
+= Legacy Load-Balancer Monitor Host Compatibility
+
+The following legacy health probe puts a path in the Host header instead of the request target:
+
+[source,http]
+----
+GET / HTTP/1.1
+Host: stagea.cache.api.rba.rackspace.com/lb_monitor
+Connection: Close
+
+----
+
+On the wire, every line must end in CRLF and the headers must end with an additional CRLF.
+Repose 10.1.0's Jetty 12.1.14 parser rejects this before the Repose filter chain:
+`HttpParser.parsedHeader()` constructs `HostPortHttpField`, whose strict `HostPort`
+constructor rejects the slash and raises HTTP 400 (`Bad HostPort`).
+A servlet filter cannot intercept that failure.
+
+== Enable compatibility
+
+The fix is included in the `ghcr.io/anthony-cervantes/repose:10.1.1` patch release.
+Compatibility is *disabled by default*. Set this JVM system property before starting Valve:
+
+[source,shell]
+----
+-Drepose.legacyMonitorHost.enabled=true
+----
+
+For the packaged container, include it in `JAVA_OPTS`, retaining any existing JVM options:
+
+[source,shell]
+----
+docker run --env 'JAVA_OPTS=-Drepose.legacyMonitorHost.enabled=true' YOUR_FIXED_IMAGE
+----
+
+A process restart is required to change the setting. It applies to both the HTTP connector
+and HTTP/1.1 inside the HTTPS connector; no filter configuration is needed.
+Only `GET / HTTP/1.1` is eligible. For a single, unfolded Host header ending in the
+literal, case-sensitive `/lb_monitor`, the connector removes just that suffix and
+validates the remaining authority with Jetty's strict `HostPortHttpField` constructor.
+The authority (including any explicit port) and request target `/` are preserved.
+No path is moved into the request target. Other paths, methods, suffixes, duplicate
+Host headers, invalid ports, userinfo, and malformed authorities remain subject to
+the original HTTP validation.
+
+The adapter runs at Jetty's `HttpParser.parseFields()` extension point, before
+`parsedHeader()` attempts to parse Host. It buffers only candidate request headers,
+within the original request-header size limit. It leaves bodies and subsequent
+requests in the original connection buffer. The original parser still validates
+all headers and framing with the same HTTP and URI compliance settings.
+
+This is transport compatibility, not a health endpoint or authentication exception.
+Keep Keystone and the existing filters configured. An unauthenticated legacy probe
+then reaches Keystone and receives HTTP 401 Unauthorized, as a probe with a valid
+Host does. The old custom HTTP reason phrase is not restored.
+The bundled opt-in `empty-request-filter` remains unchanged: zero-byte POST/PUT
+becomes UTF-8 JSON `{}`, while nonempty bodies and other methods retain their behavior.
+
+== Local regression verification
+
+Build packages and a new, task-specific local image using the packaging commands
+in the repository README. Do not overwrite the published `10.1.0` image tag.
+
+[source,shell]
+----
+./gradlew --no-daemon --max-workers=2 -PcontainerRelease \
+  :repose-aggregator:artifacts:valve:test \
+  :repose-aggregator:components:filters:empty-request-filter:test \
+  :repose-aggregator:artifacts:docker:copyPackages \
+  :repose-aggregator:artifacts:docker:copyDockerfiles
+docker build \
+  --file repose-aggregator/artifacts/docker/src/docker/resources/ghcr/Dockerfile \
+  --tag repose:legacy-monitor-host \
+  repose-aggregator/artifacts/docker/build/docker/ubuntu
+scripts/verify-container.sh repose:legacy-monitor-host 10.1.1
+python3 scripts/verify-legacy-monitor-host.py repose:legacy-monitor-host
+python3 scripts/verify-empty-request-filter.py repose:legacy-monitor-host
+----
+
+The monitor verifier sends raw socket requests through the packaged image with the
+compatibility setting both absent and enabled. An isolated Docker network hosts a
+fake Keystone service and recording origin. It verifies missing/invalid tokens,
+valid local tokens, preserved Host and target, unrelated malformed inputs, read
+fragmentation, and repeated requests on one connection. It also asserts rejected
+and unauthenticated requests never reach the origin. No staging credentials or
+business APIs are used. `--baseline` runs only the disabled matrix against the
+original published image to reproduce the regression.
+
+== Verified results (2026-11-11)
+
+The original packaged image was pulled and the exact CRLF probe was replayed
+before source changes. Its registry digest was
+`ghcr.io/anthony-cervantes/repose@sha256:2f9249b11308e82b9f397bdb948282eb88704be4877f3f2040426925da4eee09`.
+The packaged JAR identifies Jetty HTTP 12.1.14. The final baseline matrix passed
+38 checks against that unchanged image.
+
+[cols="3,1,1,1",options="header"]
+|===
+|Request |Original image |Fixed, default |Fixed, opt-in enabled
+|Exact monitor, no token |400 |400 |401
+|Valid Host, no token |401 |401 |401
+|Exact monitor, valid local fixture token |400 |400 |200
+|Unrelated malformed Host, valid local fixture token |400 |400 |400
+|===
+
+The fixed local image `repose:legacy-monitor-host` has image ID
+`sha256:d8aa68d80dbdea713a13a8ac37b5b8155315eb775c10987b774075c66b08b0f4`.
+Verification completed successfully:
+
+* Valve tests: 77 passed, six pre-existing ignored tests skipped; all six new parser tests passed.
+* Empty Request Filter tests: 38 passed.
+* Connector/parser tests rerun with the compatibility property enabled: 28 passed, including HTTPS setup tests.
+* Distribution packaging and Valve main/test license checks passed.
+* `scripts/verify-container.sh`: Java 27, Repose 10.1.0, packaged Echo HTTP smoke test passed.
+* `scripts/verify-legacy-monitor-host.py`: 86 raw HTTP checks passed across disabled/enabled settings.
+* `scripts/verify-empty-request-filter.py`: 84 backend checks passed with compatibility off,
+  and another 84 passed with it on. The latter used a local child image whose sole change
+  was `ENV JAVA_OPTS="-Drepose.legacyMonitorHost.enabled=true"`.
+
+All fixture containers and networks were removed after verification. Images were
+built locally only; no deployment, registry push, published-tag replacement,
+Salt change, or load-balancer change was performed.

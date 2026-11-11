@@ -117,7 +117,7 @@ task('release', description: 'Release the project and publish to all repos.', gr
 
 allprojects {
     group = 'org.openrepose'
-    def baseVersion = '10.1.0'
+    def baseVersion = '10.1.1'
     // Container packaging uses the stable version without invoking legacy Maven
     // publication/signature configuration. It does not publish Maven artifacts.
     version = (project.hasProperty('release') || project.hasProperty('containerRelease')) ? baseVersion : "$baseVersion~SNAPSHOT"
