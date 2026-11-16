@@ -2,7 +2,7 @@
 # Shared version references keep related libraries aligned.
 
 [versions]
-jacksonVersion = "2.22.4"
+jacksonVersion = "2.23.0"
 jerseyVersion = "4.0.3"
 jaxbVersion = "4.0.9"
 pekkoVersion = "2.0.0"
@@ -15,15 +15,15 @@ abderaVersion = "1.1.3"
 log4jVersion = "2.26.1"
 httpClientVersion = "4.5.14"
 httpCoreVersion = "4.4.16"
-jettyVersion = "12.1.14"
+jettyVersion = "12.1.15"
 mockitoVersion = "5.24.0"
-scalaVersion = "3.10.0"
+scalaVersion = "3.10.1"
 slf4jVersion = "2.0.20"
 springVersion = "7.0.10"
 
 [libraries]
 com-atlassian-oai-openapi-request-validator-core = { module = "com.atlassian.oai:openapi-request-validator-core", version = "3.0.0" }
-com-fasterxml-jackson-core-jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version = "2.22" }
+com-fasterxml-jackson-core-jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version = "2.23" }
 com-fasterxml-jackson-core-jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jacksonVersion" }
 com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonVersion" }
 com-fasterxml-jackson-dataformat-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
@@ -72,7 +72,7 @@ net-sf-ehcache-ehcache = { module = "net.sf.ehcache:ehcache", version = "2.10.9.
 net-sf-saxon-saxon-ee = { module = "net.sf.saxon:Saxon-EE", version.ref = "saxonVersion" }
 org-apache-abdera-abdera-core = { module = "org.apache.abdera:abdera-core", version.ref = "abderaVersion" }
 org-apache-abdera-abdera-parser = { module = "org.apache.abdera:abdera-parser", version.ref = "abderaVersion" }
-org-apache-commons-commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.21.0" }
+org-apache-commons-commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.22.0" }
 org-apache-jena-jena-iri = { module = "org.apache.jena:jena-iri", version = "5.6.0" }
 org-apache-logging-log4j-log4j-1-2-api = { module = "org.apache.logging.log4j:log4j-1.2-api", version.ref = "log4jVersion" }
 org-apache-thrift-libthrift = { module = "org.apache.thrift:libthrift", version = "0.25.0" }
@@ -99,7 +99,7 @@ org-eclipse-jetty-jetty-server = { module = "org.eclipse.jetty:jetty-server", ve
 org-eclipse-jetty-ee11-jetty-ee11-servlet = { module = "org.eclipse.jetty.ee11:jetty-ee11-servlet", version.ref = "jettyVersion" }
 org-eclipse-jetty-jetty-util = { module = "org.eclipse.jetty:jetty-util", version.ref = "jettyVersion" }
 # Diffson 4.7 requires the unreleased Play JSON 3.1 line.
-org-gnieh-diffson-play-json-3 = { module = "org.gnieh:diffson-play-json_3", version = "4.6.1" }
+org-gnieh-diffson-play-json-3 = { module = "org.gnieh:diffson-play-json_3", version = "4.7.1" }
 org-hamcrest-hamcrest = { module = "org.hamcrest:hamcrest", version = "3.0" }
 org-jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.0" }
 org-jtwig-jtwig-core = { module = "org.jtwig:jtwig-core", version = "5.87.0.RELEASE" }
