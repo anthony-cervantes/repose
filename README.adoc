@@ -95,12 +95,13 @@ CI-only changes do not require an application version bump.
 The `10.1.0` release adds the opt-in
 link:repose-aggregator/docs/src/asciibinder/filters/empty-request-filter.adoc[Empty Request Filter].
 The `10.1.1` patch release adds opt-in compatibility for the legacy monitor Host format.
+The `10.1.2` patch release updates the Java runtime and build JDK to Temurin 27.0.1.1+4.
 
 The `Publish Repose image` workflow uses Ubuntu 24.04 with the signed Adoptium
 Temurin 27.0.1.1+4 runtime package and locally built application/filter packages.
 It builds one Linux amd64 image and verifies the exact Java patch/build,
 the application version and an HTTP request through the packaged Echo filter,
-then pushes `ghcr.io/anthony-cervantes/repose:10.1.1` and a source commit tag.
+then pushes `ghcr.io/anthony-cervantes/repose:10.1.2` and a source commit tag.
 It runs on matching `v*` tags or manual dispatch, with a 30-minute limit and a
 standard Ubuntu runner. Pull requests do not publish images.
 Manual dispatch accepts an `image_tag` override for a patch image. Builds from a
