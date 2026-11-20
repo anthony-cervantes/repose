@@ -14,7 +14,8 @@ trap cleanup EXIT
 
 docker run --rm --entrypoint java "$image" -version >"$smoke_dir/java.txt" 2>&1
 cat "$smoke_dir/java.txt"
-grep -Eq 'version "27([."]|$)' "$smoke_dir/java.txt"
+grep -Fq 'version "27.0.1.1"' "$smoke_dir/java.txt"
+grep -Fq 'Temurin-27.0.1.1+4 (build 27.0.1.1+4)' "$smoke_dir/java.txt"
 # The current Valve launcher returns 1 after printing informational options.
 set +e
 docker run --rm --entrypoint java "$image" -jar /usr/share/repose/repose.jar --version >"$smoke_dir/version.txt" 2>&1
@@ -53,7 +54,7 @@ for attempt in {1..45}; do
         grep -Eq '^HTTP/[0-9.]+ 200' "$smoke_dir/http.txt" && \
         grep -qi 'X-Repose-Smoke: ready' "$smoke_dir/http.txt"; then
         cat "$smoke_dir/http.txt"
-        printf 'Java 27, Repose %s, and packaged Echo filter passed.\n' "$expected_version"
+        printf 'Temurin 27.0.1.1+4, Repose %s, and packaged Echo filter passed.\n' "$expected_version"
         exit 0
     fi
     if [[ "$(docker inspect --format '{{.State.Running}}' "$smoke_container")" != true ]]; then

@@ -39,9 +39,9 @@
     state: present
   become: yes
 
-- name: Install Java 27
+- name: Install Temurin 27.0.1.1+4
   apt:
-    name: temurin-27-jdk
+    name: temurin-27-jdk=27.0.1.1.0+4-0
     state: present
     update_cache: yes
   become: yes

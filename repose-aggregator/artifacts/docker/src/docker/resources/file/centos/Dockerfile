@@ -15,12 +15,13 @@ ENV PKG_DIR=/tmp/packages/repose/
 ENV JAVA_OPTS=
 
 # Install Java from a package repository.
+ARG TEMURIN_VERSION=27.0.1.1.0.4-0
 RUN yum update -q -y && yum install -q -y ca-certificates wget \
     && printf '%s\n' '[Adoptium]' 'name=Eclipse Adoptium' \
        'baseurl=https://packages.adoptium.net/artifactory/rpm/centos/$releasever/$basearch' \
        'enabled=1' 'gpgcheck=1' \
        'gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public' > /etc/yum.repos.d/adoptium.repo \
-    && yum install -q -y temurin-27-jre
+    && yum install -q -y "temurin-27-jre-${TEMURIN_VERSION}"
 
 # Copy local Repose packages
 COPY repose-*.rpm ${PKG_DIR}

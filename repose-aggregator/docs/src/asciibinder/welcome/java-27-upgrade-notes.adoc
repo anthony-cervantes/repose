@@ -5,7 +5,13 @@ historical <<ver-9-upgrade-notes.adoc#,Version 9 upgrade notes>>.
 
 == Build and Runtime
 
-Install JDK 27 and set `JAVA_HOME` to that installation before using `./gradlew`.
+Install Temurin JDK 27.0.1.1+4 and set `JAVA_HOME` to that installation before using `./gradlew`.
+This is the latest Java 27 patch as of November 20, 2026, published by
+https://github.com/adoptium/temurin27-binaries/releases/tag/jdk-27.0.1.1%2B4[Adoptium on November 18].
+CI and the active container/package installers pin this patch. The GHCR image
+installs the signed Adoptium package on Ubuntu 24.04 because the official
+`eclipse-temurin:27-jre` image does not yet contain this patch.
+The container smoke check verifies `27.0.1.1+4` before publication.
 The wrapper pins Gradle 9.9.0 and verifies its distribution checksum.
 Application Java and Scala sources, including generated XML-binding classes,
 compile to Java 27 class-file version 71. Scala application modules use Scala 3.10.

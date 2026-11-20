@@ -11,10 +11,11 @@ MAINTAINER The Repose Team <reposecore@rackspace.com>
 EXPOSE 8080 10037
 ENV PATH="/opt/repose-verification-venv/bin:${PATH}"
 
+ARG TEMURIN_VERSION=27.0.1.1.0+4-0
 RUN apt-get update -qq && apt-get install -qq -y ca-certificates wget \
     && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
     && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
-    && apt-get update -qq && apt-get install -qq -y temurin-27-jre
+    && apt-get update -qq && apt-get install -qq -y "temurin-27-jre=${TEMURIN_VERSION}"
 RUN apt-get install -qq -y curl python3-venv python3-pip build-essential
 RUN wget --quiet -O /usr/share/keyrings/openrepose.asc https://nexus.openrepose.org/repository/el/RPM_GPG_KEY-openrepose
 RUN echo 'deb [signed-by=/usr/share/keyrings/openrepose.asc] https://nexus.openrepose.org/repository/debian stable main' > /etc/apt/sources.list.d/openrepose.list

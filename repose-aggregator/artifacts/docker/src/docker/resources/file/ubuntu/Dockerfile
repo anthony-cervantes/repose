@@ -15,10 +15,11 @@ ENV PKG_DIR=/tmp/packages/repose/
 ENV JAVA_OPTS=
 
 # Install Java from a package repository.
+ARG TEMURIN_VERSION=27.0.1.1.0+4-0
 RUN apt-get update -qq && apt-get install -qq -y ca-certificates wget \
     && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
     && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
-    && apt-get update -qq && apt-get install -qq -y temurin-27-jre
+    && apt-get update -qq && apt-get install -qq -y "temurin-27-jre=${TEMURIN_VERSION}"
 
 # Copy local Repose packages
 COPY repose_*.deb ${PKG_DIR}
