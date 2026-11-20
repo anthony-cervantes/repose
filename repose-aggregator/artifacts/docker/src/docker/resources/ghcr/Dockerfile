@@ -1,5 +1,14 @@
 # syntax=docker/dockerfile:1
-FROM eclipse-temurin:27-jre
+FROM ubuntu:24.04
+
+# Install the patched Temurin runtime from its signed repository. The official
+# 27-jre container tag does not yet include this out-of-cycle patch.
+ARG TEMURIN_VERSION=27.0.1.1.0+4-0
+RUN apt-get update -qq && apt-get install -qq -y --no-install-recommends ca-certificates wget \
+    && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
+    && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
+    && apt-get update -qq && apt-get install -qq -y --no-install-recommends "temurin-27-jre=${TEMURIN_VERSION}" \
+    && rm -rf /var/lib/apt/lists/*
 
 LABEL org.opencontainers.image.authors="The Repose Team <reposecore@rackspace.com>"
 LABEL org.opencontainers.image.title="Repose"
@@ -9,7 +18,7 @@ ENV APP_ROOT=/etc/repose
 ENV APP_VARS=/var/repose
 ENV APP_LOGS=/var/log/repose
 
-# Use the distribution's Java runtime and extract application files from the
+# Use the patched Java runtime and extract application files from the
 # locally built packages. Host init-system/package-manager hooks are unnecessary
 # inside this container. Bind mounts keep the DEB archives out of image layers.
 RUN groupadd --system repose \

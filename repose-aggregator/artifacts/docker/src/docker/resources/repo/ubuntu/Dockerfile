@@ -5,10 +5,11 @@ FROM ubuntu:24.04
 MAINTAINER The Repose Team <reposecore@rackspace.com>
 
 # Install Java from an APT package repository.
+ARG TEMURIN_VERSION=27.0.1.1.0+4-0
 RUN apt-get update -qq && apt-get install -qq -y ca-certificates wget \
     && wget -q -O /usr/share/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
     && echo 'deb [signed-by=/usr/share/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb noble main' > /etc/apt/sources.list.d/adoptium.list \
-    && apt-get update -qq && apt-get install -qq -y temurin-27-jre
+    && apt-get update -qq && apt-get install -qq -y "temurin-27-jre=${TEMURIN_VERSION}"
 
 # This build-arg is used to pass the Repose version number which will be set up in this image.
 ARG REPOSE_VERSION
