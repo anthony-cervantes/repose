@@ -8,7 +8,7 @@ buildscript {
 
     dependencies {
         classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:4.1.0'
-        classpath 'com.netflix.nebula:nebula-dependency-recommender:14.2.3'
+        classpath 'com.netflix.nebula:nebula-dependency-recommender:14.3.0'
         classpath 'org.scoverage:gradle-scoverage:9.1'
         classpath 'com.gradleup.shadow:shadow-gradle-plugin:9.6.1'
         classpath 'com.github.alisiikh:gradle-scalastyle-plugin:3.5.0'
