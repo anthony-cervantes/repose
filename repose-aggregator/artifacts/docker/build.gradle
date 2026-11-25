@@ -1,27 +1,19 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-configurations {
-    containerValve {
-        canBeConsumed = false
-        canBeResolved = true
-        transitive = false
-    }
-    containerBundles {
-        canBeConsumed = false
-        canBeResolved = true
-        transitive = false
-    }
-}
-
-def valveProject = project(':repose-aggregator:artifacts:valve')
+// The container consumes exact outputs, not dependency-resolution configurations.
+// Evaluate the four producers first and wire their archive tasks explicitly.
+def valveProject = evaluationDependsOn(':repose-aggregator:artifacts:valve')
 def bundleNames = ['filter-bundle', 'extensions-filter-bundle', 'experimental-filter-bundle']
-
-dependencies {
-    containerValve project(path: ':repose-aggregator:artifacts:valve', configuration: 'fatJar')
-    bundleNames.each { bundle ->
-        containerBundles project(path: ":repose-aggregator:artifacts:$bundle", configuration: 'containerBundle')
-    }
+def bundleProjects = bundleNames.collect { name ->
+    evaluationDependsOn(":repose-aggregator:artifacts:$name")
 }
+def valveJar = valveProject.tasks.named('shadowJar')
+def bundleEars = bundleProjects.collect { it.tasks.named('ear') }
+
+// Resolve archive locations to ordinary Files; the explicit dependsOn edges
+// below are the only producer dependencies of the staging task.
+def valveFile = valveJar.get().archiveFile.get().asFile
+def bundleFiles = bundleEars.collect { it.get().archiveFile.get().asFile }
 
 // One Docker context: executable JAR, filter EARs, configs and license notices.
 // Sync removes stale files after version changes. No package-manager archives,
@@ -29,14 +21,15 @@ dependencies {
 tasks.register('stageGhcrContext', Sync) {
     group = 'build'
     description = 'Stage the Repose Docker image directly from JVM artifacts'
+    dependsOn valveJar, bundleEars
     duplicatesStrategy = DuplicatesStrategy.FAIL
     into layout.buildDirectory.dir('docker/ghcr')
 
     from('src/docker/resources/ghcr/Dockerfile')
-    from(configurations.containerValve) {
+    from(valveFile) {
         into 'rootfs/usr/share/repose'
     }
-    from(configurations.containerBundles) {
+    from(bundleFiles) {
         into 'rootfs/usr/share/repose/filters'
     }
     from(valveProject.file('src/config/filters')) {
@@ -55,8 +48,8 @@ tasks.register('stageGhcrContext', Sync) {
             valveProject.file('src/config/docs/DEPENDENCIES.txt')) {
         into 'rootfs/usr/share/doc/repose'
     }
-    bundleNames.each { bundle ->
-        def bundleProject = project(":repose-aggregator:artifacts:$bundle")
+    bundleProjects.each { bundleProject ->
+        def bundle = bundleProject.name
         from(bundleProject.file('src/config/filters')) {
             into 'rootfs/etc/repose/examples'
         }

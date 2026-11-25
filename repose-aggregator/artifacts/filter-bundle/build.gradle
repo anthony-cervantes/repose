@@ -1,12 +1,5 @@
 apply plugin: 'ear'
 
-configurations {
-    containerBundle {
-        canBeConsumed = true
-        canBeResolved = false
-    }
-}
-
 dependencies {
     earlib project(":repose-aggregator:components:filters:add-header-filter")
     earlib project(":repose-aggregator:components:filters:body-extractor-to-header-filter")
@@ -42,10 +35,6 @@ dependencies {
     earlib project(":repose-aggregator:components:filters:url-extractor-to-header-filter")
     earlib project(":repose-aggregator:components:filters:valkyrie-authorization-filter")
     earlib project(":repose-aggregator:components:filters:versioning-filter")
-}
-
-artifacts {
-    containerBundle ear
 }
 
 ear {

@@ -1,19 +1,8 @@
 apply plugin: 'ear'
 
-configurations {
-    containerBundle {
-        canBeConsumed = true
-        canBeResolved = false
-    }
-}
-
 dependencies {
     earlib project(":repose-aggregator:components:filters:api-validator-filter")
     earlib project(":repose-aggregator:components:filters:simple-rbac-filter")
-}
-
-artifacts {
-    containerBundle ear
 }
 
 ear {
