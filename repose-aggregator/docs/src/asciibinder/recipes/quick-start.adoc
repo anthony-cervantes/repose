@@ -19,10 +19,8 @@ If you can't, then the steps below may get you up and going.
 These are a few minor configuration items that may prevent some platforms from even executing the `docker run hello-world` test.
 They are not always well documented in the installation instructions, but are easily remedied.
 
-Public images can be pulled without a Docker Hub account, subject to Docker Hub pull limits.
-Use an account when authentication is needed, for example when pulling private images or publishing:
-
-- `docker login`
+Public GHCR images can be pulled anonymously.
+If authentication is needed for a private image, use `docker login ghcr.io` with appropriate credentials.
 
 Another issue that may arise is that communication with the Docker Engine is denied do to a lack of permissions.
 This can be fixed by adding the user to the `docker` group.
@@ -36,20 +34,17 @@ Make sure you can successfully run the Docker test:
 - `docker run hello-world`
 
 == Repose Docker Images
-Upstream Repose Docker images are published on Docker Hub at:
-
-image::http://dockeri.co/image/rackerlabs/repose[Repose Docker,link=https://hub.docker.com/r/rackerlabs/repose/]
+Versioned images for this fork are published to https://github.com/anthony-cervantes/repose/pkgs/container/repose[GHCR].
 
 == Running a Docker Container
-The following command runs the upstream `latest` image.
-It does not build this branch or establish which Java version that published image uses.
-For the Java 27 source implementation, <<docker.adoc#_manually_building_a_repose_docker_image,build a local image>> and substitute its tag below.
+The following command runs the published 10.1.2 image.
+To use current source instead, <<docker.adoc#_manually_building_a_repose_docker_image,build a local image>> and substitute its tag below.
 
 ----
 docker run                  \ <1>
    --detach                 \ <2>
    --publish 8080:8080      \ <3>
-   rackerlabs/repose:latest   <4>
+   ghcr.io/anthony-cervantes/repose:10.1.2   <4>
 ----
 Let's break that command down and take a closer look at what it is doing:
 
@@ -62,7 +57,7 @@ Let's break that command down and take a closer look at what it is doing:
     The port mapping format is `HOST_PORT:CONTAINER_PORT`.
     So in this example, traffic on host port 8080 will be forwarded to the containers port 8080.
 <4> This is the image ID (in repository:tag format) to create a container from.
-    Remember that *Repose* images are hosted at Docker Hub, which Docker can use implicitly.
+    Use the versioned GHCR image for this fork.
 
 The `docker run` command will return the full 64 character unique ID of the Container that was started.
 However, only the first 12 are typically needed for the `CONTAINER_ID` in the rest of the command examples.
