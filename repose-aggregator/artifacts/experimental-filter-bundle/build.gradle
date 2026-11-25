@@ -8,6 +8,8 @@ dependencies {
 }
 
 ear {
+    destinationDirectory = project.layout.buildDirectory.dir('distributions')
+    archiveFileName = "${project.name}-${project.version}.ear"
     manifest {
         attributes(
                 "Specification-Title": "Repose Components - $project.name",

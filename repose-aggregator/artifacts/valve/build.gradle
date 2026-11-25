@@ -47,6 +47,7 @@ jar {
 }
 
 shadowJar {
+    destinationDirectory = project.layout.buildDirectory.dir('libs')
     archiveFileName = 'repose.jar'
     exclude 'META-INF/*.SF'
     exclude 'META-INF/*.DSA'
