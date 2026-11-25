@@ -3,6 +3,11 @@
 
 include::../_includes/in-progress.adoc[]
 
+[WARNING]
+====
+Historical upstream native-package instructions only. This fork no longer builds or publishes Repose DEB/RPM packages. Use the <<docker.adoc#,Docker deployment recipe>> for supported installations.
+====
+
 Covers the typical *Repose* setup -- a Valve installation (i.e., standalone application) running as a Linux service.
 
 For instructions on starting *Repose* after setup, see: <<running-valve.adoc#,Running Valve>>.

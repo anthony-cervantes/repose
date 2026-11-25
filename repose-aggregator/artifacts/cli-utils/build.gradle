@@ -1,10 +1,7 @@
 apply plugin: 'com.gradleup.shadow'
-apply plugin: 'com.netflix.nebula.ospackage'
 
 configurations {
     fatJar
-    deb
-    rpm
 }
 
 dependencies {
@@ -31,85 +28,17 @@ shadowJar {
 
 artifacts {
     fatJar shadowJar
-    deb buildDeb
-    rpm buildRpm
 }
 
 build.dependsOn shadowJar
 
-signing {
-    required { gradle.taskGraph.hasTask("publish") }
-    sign shadowJar
-}
-
+// The CLI JAR remains available to developers, but has no native package.
 publishing {
     publications {
         nebula(MavenPublication) {
             artifact shadowJar
-            if(project.hasProperty('release')) {
-                artifact source: signShadowJar.singleSignature, extension: 'asc'
-                artifact source: buildDeb, extension: 'deb'
-                artifact source: buildRpm, extension: 'rpm'
-            }
         }
     }
-}
-
-ospackage {
-    packageName = "repose-cli-utils"
-    os = LINUX
-    packageDescription 'CLI Utils for working with a running repose instance'
-    priority 'optional'
-    packageGroup 'Applications/Internet'
-    maintainer 'Repose Development <ReposeCore@Rackspace.com>'
-    url 'http://openrepose.org'
-
-    if(project.hasProperty('signing.keyId') && project.hasProperty('signing.password') && project.hasProperty('signing.secretKeyRingFile')) {
-        signingKeyId project.getProperty('signing.keyId')
-        signingKeyPassphrase project.getProperty('signing.password')
-        signingKeyRingFile file(project.getProperty('signing.secretKeyRingFile'))
-    }
-
-    into '/usr/share/repose'
-
-    //the jar
-    from(shadowJar.outputs.files) {
-        rename('(.*).jar', 'repose-cli.jar')
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0555') }
-    }
-
-    //the scripts
-    from('src/config/scripts') {
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0640') }
-    }
-    link('/usr/bin/clean-repose-deploy', '/usr/share/repose/clean-repose-deploy')
-    link('/usr/bin/dd-remove', '/usr/share/repose/dd-remove')
-
-    //the license info
-    from(["$rootDir/LICENSE.txt", "$rootDir/CONTRIBUTORS.txt", 'src/config/docs/DEPENDENCIES.txt']) {
-        into '/usr/share/doc/repose-cli-utils'
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0444') }
-    }
-
-    requires("repose", "$project.version", EQUAL)
-
-    replaces('cli-utils')
-}
-
-buildDeb {
-    requires('java27-runtime-headless')
-}
-
-buildRpm {
-    release = 1
-
-    requires('java', '27', GREATER | EQUAL)
 }
 
 jacocoTestCoverageVerification {

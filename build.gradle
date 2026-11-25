@@ -14,14 +14,9 @@ buildscript {
         classpath 'com.github.alisiikh:gradle-scalastyle-plugin:3.5.0'
         classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1'
         classpath 'com.netflix.nebula:nebula-publishing-plugin:23.2.0'
-        classpath 'com.netflix.nebula:gradle-git-scm-plugin:6.1.0'
-        classpath 'com.netflix.nebula:gradle-ospackage-plugin:14.0.2'
-        classpath 'com.bmuschko:gradle-docker-plugin:10.0.0'
         classpath 'org.owasp:dependency-check-gradle:13.0.0'
     }
 }
-
-apply plugin: 'com.netflix.nebula.gradle-git-scm'
 
 // Keep existing version lookups and Nebula recommendations backed by the
 // standard Gradle catalog, which Dependabot can read and update directly.
@@ -44,83 +39,13 @@ ext {
     scalaMajDotMin = '3'
 }
 
-configurations {
-    debBundle
-    rpmBundle
-}
-
-dependencies {
-    debBundle project(path: ':repose-aggregator:artifacts:cli-utils', configuration: 'deb')
-    debBundle project(path: ':repose-aggregator:artifacts:valve', configuration: 'deb')
-    debBundle project(path: ':repose-aggregator:artifacts:filter-bundle', configuration: 'deb')
-    debBundle project(path: ':repose-aggregator:artifacts:extensions-filter-bundle', configuration: 'deb')
-    debBundle project(path: ':repose-aggregator:artifacts:experimental-filter-bundle', configuration: 'deb')
-
-    rpmBundle project(path: ':repose-aggregator:artifacts:cli-utils', configuration: 'rpm')
-    rpmBundle project(path: ':repose-aggregator:artifacts:valve', configuration: 'rpm')
-    rpmBundle project(path: ':repose-aggregator:artifacts:filter-bundle', configuration: 'rpm')
-    rpmBundle project(path: ':repose-aggregator:artifacts:extensions-filter-bundle', configuration: 'rpm')
-    rpmBundle project(path: ':repose-aggregator:artifacts:experimental-filter-bundle', configuration: 'rpm')
-}
-
-task('buildAll', description: 'Builds all the sub-projects.', group: 'release')
-
-task('tagVersion', description: 'Tag the repository with the current version.', group: 'release', dependsOn: [buildAll]) {
-    doLast {
-        scmFactory.create().tag(version)
-    }
-}
-
-//This populates the version number so that jenkins can grab it and send it on to the release verification job
-task('exportVersion', description: 'Write the current build version out to a properties file.') {
-    doLast {
-        file("$rootDir/repose-aggregator/build/release-version.properties").text = 'RELEASE_VERSION=' + version + System.lineSeparator()
-    }
-}
-
-task('publishToPackageRepo', group: 'publishing') {
-    description 'Publishes the DEB and RPM packages to the package repository'
-    dependsOn configurations.debBundle, configurations.rpmBundle, buildAll
-
-    doLast {
-        ['nexus.openrepose.username', 'nexus.openrepose.password'].each { name ->
-            if (!project.hasProperty(name)) {
-                throw new GradleException('The "' + name + '" property is required')
-            }
-        }
-        def credentials = project.property('nexus.openrepose.username') + ':' + project.property('nexus.openrepose.password')
-        def upload = { File artifact, String method, String path ->
-            def connection = new URL('https://nexus.openrepose.org' + path).openConnection()
-            connection.requestMethod = method
-            connection.doOutput = true
-            connection.setRequestProperty('Authorization', 'Basic ' + credentials.getBytes('UTF-8').encodeBase64())
-            connection.setRequestProperty('Content-Type', 'application/octet-stream')
-            connection.setFixedLengthStreamingMode(artifact.length())
-            try {
-                connection.outputStream.withCloseable { output ->
-                    artifact.withInputStream { input -> output << input }
-                }
-                if (connection.responseCode < 200 || connection.responseCode >= 300) {
-                    throw new GradleException('Failed to upload ' + artifact.name + ': HTTP ' + connection.responseCode)
-                }
-                logger.lifecycle 'Successfully uploaded {}', artifact.name
-            } finally {
-                connection.disconnect()
-            }
-        }
-        configurations.rpmBundle.files.each { upload(it, 'PUT', '/repository/el/' + it.name) }
-        configurations.debBundle.files.each { upload(it, 'POST', '/repository/debian/') }
-    }
-}
-
-task('release', description: 'Release the project and publish to all repos.', group: 'release', dependsOn: [exportVersion, tagVersion, publishToPackageRepo])
+task('buildAll', description: 'Builds all the sub-projects.', group: 'build')
 
 allprojects {
     group = 'org.openrepose'
     def baseVersion = '10.1.2'
-    // Container packaging uses the stable version without invoking legacy Maven
-    // publication/signature configuration. It does not publish Maven artifacts.
-    version = (project.hasProperty('release') || project.hasProperty('containerRelease')) ? baseVersion : "$baseVersion~SNAPSHOT"
+    // Container releases use the stable application version; development builds remain snapshots.
+    version = project.hasProperty('containerRelease') ? baseVersion : "$baseVersion~SNAPSHOT"
 
     apply plugin: 'idea'
     apply plugin: 'com.netflix.nebula.dependency-recommender'
@@ -152,6 +77,8 @@ allprojects {
 
     repositories {
         mavenCentral()
+        // Dependency resolution only; legacy libraries still need verification
+        // before this fallback can be retired. Nothing is published here.
         maven {
             url "https://maven.research.rackspacecloud.com/content/groups/aggregate/"
         }
@@ -178,7 +105,6 @@ subprojects {
     apply plugin: 'com.github.hierynomus.license'
     apply plugin: 'jacoco'
     apply plugin: 'com.netflix.nebula.maven-publish'
-    apply plugin: 'signing'
     apply plugin: 'org.scoverage'
     apply plugin: 'org.owasp.dependencycheck'
 
@@ -452,44 +378,17 @@ subprojects {
         }
     }
 
+    // Keep local Maven publications for extension development. No remote
+    // publication repositories or release/signing tasks are configured.
     publishing {
-        repositories {
-            maven {
-                name 'reposeNexus'
-                if (project.hasProperty('release')) {
-                    url 'https://maven.research.rackspacecloud.com/content/repositories/releases'
-                } else {
-                    url 'https://maven.research.rackspacecloud.com/content/repositories/snapshots'
-                }
-                credentials {
-                    username project.hasProperty('maven.repo.username') ? property('maven.repo.username') : 'Need to provide an actual username'
-                    password project.hasProperty('maven.repo.password') ? property('maven.repo.password') : 'Need to provide an actual password'
-                }
-            }
-        }
-
         publications {
             nebula(MavenPublication) {
-                if(project.hasProperty('release')) {
-                    signArchives.signatures.findAll({!it.toSign.canonicalPath.contains("deb") && !it.toSign.canonicalPath.contains("rpm")}).each {
-                        artifact source: it, extension: 'asc'
-                    }
-                }
-
-                //when we include the signature it tries to switch the packaging in the pom to pom,
-                // i just remove it here, because the default in maven is jar if you don't specify,
-                // so i can go fix it only where it needs it
                 pom.withXml { XmlProvider xml ->
                     def root = xml.asNode()
                     root.get("packaging").each { root.remove(it) }
                 }
             }
         }
-    }
-
-    signing {
-        required { gradle.taskGraph.hasTask("publish") }
-        sign configurations.archives
     }
 
     if (project.hasProperty("minCoverageRatio")) {
@@ -526,8 +425,6 @@ subprojects {
     }
 
     buildAll.dependsOn build
-    publish.dependsOn buildAll
-    project.tasks.getByPath(':release').dependsOn publish
 }
 
 dependencyRecommendations {

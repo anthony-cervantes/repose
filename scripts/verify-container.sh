@@ -12,6 +12,36 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# Verify the staged runtime contract as the image's non-root user.
+docker run --rm --entrypoint /bin/sh "$image" -ec '
+    test "$(id -un)" = repose
+    test -r /usr/share/repose/repose.jar
+    test ! -w /usr/share/repose/repose.jar
+    for bundle in filter-bundle extensions-filter-bundle experimental-filter-bundle; do
+        archive="/usr/share/repose/filters/$bundle-$1.ear"
+        test -r "$archive"
+        test ! -w "$archive"
+    done
+    for config in container.cfg.xml system-model.cfg.xml log4j2.xml; do
+        test -r "/etc/repose/$config"
+        test -r "/etc/repose/examples/$config"
+    done
+    for package in repose repose-filter-bundle repose-extensions-filter-bundle repose-experimental-filter-bundle; do
+        for notice in LICENSE.txt CONTRIBUTORS.txt DEPENDENCIES.txt; do
+            test -r "/usr/share/doc/$package/$notice"
+        done
+    done
+    test -r /etc/repose/examples/empty-request-filter.cfg.xml
+    test -x /usr/bin/clean-repose-deploy
+    test -w /etc/repose
+    test -w /var/repose
+    test -w /var/log/repose
+    if grep -Fq "@docsHome@" /etc/repose/container.cfg.xml; then
+        echo "Unexpanded configuration token" >&2
+        exit 1
+    fi
+' sh "$expected_version"
+
 docker run --rm --entrypoint java "$image" -version >"$smoke_dir/java.txt" 2>&1
 cat "$smoke_dir/java.txt"
 grep -Fq 'version "27.0.1.1"' "$smoke_dir/java.txt"

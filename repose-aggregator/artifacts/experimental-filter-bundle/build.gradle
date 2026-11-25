@@ -1,9 +1,10 @@
 apply plugin: 'ear'
-apply plugin: 'com.netflix.nebula.ospackage'
 
 configurations {
-    deb
-    rpm
+    containerBundle {
+        canBeConsumed = true
+        canBeResolved = false
+    }
 }
 
 dependencies {
@@ -14,8 +15,7 @@ dependencies {
 }
 
 artifacts {
-    deb buildDeb
-    rpm buildRpm
+    containerBundle ear
 }
 
 ear {
@@ -39,68 +39,10 @@ publishing {
     publications {
         nebula(MavenPublication) {
             artifact source: ear, extension: 'ear'
-            if(project.hasProperty('release')) {
-                artifact source: buildDeb, extension: 'deb'
-                artifact source: buildRpm, extension: 'rpm'
-            }
 
             pom.withXml {
                 asNode().appendNode('packaging', 'ear')
             }
         }
     }
-}
-
-ospackage {
-    packageName = "repose-experimental-filter-bundle"
-    os = LINUX
-    packageDescription 'Package for the Repose Experimental Filter Bundle'
-    priority 'optional'
-    packageGroup 'Applications/Internet'
-    maintainer 'Repose Development <ReposeCore@Rackspace.com>'
-    url 'http://openrepose.org'
-
-    if(project.hasProperty('signing.keyId') && project.hasProperty('signing.password') && project.hasProperty('signing.secretKeyRingFile')) {
-        signingKeyId project.getProperty('signing.keyId')
-        signingKeyPassphrase project.getProperty('signing.password')
-        signingKeyRingFile file(project.getProperty('signing.secretKeyRingFile'))
-    }
-
-    into '/usr/share/repose/filters'
-
-    //the bundle
-    from(ear.outputs.files) {
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0555') }
-    }
-
-    //the configs
-    from('src/config/filters') {
-        into '/etc/repose/examples'
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0640') }
-    }
-
-    //the license info
-    from(["$rootDir/LICENSE.txt", "$rootDir/CONTRIBUTORS.txt", 'src/config/docs/DEPENDENCIES.txt']) {
-        into '/usr/share/doc/repose-experimental-filter-bundle'
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0444') }
-    }
-
-    requires("repose", "$project.version", EQUAL)
-}
-
-buildDeb {
-    requires('java27-runtime-headless')
-}
-
-buildRpm {
-    release = 1
-
-    addParentDirs false
-    requires('java', '27', GREATER | EQUAL)
 }

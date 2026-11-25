@@ -1,36 +1,20 @@
-## What is Repose?
+## Repose
 
-Repose is an open-source, RESTful, middleware platform that transparently integrates with your existing infrastructure. Repose provides highly scalable and extensible solutions to API processing tasks including authentication, rate limiting, access control, logging, and more.
+Repose is an open-source, RESTful middleware platform for API authentication,
+rate limiting, access control, logging and other request processing.
 
-Please see our website for more information!
-<http://www.OpenRepose.org/>
+This fork publishes one versioned Linux amd64 image to
+[GitHub Container Registry](https://github.com/anthony-cervantes/repose/pkgs/container/repose).
+The image uses Ubuntu 24.04 and the pinned Temurin 27 runtime; its JAR, filter
+EARs, configuration and license notices are staged directly from Gradle.
 
-## Base Image
+## Run
 
-The current Dockerfiles use Ubuntu 24.04 and CentOS Stream 10, with the Temurin 27 JRE.
-The Gradle build uses the `centos` directory and `-centos` tag suffix for the Stream image.
-Local builds install packages produced from the current source. Passing `-Prepose-version` selects remote package installation.
+```bash
+docker run -d --name repose -p 8080:8080 ghcr.io/anthony-cervantes/repose:10.1.2
+```
 
-These source definitions do not change existing images on Docker Hub. Build and publish a tag before describing it as a Java 27 image.
-
-## How To Run This Image
-
-This image will set up the suggested environment for running Repose. This includes installing Repose along with all of its dependencies, setting reasonable JVM options, exposing a service port, and declaring a volume for configuration.
-
-Please see the Docker page in our documentation for more information, including specific commands to run!
-<http://www.OpenRepose.org/versions/latest/recipes/docker.html>
-
-## Tags
-
-The publishing tasks use the tag format `x.x.x.x` or `x.x.x.x-centos`.
-
-Tags that have already been published (e.g., older OS-specific tags) will continue to work, but there is no plan to maintain them going forward.
-
-## Contact Us
-
-Please contact us at <ReposeCore@Rackspace.com> with any questions or concerns!
-
-## Other Information
-
-Please see our documentation for more information on configuring and customizing your Repose instance!
-<http://www.OpenRepose.org/versions/latest/>
+Build from source and smoke-test locally with
+`bash scripts/build-container.sh local/repose:dev` from the repository root.
+Only version tag pushes publish to GHCR; Docker Hub, RPM and DEB deployments
+are historical and not maintained by this fork.
