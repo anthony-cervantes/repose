@@ -82,9 +82,10 @@ From the repository root, build and verify the same image as GitHub Actions:
 bash scripts/build-container.sh local/repose:dev
 ----
 
-This stages the four local DEB packages and the GHCR Dockerfile in
-`repose-aggregator/artifacts/docker/build/docker/ghcr`.
-It does not publish packages, build RPMs, or require access to a remote Repose package repository.
+This stages the executable Valve JAR, the three filter EAR bundles, default and
+example configurations, and license notices under `rootfs/` in
+`repose-aggregator/artifacts/docker/build/docker/ghcr`, alongside the GHCR Dockerfile.
+There are no Repose DEB/RPM intermediates, native service files or remote publication targets.
 The script checks the Java and Repose versions, an HTTP Echo request,
 legacy monitor Host compatibility and the Empty Request Filter.
 

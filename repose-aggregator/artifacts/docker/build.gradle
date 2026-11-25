@@ -1,176 +1,68 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
-import groovy.json.JsonSlurper
-
-apply plugin: 'com.bmuschko.docker-remote-api'
+import org.apache.tools.ant.filters.ReplaceTokens
 
 configurations {
-    dockerDebBundle
-    dockerRpmBundle
+    containerValve {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+    }
+    containerBundles {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+    }
 }
+
+def valveProject = project(':repose-aggregator:artifacts:valve')
+def bundleNames = ['filter-bundle', 'extensions-filter-bundle', 'experimental-filter-bundle']
 
 dependencies {
-    dockerDebBundle project(path: ':repose-aggregator:artifacts:valve', configuration: 'deb')
-    dockerDebBundle project(path: ':repose-aggregator:artifacts:filter-bundle', configuration: 'deb')
-    dockerDebBundle project(path: ':repose-aggregator:artifacts:extensions-filter-bundle', configuration: 'deb')
-    dockerDebBundle project(path: ':repose-aggregator:artifacts:experimental-filter-bundle', configuration: 'deb')
-
-    dockerRpmBundle project(path: ':repose-aggregator:artifacts:valve', configuration: 'rpm')
-    dockerRpmBundle project(path: ':repose-aggregator:artifacts:filter-bundle', configuration: 'rpm')
-    dockerRpmBundle project(path: ':repose-aggregator:artifacts:extensions-filter-bundle', configuration: 'rpm')
-    dockerRpmBundle project(path: ':repose-aggregator:artifacts:experimental-filter-bundle', configuration: 'rpm')
+    containerValve project(path: ':repose-aggregator:artifacts:valve', configuration: 'fatJar')
+    bundleNames.each { bundle ->
+        containerBundles project(path: ":repose-aggregator:artifacts:$bundle", configuration: 'containerBundle')
+    }
 }
 
-String dockerBuildDir = "$buildDir/docker"
-String reposeVersion = project.findProperty('repose-version') as String
-String currentVersion = reposeVersion ?: (version as String).replace('~', '-')
-
-// GHCR extracts local DEBs into the image. RPMs, legacy Dockerfiles and
-// remote package publishing are not inputs to this deployment.
+// One Docker context: executable JAR, filter EARs, configs and license notices.
+// Sync removes stale files after version changes. No package-manager archives,
+// native service files, signing, or external publication tasks are involved.
 tasks.register('stageGhcrContext', Sync) {
-    into "$dockerBuildDir/ghcr"
-    from(configurations.dockerDebBundle)
+    group = 'build'
+    description = 'Stage the Repose Docker image directly from JVM artifacts'
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    into layout.buildDirectory.dir('docker/ghcr')
+
     from('src/docker/resources/ghcr/Dockerfile')
-}
-
-task('copyPackages', type: Copy) {
-    onlyIf { !reposeVersion }
-
-    into dockerBuildDir
-
-    from(configurations.dockerDebBundle) {
-        into 'ubuntu'
+    from(configurations.containerValve) {
+        into 'rootfs/usr/share/repose'
+    }
+    from(configurations.containerBundles) {
+        into 'rootfs/usr/share/repose/filters'
+    }
+    from(valveProject.file('src/config/filters')) {
+        into 'rootfs/etc/repose'
+        filter(ReplaceTokens, tokens: [docsHome: project.docsHome.toString()])
+    }
+    from(valveProject.file('src/config/filters')) {
+        into 'rootfs/etc/repose/examples'
+        filter(ReplaceTokens, tokens: [docsHome: project.docsHome.toString()])
+    }
+    from(valveProject.file('src/config/scripts/clean-repose-deploy')) {
+        into 'rootfs/usr/share/repose'
     }
 
-    from(configurations.dockerRpmBundle) {
-        into 'centos'
+    from(rootProject.file('LICENSE.txt'), rootProject.file('CONTRIBUTORS.txt'),
+            valveProject.file('src/config/docs/DEPENDENCIES.txt')) {
+        into 'rootfs/usr/share/doc/repose'
     }
-}
-
-task('copyDockerfiles', type: Copy) {
-    String reposePackageSource = reposeVersion ? 'repo' : 'file'
-
-    into dockerBuildDir
-
-    from("$projectDir/src/docker/resources/$reposePackageSource/ubuntu") {
-        into 'ubuntu'
-    }
-
-    from("$projectDir/src/docker/resources/$reposePackageSource/centos") {
-        into 'centos'
-    }
-}
-
-docker {
-    url = "unix:///var/run/docker.sock"
-
-    registryCredentials {
-        username = project.hasProperty('dockerhub.username') ? project.property('dockerhub.username') : 'Need to provide a Docker Hub username'
-        password = project.hasProperty('dockerhub.password') ? project.property('dockerhub.password') : 'Need to provide a Docker Hub password'
-        email = 'reposecore@rackspace.com'
-    }
-}
-
-['Ubuntu': '', 'Centos': '-centos'].forEach { baseImage, tagSuffix ->
-    task("build${baseImage}ImageLocal", type: DockerBuildImage) {
-        dependsOn copyPackages, copyDockerfiles
-        inputDir = file("$dockerBuildDir/${baseImage.toLowerCase()}")
-        if (reposeVersion) {
-            buildArgs = ['REPOSE_VERSION': reposeVersion]
+    bundleNames.each { bundle ->
+        def bundleProject = project(":repose-aggregator:artifacts:$bundle")
+        from(bundleProject.file('src/config/filters')) {
+            into 'rootfs/etc/repose/examples'
+        }
+        from(rootProject.file('LICENSE.txt'), rootProject.file('CONTRIBUTORS.txt'),
+                bundleProject.file('src/config/docs/DEPENDENCIES.txt')) {
+            into "rootfs/usr/share/doc/repose-$bundle"
         }
     }
-
-    task("build${baseImage}Image", group: 'docker') {
-        dependsOn "build${baseImage}ImageLocal"
-        finalizedBy "remove${baseImage}Image"
-    }
-
-    task("tag${baseImage}ImageVersion", type: DockerTagImage) {
-        dependsOn "build${baseImage}Image"
-        repository = 'rackerlabs/repose'
-        tag = currentVersion + tagSuffix
-        targetImageId { tasks["build${baseImage}ImageLocal"].getImageId() }
-    }
-
-    task("tag${baseImage}ImageLatest", type: DockerTagImage) {
-        dependsOn "build${baseImage}Image"
-        repository = 'rackerlabs/repose'
-        tag = "latest${tagSuffix}"
-        targetImageId { tasks["build${baseImage}ImageLocal"].getImageId() }
-    }
-
-    task("push${baseImage}ImageVersion", type: DockerPushImage) {
-        dependsOn ':buildAll', "tag${baseImage}ImageVersion"
-        images.add('rackerlabs/repose:' + currentVersion + tagSuffix)
-    }
-
-    task("push${baseImage}ImageLatest", type: DockerPushImage) {
-        dependsOn ':buildAll', "tag${baseImage}ImageLatest"
-        onlyIf { isLatestDockerHubVersion(currentVersion) }
-        images.add("rackerlabs/repose:latest${tagSuffix}")
-    }
-
-    task("push${baseImage}Image", group: 'docker') {
-        dependsOn "push${baseImage}ImageVersion", "push${baseImage}ImageLatest"
-    }
-
-    task("remove${baseImage}Image", type: DockerRemoveImage) {
-        dependsOn "build${baseImage}Image"
-        mustRunAfter "tag${baseImage}ImageVersion", "tag${baseImage}ImageLatest", "push${baseImage}ImageVersion", "push${baseImage}ImageLatest", publish
-        targetImageId { tasks["build${baseImage}ImageLocal"].getImageId() }
-        force = true
-    }
-
-    tasks.getByPath(':release') dependsOn tasks["push${baseImage}Image"]
-}
-
-private static final boolean isLatestDockerHubVersion(String version) {
-    boolean isLatest = true
-
-    String nextPage = 'https://hub.docker.com/v2/repositories/rackerlabs/repose/tags/'
-    while (nextPage && isLatest) {
-        Map jsonObject = new JsonSlurper().parse(new URL(nextPage)) as Map
-        List<String> otherVersions = jsonObject.results.collect { it.name }
-
-        if (!isLatestVersion(version, otherVersions)) {
-            isLatest = false
-        }
-
-        nextPage = jsonObject.next
-    }
-
-    return isLatest
-}
-
-private static final boolean isLatestVersion(String version, List<String> otherVersions) {
-    return !otherVersions.any {
-        it ==~ /(\d+\.)*\d+/ && compareVersions(version, it) < 0
-    }
-}
-
-/**
- - * @return -1 if v1 is a lower version than v2, 0 if they are equal, and 1 if v1 is a greater version than v2
- - */
-private static final compareVersions(String v1, String v2) {
-    List<String> v1Parts = v1.tokenize('.')
-    List<String> v2Parts = v2.tokenize('.')
-
-    int minLen = Math.min(v1Parts.size(), v2Parts.size())
-
-    // Compare each number from the versions until either the numbers do not match,
-    // or the end of a version string is hit.
-    for (int i = 0; i < minLen; ++i) {
-        int n1 = v1Parts[i] as int
-        int n2 = v2Parts[i] as int
-
-        if (n1 != n2) {
-            return n1 <=> n2
-        }
-    }
-
-    // If we got this far, then one version is a substring of the other.
-    // Therefore, whichever version is longer is the greater version.
-    return v1Parts.size() <=> v2Parts.size()
 }

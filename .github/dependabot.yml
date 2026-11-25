@@ -19,7 +19,6 @@ updates:
     directories:
       - /repose-aggregator/docs
       - /repose-aggregator/tests/performance-tests/src/performanceTest/resources/roles/repose/files/mocks
-      - /repose-aggregator/tests/release-verification/src/fake-services/*
     schedule:
       interval: weekly
       day: monday
@@ -28,19 +27,6 @@ updates:
     open-pull-requests-limit: 5
     groups:
       npm-minor-patch:
-        patterns: ["*"]
-        update-types: [minor, patch]
-
-  - package-ecosystem: pip
-    directory: /repose-aggregator/tests/release-verification/src/scripts
-    schedule:
-      interval: weekly
-      day: monday
-      time: "09:00"
-      timezone: Etc/UTC
-    open-pull-requests-limit: 5
-    groups:
-      pip-minor-patch:
         patterns: ["*"]
         update-types: [minor, patch]
 

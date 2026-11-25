@@ -99,9 +99,11 @@ The `10.1.2` patch release updates the Java runtime and build JDK to Temurin 27.
 
 Docker via GHCR is the only supported deployment path for this fork.
 The `Repose Docker` workflow builds one Linux amd64 image using Ubuntu 24.04,
-the signed Adoptium Temurin 27.0.1.1+4 runtime and locally built DEB packages.
-The DEBs are intermediate build inputs, not standalone releases; no RPMs
-or remote Maven packages are published by Actions.
+the signed Adoptium Temurin 27.0.1.1+4 runtime and directly staged JVM artifacts.
+Gradle produces the Valve JAR, three filter EAR bundles, configuration and license
+notices; there are no Repose DEB/RPM intermediates, native deployment tasks, or
+remote Maven/Docker Hub publication targets. Local Maven publications remain
+available for extension development.
 Pull requests and manual runs build and smoke-test the image without publishing.
 Pushing a matching `v<version>` tag builds and verifies the image before pushing
 the version and source commit tags to `ghcr.io/anthony-cervantes/repose`.

@@ -25,7 +25,7 @@ Learn how to implement Role-Based Access Control (RBAC) with *Repose*!
 Details the ways which *Repose Valve* can be run.
 
 == <<valve-installation.adoc#,Valve Installation>>
-Covers the typical *Repose* setup -- a Valve installation (i.e., standalone application) running as a Linux service.
+Historical upstream Linux service installation instructions. This fork supports Docker deployment only.
 
 == <<echo-server.adoc#,Echo Server>>
 

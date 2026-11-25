@@ -1,12 +1,7 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 apply plugin: 'com.gradleup.shadow'
-apply plugin: 'com.netflix.nebula.ospackage'
 
 configurations {
     fatJar
-    deb
-    rpm
 }
 
 dependencies {
@@ -61,228 +56,19 @@ shadowJar {
 
 artifacts {
     fatJar shadowJar
-    deb buildDeb
-    rpm buildRpm
 }
 
 build.dependsOn shadowJar
 
-signing {
-    required { gradle.taskGraph.hasTask("publish") }
-    sign shadowJar
-}
-
+// Preserve the local development publication; deployment is through GHCR.
 publishing {
     publications {
         nebula(MavenPublication) {
             artifact(shadowJar) {
                 classifier = 'all'
             }
-            if(project.hasProperty('release')) {
-                artifact source: signShadowJar.singleSignature, extension: 'asc'
-                artifact source: buildDeb, extension: 'deb'
-                artifact source: buildRpm, extension: 'rpm'
-            }
         }
     }
-}
-
-ospackage {
-    packageName = "repose"
-    os = LINUX
-    packageDescription 'Package for the Repose Valve Deployment'
-    priority 'optional'
-    packageGroup 'Applications/Internet'
-    maintainer 'Repose Development <ReposeCore@Rackspace.com>'
-    url 'http://openrepose.org'
-
-    if(project.hasProperty('signing.keyId') && project.hasProperty('signing.password') && project.hasProperty('signing.secretKeyRingFile')) {
-        signingKeyId project.getProperty('signing.keyId')
-        signingKeyPassphrase project.getProperty('signing.password')
-        signingKeyRingFile file(project.getProperty('signing.secretKeyRingFile'))
-    }
-
-    into '/usr/share/repose'
-
-    //the main directory
-    from('src/config/DELETE-ME') {
-        createDirectoryEntry true
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0555') }
-    }
-
-    //the web app
-    from(shadowJar.outputs.files) {
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0555') }
-    }
-
-    //the filter bundle directory
-    from('src/config/DELETE-ME') {
-        into '/usr/share/repose/filters'
-        createDirectoryEntry true
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0755') }
-    }
-
-    //the artifact exploding directory
-    from('src/config/DELETE-ME') {
-        into '/var/repose'
-        createDirectoryEntry true
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0750') }
-    }
-
-    //the log directory
-    from('src/config/DELETE-ME') {
-        into '/var/log/repose'
-        createDirectoryEntry true
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0750') }
-    }
-
-    //the log rotate settings
-    from('src/config/logrotate.d') {
-        into '/etc/logrotate.d'
-        createDirectoryEntry false
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0644') }
-    }
-
-    //the configs directory
-    from('src/config/DELETE-ME') {
-        into '/etc/repose'
-        createDirectoryEntry true
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0770') }
-    }
-
-    //the basic configs
-    from('src/config/filters') { //not really filter config, but it's where the bundles are putting them for now, so i'm maintaining consistency
-        into '/etc/repose'
-        createDirectoryEntry true
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0640') }
-        fileType new org.redline_rpm.payload.Directive(CONFIG.flag() | NOREPLACE.flag())
-
-        //INFO: We'd like to use the more standard gradle 'expand( docsHome: docsHome)',
-        // however it chokes pretty hard on the regexs we sprinkle into our xml specifically the `\`.
-        // We can update our config file examples to not have that in the regex,
-        // however some of the schemas we've imported also have them, and we shouldn't mess with those.
-        // Instead I've elected to use ant based filtering.
-        filter(ReplaceTokens, tokens: [docsHome: docsHome])
-    }
-
-    //the configs
-    from('src/config/filters') {
-        into '/etc/repose/examples'
-        createDirectoryEntry true
-        user 'repose'
-        permissionGroup 'repose'
-        filePermissions { unix('0640') }
-
-        //INFO: We'd like to use the more standard gradle 'expand( docsHome: docsHome)',
-        // however it chokes pretty hard on the regexs we sprinkle into our xml specifically the `\`.
-        // We can update our config file examples to not have that in the regex,
-        // however some of the schemas we've imported also have them, and we shouldn't mess with those.
-        // Instead I've elected to use ant based filtering.
-        filter(ReplaceTokens, tokens: [docsHome: docsHome])
-    }
-
-    //the systemd service
-    from('src/config/systemd/repose.service') {
-        into '/lib/systemd/system'
-        createDirectoryEntry false
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0644') }
-    }
-
-    //the systemd wrapper script
-    from('src/config/scripts/repose-systemd') {
-        rename('repose-systemd', 'repose')
-        into '/usr/share/repose'
-        createDirectoryEntry false
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0755') }
-    }
-
-    //the sysconfig
-    from('src/config/sysconfig') {
-        into '/etc/sysconfig'
-        createDirectoryEntry false
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0644') }
-    }
-
-    //clean up script
-    from('src/config/scripts/clean-repose-deploy') {
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0755') }
-    }
-    link('/usr/bin/clean-repose-deploy', '/usr/share/repose/clean-repose-deploy')
-
-    //the license info
-    from(["$rootDir/LICENSE.txt", "$rootDir/CONTRIBUTORS.txt", 'src/config/docs/DEPENDENCIES.txt']) {
-        into '/usr/share/doc/repose'
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0444') }
-    }
-
-    conflicts('repose-war')
-    recommends('repose-filter-bundle')
-    suggests('repose-extensions-filter-bundle')
-    suggests('logrotate')
-    replaces('repose-valve')
-}
-
-buildDeb {
-    //the init.d
-    from('src/config/scripts/repose-deb') {
-        rename('repose-deb', 'repose')
-        into '/etc/init.d'
-        createDirectoryEntry false
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0755') }
-    }
-
-    requires('java27-runtime-headless')
-    preInstall file('src/config/scripts/preinst-deb')
-    configurationFile '/etc/repose/container.cfg.xml'
-    configurationFile '/etc/repose/system-model.cfg.xml'
-    configurationFile '/etc/repose/log4j2.xml'
-    configurationFile '/etc/init.d/repose'
-}
-
-buildRpm {
-    release = 1
-
-    //the init.d
-    from('src/config/scripts/repose-rpm') {
-        rename('repose-rpm', 'repose')
-        into '/etc/init.d'
-        createDirectoryEntry false
-        user 'root'
-        permissionGroup 'root'
-        filePermissions { unix('0755') }
-    }
-
-    requires('java', '27', GREATER | EQUAL)
-    preInstall file('src/config/scripts/preinst-rpm')
-    postInstall('if [ -x /sbin/chkconfig ]; then /sbin/chkconfig --add repose; fi')
 }
 
 tasks.named('test') {
