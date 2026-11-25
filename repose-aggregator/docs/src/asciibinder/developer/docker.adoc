@@ -26,7 +26,8 @@ bash scripts/build-container.sh local/repose:dev
 The shared script stages the JVM artifacts directly, builds the GHCR Dockerfile
 and runs the same smoke/regression checks as CI.
 It does not publish an image or require Docker Hub credentials.
-The Gradle staging task is `:repose-aggregator:artifacts:docker:stageGhcrContext`.
+Gradle builds only the Valve JAR and filter EARs. The standalone Python script
+`scripts/stage_container.py` stages their exact outputs after compilation.
 The previous version-specific remote package installation and CentOS/Docker Hub
 tasks have been retired. To run an existing release, pull its versioned GHCR image.
 

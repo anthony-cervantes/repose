@@ -18,8 +18,17 @@ revision="$(git rev-parse HEAD)"
 repository="${GITHUB_REPOSITORY:-anthony-cervantes/repose}"
 context="repose-aggregator/artifacts/docker/build/docker/ghcr"
 
-./gradlew --no-daemon --max-workers=2 -PcontainerRelease \
-    :repose-aggregator:artifacts:docker:stageGhcrContext
+python3 -B -m unittest discover -s scripts -p test_stage_container.py
+
+# Gradle only compiles the application archives. Keep context staging outside
+# the Gradle task graph to avoid coupling the container filesystem to its producers.
+./gradlew --no-daemon --max-workers=2 --stacktrace -PcontainerRelease \
+    :repose-aggregator:artifacts:valve:shadowJar \
+    :repose-aggregator:artifacts:filter-bundle:ear \
+    :repose-aggregator:artifacts:extensions-filter-bundle:ear \
+    :repose-aggregator:artifacts:experimental-filter-bundle:ear
+
+python3 -B scripts/stage_container.py "$version"
 
 docker build \
     --label "org.opencontainers.image.source=https://github.com/$repository" \
