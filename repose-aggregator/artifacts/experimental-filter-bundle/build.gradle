@@ -1,21 +1,10 @@
 apply plugin: 'ear'
 
-configurations {
-    containerBundle {
-        canBeConsumed = true
-        canBeResolved = false
-    }
-}
-
 dependencies {
     earlib project(":repose-aggregator:components:filters:servlet-contract-filter")
     earlib project(":repose-aggregator:components:filters:echo-filter")
     earlib project(":repose-aggregator:components:filters:exception-filter")
     earlib project(":repose-aggregator:components:filters:tightly-coupled-filter")
-}
-
-artifacts {
-    containerBundle ear
 }
 
 ear {
