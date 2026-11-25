@@ -27,6 +27,14 @@ String dockerBuildDir = "$buildDir/docker"
 String reposeVersion = project.findProperty('repose-version') as String
 String currentVersion = reposeVersion ?: (version as String).replace('~', '-')
 
+// GHCR extracts local DEBs into the image. RPMs, legacy Dockerfiles and
+// remote package publishing are not inputs to this deployment.
+tasks.register('stageGhcrContext', Sync) {
+    into "$dockerBuildDir/ghcr"
+    from(configurations.dockerDebBundle)
+    from('src/docker/resources/ghcr/Dockerfile')
+}
+
 task('copyPackages', type: Copy) {
     onlyIf { !reposeVersion }
 

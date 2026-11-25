@@ -97,19 +97,22 @@ link:repose-aggregator/docs/src/asciibinder/filters/empty-request-filter.adoc[Em
 The `10.1.1` patch release adds opt-in compatibility for the legacy monitor Host format.
 The `10.1.2` patch release updates the Java runtime and build JDK to Temurin 27.0.1.1+4.
 
-The `Publish Repose image` workflow uses Ubuntu 24.04 with the signed Adoptium
-Temurin 27.0.1.1+4 runtime package and locally built application/filter packages.
-It builds one Linux amd64 image and verifies the exact Java patch/build,
-the application version and an HTTP request through the packaged Echo filter,
-then pushes `ghcr.io/anthony-cervantes/repose:10.1.2` and a source commit tag.
-It runs on matching `v*` tags or manual dispatch, with a 30-minute limit and a
-standard Ubuntu runner. Pull requests do not publish images.
-Manual dispatch accepts an `image_tag` override for a patch image. Builds from a
-non-default branch must use a separate image tag to preserve the release tag.
+Docker via GHCR is the only supported deployment path for this fork.
+The `Repose Docker` workflow builds one Linux amd64 image using Ubuntu 24.04,
+the signed Adoptium Temurin 27.0.1.1+4 runtime and locally built DEB packages.
+The DEBs are intermediate build inputs, not standalone releases; no RPMs
+or remote Maven packages are published by Actions.
+Pull requests and manual runs build and smoke-test the image without publishing.
+Pushing a matching `v<version>` tag builds and verifies the image before pushing
+the version and source commit tags to `ghcr.io/anthony-cervantes/repose`.
+Manual runs never publish or overwrite release tags.
 
-For local container packaging, use `./gradlew -PcontainerRelease :repose-aggregator:artifacts:docker:copyPackages :repose-aggregator:artifacts:docker:copyDockerfiles`.
-This selects the stable application/package version without invoking the separate
-legacy Maven publication and signing configuration.
+Run the same build and smoke tests locally:
+
+[source,shell]
+----
+bash scripts/build-container.sh local/repose:dev
+----
 
 The opt-in
 link:repose-aggregator/docs/src/asciibinder/recipes/legacy-monitor-host.adoc[legacy monitor Host compatibility]
@@ -117,14 +120,16 @@ setting handles the observed `/lb_monitor` Host suffix before HTTP parsing rejec
 while retaining authentication and strict validation of other malformed Host values.
 
 == Installation
-You can install *Repose* using the following methods:
 
-* link:repose-aggregator/docs/src/asciibinder/recipes/valve-installation.adoc#_yum_based_linux_distributions[yum]
-* link:repose-aggregator/docs/src/asciibinder/recipes/valve-installation.adoc#_apt_based_linux_distributions[apt]
-* link:repose-aggregator/docs/src/asciibinder/recipes/docker.adoc[Docker]
-* https://github.com/rackerlabs/puppet-repose[Puppet]
-* https://github.com/rackerlabs/cookbook-repose[Chef]
+Use Docker with a versioned GHCR image (currently 10.1.2):
 
+[source,shell]
+----
+docker run --detach --name repose --publish 8080:8080 ghcr.io/anthony-cervantes/repose:10.1.2
+----
+
+See the link:repose-aggregator/docs/src/asciibinder/recipes/docker.adoc[Docker deployment recipe].
+Legacy package and configuration-management instructions are historical, not supported deployment paths for this fork.
 
 == Configuration
 

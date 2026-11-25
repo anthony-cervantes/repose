@@ -1,24 +1,42 @@
-name: Publish Repose image
+name: Repose Docker
 
 on:
+  pull_request:
+  workflow_dispatch:
   push:
     tags: ["v*"]
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        description: 'Optional image tag; required for patch builds on a non-default branch'
-        required: false
-        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: publish-ghcr-${{ github.ref }}
-  cancel-in-progress: false
+  group: repose-docker-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  validate:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '27.0.1.1+4'
+          cache: gradle
+          cache-dependency-path: |
+            **/*.gradle
+            settings.gradle
+            gradle/libs.versions.toml
+            gradle/wrapper/gradle-wrapper.properties
+      - name: Build and verify Docker image (no publishing)
+        run: bash scripts/build-container.sh repose:ci
+
   publish:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -38,66 +56,23 @@ jobs:
             settings.gradle
             gradle/libs.versions.toml
             gradle/wrapper/gradle-wrapper.properties
-      - name: Select release version and commit tags
-        id: release
-        shell: bash
-        env:
-          REQUESTED_IMAGE_TAG: ${{ inputs.image_tag }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      - name: Build and verify release image
         run: |
-          version=$(sed -n "s/.*def baseVersion = '\([^']*\)'.*/\1/p" build.gradle)
-          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
-          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "v$version" ]]; then
-            echo 'Version tag does not match build.gradle' >&2
-            exit 1
-          fi
-          image_tag="${REQUESTED_IMAGE_TAG:-$version}"
-          if [[ ! "$image_tag" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}$ ]]; then
-            echo 'Invalid container image tag' >&2
-            exit 1
-          fi
-          if [[ "$GITHUB_REF_TYPE" != tag && "$GITHUB_REF_NAME" != "$DEFAULT_BRANCH" && "$image_tag" == "$version" ]]; then
-            echo 'Patch builds must use a separate image_tag to preserve the release tag' >&2
-            exit 1
-          fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "tag=$image_tag" >> "$GITHUB_OUTPUT"
-          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
-          echo "revision=${GITHUB_SHA:0:12}" >> "$GITHUB_OUTPUT"
-      - name: Package local application and filter bundles
-        run: |
-          ./gradlew --no-daemon --max-workers=2 -PcontainerRelease \
-            :repose-aggregator:artifacts:docker:copyPackages \
-            :repose-aggregator:artifacts:docker:copyDockerfiles
-      - name: Build and smoke-test the exact image to publish
-        env:
-          IMAGE: ${{ steps.release.outputs.image }}
-          VERSION: ${{ steps.release.outputs.version }}
-          IMAGE_TAG: ${{ steps.release.outputs.tag }}
-          REVISION: ${{ steps.release.outputs.revision }}
-        run: |
-          docker build \
-            --file repose-aggregator/artifacts/docker/src/docker/resources/ghcr/Dockerfile \
-            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
-            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
-            --label "org.opencontainers.image.version=$VERSION" \
-            --tag "$IMAGE:$IMAGE_TAG" --tag "$IMAGE:sha-$REVISION" \
-            repose-aggregator/artifacts/docker/build/docker/ubuntu
-          scripts/verify-container.sh "$IMAGE:$IMAGE_TAG" "$VERSION"
-          python3 scripts/verify-legacy-monitor-host.py "$IMAGE:$IMAGE_TAG"
-          python3 scripts/verify-empty-request-filter.py "$IMAGE:$IMAGE_TAG"
-      - name: Push verified image to GHCR
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          version="${GITHUB_REF_NAME#v}"
+          bash scripts/build-container.sh "$image:$version" "$version"
+      - name: Publish verified image to GHCR
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE: ${{ steps.release.outputs.image }}
-          IMAGE_TAG: ${{ steps.release.outputs.tag }}
-          REVISION: ${{ steps.release.outputs.revision }}
         run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          version="${GITHUB_REF_NAME#v}"
+          revision="${GITHUB_SHA:0:12}"
+          docker tag "$image:$version" "$image:sha-$revision"
           printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
-          docker push "$IMAGE:$IMAGE_TAG"
-          docker push "$IMAGE:sha-$REVISION"
+          docker push "$image:$version"
+          docker push "$image:sha-$revision"
           {
-            echo "Published: \`$IMAGE:$IMAGE_TAG\`"
-            echo "Commit tag: \`$IMAGE:sha-$REVISION\`"
-            docker image inspect "$IMAGE:$IMAGE_TAG" --format '{{range .RepoDigests}}{{println .}}{{end}}'
+            printf 'Published `%s` and `%s`\n' "$image:$version" "$image:sha-$revision"
+            docker image inspect "$image:$version" --format '{{range .RepoDigests}}{{println .}}{{end}}'
           } >> "$GITHUB_STEP_SUMMARY"
