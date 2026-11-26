@@ -1,3 +1,6 @@
+ext.xercesXsd11TestOnly = true
+apply from: rootProject.file('gradle/xerces-xsd11.gradle')
+
 dependencies {
 
     api project(":repose-aggregator:commons:commons-utilities")
@@ -21,7 +24,6 @@ dependencies {
     testImplementation "org.hamcrest:hamcrest"
     testImplementation "org.mockito:mockito-core"
     testImplementation "org.eclipse.jetty:jetty-server"
-    testImplementation "xerces:xerces-xsd11"
     testImplementation "org.spockframework:spock-core"
     testImplementation "org.springframework:spring-test"
     testImplementation "org.scalatest:scalatest_$scalaMajDotMin"

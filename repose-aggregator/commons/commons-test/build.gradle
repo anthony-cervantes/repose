@@ -1,6 +1,7 @@
+apply from: rootProject.file('gradle/xerces-xsd11.gradle')
+
 dependencies {
     api "org.scala-lang:scala-library"
-    api "xerces:xerces-xsd11"
     api "org.hamcrest:hamcrest"
     api "org.scalatest:scalatest_$scalaMajDotMin"
     api "org.scalatestplus:junit-4-13_$scalaMajDotMin"

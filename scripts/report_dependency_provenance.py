@@ -10,7 +10,7 @@ from urllib.parse import urlsplit
 from zipfile import ZipFile
 
 LEGACY = ('saxon-ee', 'saxon-he', 'xerces-xsd11', 'xercesimpl', 'deproxy',
-          'http-delegation', 'scalac-scoverage')
+          'http-delegation', 'scalac-scoverage', 'xml-apis', 'xpath2', 'java-cup', 'xml-resolver')
 MARKERS = ('net/sf/saxon/', 'com/saxonica/', 'org/apache/xerces/',
            'org/rackspace/deproxy/', 'com/rackspace/httpdelegation/')
 

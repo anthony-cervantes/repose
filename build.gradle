@@ -52,6 +52,12 @@ allprojects {
     apply from: rootProject.file('gradle/jakarta-servlet.gradle')
 
     configurations.configureEach {
+        // Do not let a transitive XSD 1.0-only Xerces implementation shadow
+        // the selected XSD 1.1 provider. Java 27 supplies the XML API classes.
+        if (name.endsWith('Classpath') || name in ['earlib', 'deploy', 'optimizerXslt']) {
+            exclude group: 'xerces', module: 'xercesImpl'
+            exclude group: 'xml-apis', module: 'xml-apis'
+        }
         resolutionStrategy.dependencySubstitution {
             substitute module('net.sf.ehcache:ehcache-core') using module(
                 "net.sf.ehcache:ehcache:${rootProject.versionProperties.get('net.sf.ehcache:ehcache')}")
@@ -77,10 +83,14 @@ allprojects {
 
     repositories {
         mavenCentral()
-        // Dependency resolution only; legacy libraries still need verification
-        // before this fallback can be retired. Nothing is published here.
+        // Only the two remaining legacy artifacts may use Rackspace.
+        // The clean-cache audit must confirm no other modules need this host.
         maven {
             url "https://maven.research.rackspacecloud.com/content/groups/aggregate/"
+            content {
+                includeModule('net.sf.saxon', 'Saxon-EE')
+                includeModule('org.rackspace', 'deproxy')
+            }
         }
         maven {
             url 'https://build.shibboleth.net/nexus/content/repositories/releases'

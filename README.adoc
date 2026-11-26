@@ -116,6 +116,19 @@ Run the same build and smoke tests locally:
 bash scripts/build-container.sh local/repose:dev
 ----
 
+=== XML Schema 1.1 dependencies
+
+The standard Maven Central `xerces:xercesImpl` JAR does not implement XSD 1.1.
+Use Apache Xerces 2.12.2's XSD 1.1 classifier, published to Maven Central by
+eXist-db (https://central.sonatype.com/artifact/org.exist-db.thirdparty.xerces/xercesImpl/2.12.2),
+with the explicit XPath2 processor, CUP and XML Resolver dependencies.
+The shared dependency declaration is `gradle/xerces-xsd11.gradle`.
+Java 27 provides the XML APIs instead of the patched legacy XML APIs JAR.
+The normal Docker build runs schema 1.0/1.1 assertions and parser feature probes
+against the staged Valve and filter bundles, and WADL request routing against
+the actual Docker image. The Rackspace repository is limited to Saxon-EE and
+Deproxy until their separate migrations are complete.
+
 === Dependency provenance audit
 
 For legacy repository migrations, use the existing Docker validation workflow

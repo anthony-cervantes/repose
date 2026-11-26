@@ -1,3 +1,6 @@
+ext.xercesXsd11TestOnly = true
+apply from: rootProject.file('gradle/xerces-xsd11.gradle')
+
 dependencies {
 
     api project(":repose-aggregator:core:repose-core-api")
@@ -32,7 +35,6 @@ dependencies {
     testImplementation "org.apache.logging.log4j:log4j-core"
     testImplementation "org.apache.logging.log4j:log4j-core-test"
     testImplementation "org.apache.logging.log4j:log4j-slf4j2-impl"
-    testImplementation "xerces:xerces-xsd11"
     testImplementation "org.slf4j:jcl-over-slf4j"
 }
 

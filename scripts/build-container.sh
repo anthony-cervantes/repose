@@ -18,6 +18,17 @@ revision="$(git rev-parse HEAD)"
 repository="${GITHUB_REPOSITORY:-anthony-cervantes/repose}"
 context="repose-aggregator/artifacts/docker/build/docker/ghcr"
 
+# Catch stale declarations even when the Docker build never resolves test configurations.
+if git grep -n -E 'xerces:xerces-xsd11|xml-apis:xml-apis|org\.eclipse\.wst\.xml\.xpath2\.processor' -- '*.gradle' '*.gradle.kts' '*.toml'; then
+    echo 'Retired XML dependency declared in Gradle build files' >&2
+    exit 1
+else
+    grep_status=$?
+    if [[ "$grep_status" != 1 ]]; then
+        exit "$grep_status"
+    fi
+fi
+
 python3 -B -m unittest discover -s scripts -p test_stage_container.py
 
 # Gradle only compiles the application archives. Keep context staging outside
@@ -33,6 +44,7 @@ fi
     :repose-aggregator:artifacts:experimental-filter-bundle:ear
 
 python3 -B scripts/stage_container.py "$version"
+python3 -B scripts/verify-xml-runtime.py "$context/rootfs/usr/share/repose"
 
 docker build \
     --label "org.opencontainers.image.source=https://github.com/$repository" \
@@ -41,5 +53,6 @@ docker build \
     --tag "$image" "$context"
 
 scripts/verify-container.sh "$image" "$version"
+python3 -B scripts/verify-wadl.py "$image"
 python3 scripts/verify-legacy-monitor-host.py "$image"
 python3 scripts/verify-empty-request-filter.py "$image"
