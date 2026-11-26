@@ -22,7 +22,11 @@ python3 -B -m unittest discover -s scripts -p test_stage_container.py
 
 # Gradle only compiles the application archives. Keep context staging outside
 # the Gradle task graph to avoid coupling the container filesystem to its producers.
-./gradlew --no-daemon --max-workers=2 --stacktrace -PcontainerRelease \
+gradle_args=(--no-daemon --max-workers=2 --stacktrace -PcontainerRelease)
+if [[ "${REPOSE_GRADLE_AUDIT:-0}" == 1 ]]; then
+    gradle_args+=(--info --console=plain --no-build-cache --rerun-tasks)
+fi
+./gradlew "${gradle_args[@]}" \
     :repose-aggregator:artifacts:valve:shadowJar \
     :repose-aggregator:artifacts:filter-bundle:ear \
     :repose-aggregator:artifacts:extensions-filter-bundle:ear \

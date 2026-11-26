@@ -3,6 +3,11 @@ name: Repose Docker
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      dependency_audit:
+        description: 'Clean-cache dependency provenance and targeted coverage/test probes'
+        type: boolean
+        default: false
   push:
     tags: ["v*"]
 
@@ -33,7 +38,11 @@ jobs:
             gradle/libs.versions.toml
             gradle/wrapper/gradle-wrapper.properties
       - name: Build and verify Docker image (no publishing)
+        if: ${{ !startsWith(github.head_ref, 'audit/') && !inputs.dependency_audit }}
         run: bash scripts/build-container.sh repose:ci
+      - name: Clean-cache dependency audit and Docker verification (no publishing)
+        if: ${{ startsWith(github.head_ref, 'audit/') || inputs.dependency_audit }}
+        run: bash scripts/audit-dependencies.sh
 
   publish:
     if: github.event_name == 'push' && github.ref_type == 'tag'
