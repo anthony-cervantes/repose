@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 # Install the patched Temurin runtime from its signed repository. The official
 # 27-jre container tag does not yet include this out-of-cycle patch.
