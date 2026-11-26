@@ -1,3 +1,6 @@
+ext.xercesXsd11TestOnly = true
+apply from: rootProject.file('gradle/xerces-xsd11.gradle')
+
 dependencies {
     api project(":repose-aggregator:core:repose-core-api")
     api project(":repose-aggregator:commons:commons-utilities")
@@ -24,7 +27,6 @@ dependencies {
     testImplementation "org.springframework:spring-test"
     testImplementation "org.springframework:spring-web"
     testImplementation "org.slf4j:jcl-over-slf4j"
-    testImplementation "xerces:xerces-xsd11"
 }
 
 // Preserve the imported parser's original Apache 2.0 notices.

@@ -13,10 +13,11 @@ status=0
 
 # The normal container validation is still required. Do not publish any image.
 if bash scripts/build-container.sh repose:audit 2>&1 | tee "$log"; then
-    # A small real Scala module exercises coverage; compile the test framework
-    # separately to resolve Deproxy without running the entire integration suite.
+    # Resolve migrated consumers' test classpaths; separately exercise Scala coverage
+    # and resolve Deproxy without running the entire integration suite.
     if ! ./gradlew --no-daemon --max-workers=2 --info --console=plain --stacktrace --continue \
         -PcontainerRelease \
+        verifyXercesTestDependencies \
         :repose-aggregator:external:http-delegation:reportTestScoverage \
         :repose-aggregator:tests:functional-test-framework:compileGroovy \
         2>&1 | tee -a "$log"; then

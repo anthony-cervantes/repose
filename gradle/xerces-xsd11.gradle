@@ -1,11 +1,34 @@
 // Use the classified Apache XSD 1.1 distribution published to Maven Central
 // by eXist-db. XPath2, CUP and the catalog resolver are explicit because the
 // Xerces POM marks those dependencies optional.
+// Keep the dependency in its original scope for test-only consumers.
+def testOnly = project.ext.has('xercesXsd11TestOnly') && project.ext.get('xercesXsd11TestOnly')
+def compileScope = testOnly ? 'testImplementation' : 'api'
+def runtimeScope = testOnly ? 'testRuntimeOnly' : 'runtimeOnly'
+
 dependencies {
-    api "org.exist-db.thirdparty.xerces:xercesImpl:${rootProject.versionProperties.get('org.exist-db.thirdparty.xerces:xercesImpl')}:xml-schema-1.1"
-    runtimeOnly "org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2:${rootProject.versionProperties.get('org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2')}"
-    runtimeOnly "edu.princeton.cup:java-cup:${rootProject.versionProperties.get('edu.princeton.cup:java-cup')}"
-    runtimeOnly "xml-resolver:xml-resolver:${rootProject.versionProperties.get('xml-resolver:xml-resolver')}"
+    add(compileScope, "org.exist-db.thirdparty.xerces:xercesImpl:${rootProject.versionProperties.get('org.exist-db.thirdparty.xerces:xercesImpl')}:xml-schema-1.1")
+    add(runtimeScope, "org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2:${rootProject.versionProperties.get('org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2')}")
+    add(runtimeScope, "edu.princeton.cup:java-cup:${rootProject.versionProperties.get('edu.princeton.cup:java-cup')}")
+    add(runtimeScope, "xml-resolver:xml-resolver:${rootProject.versionProperties.get('xml-resolver:xml-resolver')}")
     // Xalan 2.7.3's published POM omits serializer (XALANJ-2649).
-    runtimeOnly "xalan:serializer:${rootProject.versionProperties.get('xalan:xalan')}"
+    add(runtimeScope, "xalan:serializer:${rootProject.versionProperties.get('xalan:xalan')}")
+}
+
+tasks.register('verifyXercesTestDependencies') {
+    group = 'verification'
+    description = 'Resolve test dependency artifacts and verify the classified Xerces provider.'
+    doLast {
+        def expectedJar = "xercesImpl-${rootProject.versionProperties.get('org.exist-db.thirdparty.xerces:xercesImpl')}-xml-schema-1.1.jar"
+        ['testCompileClasspath', 'testRuntimeClasspath'].each { configName ->
+            // Resolve external artifacts without building unrelated project JARs.
+            def externalFiles = configurations.getByName(configName).incoming.artifactView {
+                componentFilter { id -> id instanceof org.gradle.api.artifacts.component.ModuleComponentIdentifier }
+            }.files.files
+            if (!externalFiles.any { it.name == expectedJar }) {
+                throw new GradleException("${project.path}:${configName}: missing ${expectedJar}")
+            }
+            logger.lifecycle("${project.path}:${configName}: resolved ${expectedJar}")
+        }
+    }
 }
