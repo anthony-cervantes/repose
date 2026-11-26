@@ -112,7 +112,6 @@ org-linkedin-org-linkedin-util-groovy = { module = "org.linkedin:org.linkedin.ut
 org-luaj-luaj-jse = { module = "org.luaj:luaj-jse", version = "3.0.1" }
 org-openjdk-nashorn-nashorn-core = { module = "org.openjdk.nashorn:nashorn-core", version = "15.7" }
 org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoVersion" }
-org-openrepose-http-delegation = { module = "org.openrepose:http-delegation", version = "5.0.0" }
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version = "1.18.48" }
 org-python-jython-standalone = { module = "org.python:jython-standalone", version = "2.7.4" }
 org-rackspace-deproxy = { module = "org.rackspace:deproxy", version = "0.21" }

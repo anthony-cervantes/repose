@@ -116,6 +116,26 @@ Run the same build and smoke tests locally:
 bash scripts/build-container.sh local/repose:dev
 ----
 
+=== Dependency provenance audit
+
+For legacy repository migrations, use the existing Docker validation workflow
+with its `dependency_audit` manual input, or open a PR from an `audit/` branch.
+The audit also runs locally with:
+
+[source,bash]
+----
+bash scripts/audit-dependencies.sh
+----
+
+This uses a temporary Gradle user home and reruns archive compilation with
+download logging. It builds and verifies a local Docker image without publishing,
+then attempts a Scala 3 unit-test coverage report for HTTP Delegation and
+compiles the functional test framework to resolve Deproxy.
+It reports observed download hosts/paths and hashes of the staged JVM archives,
+plus recognizable legacy JARs and shaded classes. Missing log evidence is not
+proof that a repository is unused; it is not an SBOM or a full test-suite run.
+Normal PR validation and tag publishing keep the existing build path.
+
 The opt-in
 link:repose-aggregator/docs/src/asciibinder/recipes/legacy-monitor-host.adoc[legacy monitor Host compatibility]
 setting handles the observed `/lb_monitor` Host suffix before HTTP parsing rejects it,

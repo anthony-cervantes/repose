@@ -132,7 +132,8 @@ subprojects {
         testRuntimeOnly "org.springframework:spring-web"
         mockitoAgent "org.mockito:mockito-core"
 
-        scoverage "org.scoverage:scalac-scoverage-runtime_$scalaMajDotMin:2.5.2"
+        // Scala 3 instruments coverage in the compiler; the Scoverage plugin
+        // supplies the report dependencies. Do not resolve a Scala 2-style runtime.
 
     }
 
