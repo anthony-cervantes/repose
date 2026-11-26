@@ -13,7 +13,11 @@ from zipfile import ZipFile
 PROVIDER = "net/sf/saxon/Version.class"
 JAVA = r'''import java.io.StringReader;
 import java.io.StringWriter;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamResult;
+import net.sf.saxon.TransformerFactoryImpl;
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.lib.ExtensionFunctionDefinition;
 import net.sf.saxon.lib.ExtensionFunctionCall;
@@ -35,6 +39,24 @@ class SaxonHeProbe {
     }
 
     public static void main(String[] args) throws Exception {
+        // Exercise the translation filter's shared JAXP factory API.
+        var loader = SaxonHeProbe.class.getClassLoader();
+        var factory = (TransformerFactoryImpl) TransformerFactory.newInstance(
+            "net.sf.saxon.TransformerFactoryImpl", loader);
+        factory.getConfiguration().getDynamicLoader().setClassLoader(loader);
+        var identityOutput = new StringWriter();
+        factory.newTransformer().transform(xml("<probe>ok</probe>"), new StreamResult(identityOutput));
+        if (!identityOutput.toString().contains("<probe>ok</probe>")) {
+            throw new AssertionError("Saxon JAXP identity transformation failed");
+        }
+        // An explicit EE request must not silently become an HE factory.
+        try {
+            TransformerFactory.newInstance("com.saxonica.config.EnterpriseTransformerFactory", loader);
+            throw new AssertionError("Proprietary factory unexpectedly available in HE candidate");
+        } catch (TransformerFactoryConfigurationError expected) {
+            System.out.println("Explicit EE factory request rejected in HE candidate");
+        }
+
         // Match the API checker's Processor construction.
         var p = new Processor(true);
         expect("HE", p.getSaxonEdition());

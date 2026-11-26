@@ -19,7 +19,6 @@
  */
 package org.openrepose.filters.translation;
 
-import com.saxonica.config.EnterpriseTransformerFactory;
 import net.sf.saxon.TransformerFactoryImpl;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.SoftReferenceObjectPool;
@@ -122,24 +121,12 @@ public class TranslationFilter implements Filter, UpdateListener<TranslationConf
         synchronized (lock) {
             configuration = newConfig;
 
-            if (configuration.getXslEngine() == XSLEngine.SAXON_EE) {
-                updateTransformerPool(SAXON_EE_FACTORY_NAME);
-                /*
-                 * I found this through here: http://sourceforge.net/p/saxon/mailman/message/29737564/
-                 * A bit of deduction and stuff let me to assume that all dynamic loading is done with the DynamicLoader
-                 * object. The only way to get a hold of that is to typecast the TransformerFactory to the actual class,
-                 * get the DynamicLoader out of it, and set it's classloader to the one where the saxonica classes are located.
-                 */
-                //Now that we have a Saxon EE transformer factory, we need to configure it...
-                //We have to do casting to get the configuration object, to configure the DynamicLoader for our classloader
-                //This is only needed for saxon EE, because it generates bytecode.
-                EnterpriseTransformerFactory etf = (EnterpriseTransformerFactory) transformerFactory;
-                etf.getConfiguration().getDynamicLoader().setClassLoader(this.getClass().getClassLoader());
-            } else {
-                updateTransformerPool(SAXON_HE_FACTORY_NAME);
-                TransformerFactoryImpl tfi = (TransformerFactoryImpl) transformerFactory;
-                tfi.getConfiguration().getDynamicLoader().setClassLoader(this.getClass().getClassLoader());
-            }
+            // Keep explicit edition selection, but configure both factories through
+            // their common Saxon API. Enterprise classes need not be linked at compile time.
+            updateTransformerPool(configuration.getXslEngine() == XSLEngine.SAXON_EE
+                    ? SAXON_EE_FACTORY_NAME : SAXON_HE_FACTORY_NAME);
+            ((TransformerFactoryImpl) transformerFactory).getConfiguration()
+                    .getDynamicLoader().setClassLoader(this.getClass().getClassLoader());
 
             xslListener.unsubscribe();
             try {

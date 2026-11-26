@@ -47,6 +47,19 @@ integrated extension, and retains the existing Xerces, Docker, WADL routing,
 monitor-host, empty-request and test-classpath probes. Neither job publishes
 images. Candidate mode is rejected by the release build entry point.
 
+## Candidate findings
+
+The first candidate run (45754893387) resolved Central HE without downloading
+EE, but failed compiling TranslationFilter because it imported the proprietary
+EnterpriseTransformerFactory. Both factory implementations inherit
+TransformerFactoryImpl in Saxon 9.8. The filter now uses that shared API to
+configure its class loader, retaining the exact factory class name selected
+by configuration. The HE probe exercises that API and verifies explicit EE
+factory construction fails rather than falling back to HE. This does not yet
+establish safe hot-reload behavior for all invalid configurations.
+
+- https://www.saxonica.com/html/documentation9.8/javadoc/com/saxonica/config/EnterpriseTransformerFactory.html
+
 ## Promotion gates (not satisfied merely by a green candidate job)
 
 1. Review candidate logs for compilation and runtime failures, duplicate
