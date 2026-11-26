@@ -37,7 +37,7 @@ def verify(image):
   <destinations><endpoint id="unused" default="true" protocol="http" hostname="localhost" port="9999"/></destinations>
 </system-model>''',
                 "validator.cfg.xml": '''<validators xmlns="http://docs.openrepose.org/repose/validator/v1.0">
-  <validator role="default" default="true" wadl="file:///etc/repose/audit.wadl"
+  <validator role="default" default="true" wadl="audit.wadl"
              check-well-formed="true" check-grammars="true" check-elements="true" xsd-engine="Xerces"/>
 </validators>''',
                 "audit.wadl": '''<application xmlns="http://wadl.dev.java.net/2009/02">
