@@ -38,4 +38,10 @@ if grep -E 'Downloading https?://[^ ]*/(xerces/xerces-xsd11/|xml-apis/xml-apis/2
     echo "Retired XML dependency downloaded" >&2
     status=1
 fi
+if [[ "${ORG_GRADLE_PROJECT_saxonHeCandidate:-false}" == true ]]; then
+    if grep -E 'Downloading https?://[^ ]*/net/sf/saxon/Saxon-EE/' "$log"; then
+        echo 'Proprietary Saxon dependency downloaded by HE candidate' >&2
+        status=1
+    fi
+fi
 exit "$status"

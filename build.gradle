@@ -39,6 +39,10 @@ ext {
     scalaMajDotMin = '3'
 }
 
+// Experimental edition-only compatibility build; the release default remains unchanged.
+def saxonHeCandidate = providers.gradleProperty('saxonHeCandidate').orElse('false').get() == 'true'
+def saxonHeVersion = versionProperties.getProperty('saxonVersion')
+
 task('buildAll', description: 'Builds all the sub-projects.', group: 'build')
 
 allprojects {
@@ -58,7 +62,16 @@ allprojects {
             exclude group: 'xerces', module: 'xercesImpl'
             exclude group: 'xml-apis', module: 'xml-apis'
         }
+        if (saxonHeCandidate) {
+            // Keep exactly one Saxon API version in the experimental classpath.
+            // A newer transitive HE version is a separate API upgrade to evaluate later.
+            resolutionStrategy.force("net.sf.saxon:Saxon-HE:${saxonHeVersion}")
+        }
         resolutionStrategy.dependencySubstitution {
+            if (saxonHeCandidate) {
+                substitute module('net.sf.saxon:Saxon-EE') using module(
+                    "net.sf.saxon:Saxon-HE:${saxonHeVersion}")
+            }
             substitute module('net.sf.ehcache:ehcache-core') using module(
                 "net.sf.ehcache:ehcache:${rootProject.versionProperties.get('net.sf.ehcache:ehcache')}")
             ['hamcrest-core', 'hamcrest-library'].each { artifact ->
@@ -88,7 +101,9 @@ allprojects {
         maven {
             url "https://maven.research.rackspacecloud.com/content/groups/aggregate/"
             content {
-                includeModule('net.sf.saxon', 'Saxon-EE')
+                if (!saxonHeCandidate) {
+                    includeModule('net.sf.saxon', 'Saxon-EE')
+                }
                 includeModule('org.rackspace', 'deproxy')
             }
         }

@@ -4,6 +4,11 @@ set -euo pipefail
 
 image="${1:?Usage: build-container.sh IMAGE [EXPECTED_VERSION]}"
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
+# An experimental image must never be used by the release publishing entry point.
+if [[ "${ORG_GRADLE_PROJECT_saxonHeCandidate:-false}" == true && $# -ge 2 ]]; then
+    echo 'Saxon-HE candidate is not a release build' >&2
+    exit 1
+fi
 version=$(sed -n "s/.*def baseVersion = '\([^']*\)'.*/\1/p" build.gradle)
 if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo 'Invalid baseVersion in build.gradle' >&2
@@ -45,6 +50,9 @@ fi
 
 python3 -B scripts/stage_container.py "$version"
 python3 -B scripts/verify-xml-runtime.py "$context/rootfs/usr/share/repose"
+if [[ "${ORG_GRADLE_PROJECT_saxonHeCandidate:-false}" == true ]]; then
+    python3 -B scripts/verify-saxon-he.py "$context/rootfs/usr/share/repose"
+fi
 
 docker build \
     --label "org.opencontainers.image.source=https://github.com/$repository" \
