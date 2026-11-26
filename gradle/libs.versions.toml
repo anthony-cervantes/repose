@@ -128,7 +128,12 @@ org-springframework-spring-test = { module = "org.springframework:spring-test", 
 org-springframework-spring-web = { module = "org.springframework:spring-web", version.ref = "springVersion" }
 org-xmlunit-xmlunit-matchers = { module = "org.xmlunit:xmlunit-matchers", version = "2.14.0" }
 xalan-xalan = { module = "xalan:xalan", version = "2.7.3" }
-xerces-xerces-xsd11 = { module = "xerces:xerces-xsd11", version = "2.12.0-rax" }
+# Apache Xerces' XSD 1.1 build, republished on Maven Central by eXist-db.
+# The xml-schema-1.1 classifier is required; the default JAR is XSD 1.0 only.
+xerces-xsd11 = { module = "org.exist-db.thirdparty.xerces:xercesImpl", version = "2.12.2" }
+eclipse-wst-xpath2 = { module = "org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2", version = "1.2.0" }
+java-cup = { module = "edu.princeton.cup:java-cup", version = "10k" }
+xml-resolver = { module = "xml-resolver:xml-resolver", version = "1.2" }
 # Test integrations are separate artifacts in ScalaTest 3.2 and Spock 2.
 org-scalatestplus-junit-4-13-3 = { module = "org.scalatestplus:junit-4-13_3", version = "3.2.20.0" }
 org-scalatestplus-mockito-5-23-3 = { module = "org.scalatestplus:mockito-5-23_3", version = "3.2.20.0" }

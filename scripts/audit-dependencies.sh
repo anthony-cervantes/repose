@@ -32,4 +32,9 @@ if ! grep -q "^Staged Docker context:" "$log"; then
     rootfs="$audit_dir/no-stage"
 fi
 python3 -B scripts/report_dependency_provenance.py "$log" "$rootfs"
+# Fail this migration audit if any of the three retired coordinates is still downloaded.
+if grep -E 'Downloading https?://[^ ]*/(xerces/xerces-xsd11/|xml-apis/xml-apis/2\.0\.2-rax/|org/eclipse/wst/xml/xpath2/org\.eclipse\.wst\.xml\.xpath2\.processor/)' "$log"; then
+    echo "Retired XML dependency downloaded" >&2
+    status=1
+fi
 exit "$status"

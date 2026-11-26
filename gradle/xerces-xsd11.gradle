@@ -1,0 +1,9 @@
+// Use the classified Apache XSD 1.1 distribution published to Maven Central
+// by eXist-db. XPath2, CUP and the catalog resolver are explicit because the
+// Xerces POM marks those dependencies optional.
+dependencies {
+    api "org.exist-db.thirdparty.xerces:xercesImpl:${rootProject.versionProperties.get('org.exist-db.thirdparty.xerces:xercesImpl')}:xml-schema-1.1"
+    runtimeOnly "org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2:${rootProject.versionProperties.get('org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2')}"
+    runtimeOnly "edu.princeton.cup:java-cup:${rootProject.versionProperties.get('edu.princeton.cup:java-cup')}"
+    runtimeOnly "xml-resolver:xml-resolver:${rootProject.versionProperties.get('xml-resolver:xml-resolver')}"
+}

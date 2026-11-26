@@ -33,6 +33,7 @@ fi
     :repose-aggregator:artifacts:experimental-filter-bundle:ear
 
 python3 -B scripts/stage_container.py "$version"
+python3 -B scripts/verify-xml-runtime.py "$context/rootfs/usr/share/repose"
 
 docker build \
     --label "org.opencontainers.image.source=https://github.com/$repository" \
@@ -41,5 +42,6 @@ docker build \
     --tag "$image" "$context"
 
 scripts/verify-container.sh "$image" "$version"
+python3 -B scripts/verify-wadl.py "$image"
 python3 scripts/verify-legacy-monitor-host.py "$image"
 python3 scripts/verify-empty-request-filter.py "$image"
