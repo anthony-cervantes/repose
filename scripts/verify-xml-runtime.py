@@ -16,8 +16,11 @@ FACTORIES = (
 )
 FORBIDDEN = ("xerces-xsd11-", "xml-apis-2.0.2-rax", "org.eclipse.wst.xml.xpath2.processor-")
 JAVA = r'''import java.io.StringReader;
+import java.io.StringWriter;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -85,6 +88,16 @@ class XmlRuntimeProbe {
             // The configured security feature must still reject this document.
         }
         System.out.println("XSD 1.0, XSD 1.1 assertions and secure parser features passed");
+
+        // Match the API checker's Xalan XSLTC identity-transformer initialization.
+        var transformer = TransformerFactory.newInstance(
+            "org.apache.xalan.xsltc.trax.TransformerFactoryImpl", loader).newTransformer();
+        var result = new StringWriter();
+        transformer.transform(xml("<probe>ok</probe>"), new StreamResult(result));
+        if (!result.toString().contains("<probe>ok</probe>")) {
+            throw new AssertionError("Xalan identity transformation failed: " + result);
+        }
+        System.out.println("Xalan identity transformation passed");
     }
 }
 '''

@@ -6,4 +6,6 @@ dependencies {
     runtimeOnly "org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2:${rootProject.versionProperties.get('org.exist-db.thirdparty.org.eclipse.wst.xml:xpath2')}"
     runtimeOnly "edu.princeton.cup:java-cup:${rootProject.versionProperties.get('edu.princeton.cup:java-cup')}"
     runtimeOnly "xml-resolver:xml-resolver:${rootProject.versionProperties.get('xml-resolver:xml-resolver')}"
+    // Xalan 2.7.3's published POM omits serializer (XALANJ-2649).
+    runtimeOnly "xalan:serializer:${rootProject.versionProperties.get('xalan:xalan')}"
 }
